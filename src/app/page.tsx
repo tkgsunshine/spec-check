@@ -349,14 +349,6 @@ export default function HomePage() {
         setErrorMsg('額面年収を入力してください。');
         return;
       }
-      if (financialAssets === '' && realEstateAssets === '' && carAssets === '' && watchAssets === '') {
-        setErrorMsg('総資産の内訳を入力してください（「資産なし (0万円)」ボタンもご利用いただけます）。');
-        return;
-      }
-      if (mortgageDebt === '' && carDebt === '' && scholarshipDebt === '' && otherDebt === '') {
-        setErrorMsg('負債の内訳を入力してください（「負債なし (0万円)」ボタンもご利用いただけます）。');
-        return;
-      }
     }
     if (currentStep === 4) {
       if (!academicDegree) {
@@ -410,18 +402,6 @@ export default function HomePage() {
       setCurrentStep(3);
       return;
     }
-    if (financialAssets === '' && realEstateAssets === '' && carAssets === '' && watchAssets === '') {
-      setErrorMsg('総資産の内訳を入力してください（「資産なし (0万円)」ボタンもご利用いただけます）。');
-      setLoading(false);
-      setCurrentStep(3);
-      return;
-    }
-    if (mortgageDebt === '' && carDebt === '' && scholarshipDebt === '' && otherDebt === '') {
-      setErrorMsg('負債の内訳を入力してください（「負債なし (0万円)」ボタンもご利用いただけます）。');
-      setLoading(false);
-      setCurrentStep(3);
-      return;
-    }
     if (!academicDegree) {
       setErrorMsg('最終学歴を選択してください。');
       setLoading(false);
@@ -450,14 +430,14 @@ export default function HomePage() {
         faceRating: faceRating ? faceRating : null,
         faceImageUrl: faceImageUrl || null,
         annualIncome: Number(cleanIncome),
-        financialAssets: financialAssets !== '' ? Number(toHalfWidthDigits(financialAssets)) : null,
-        realEstateAssets: realEstateAssets !== '' ? Number(toHalfWidthDigits(realEstateAssets)) : null,
-        carAssets: carAssets !== '' ? Number(toHalfWidthDigits(carAssets)) : null,
-        watchAssets: watchAssets !== '' ? Number(toHalfWidthDigits(watchAssets)) : null,
-        mortgageDebt: mortgageDebt !== '' ? Number(toHalfWidthDigits(mortgageDebt)) : null,
-        carDebt: carDebt !== '' ? Number(toHalfWidthDigits(carDebt)) : null,
-        scholarshipDebt: scholarshipDebt !== '' ? Number(toHalfWidthDigits(scholarshipDebt)) : null,
-        otherDebt: otherDebt !== '' ? Number(toHalfWidthDigits(otherDebt)) : null,
+        financialAssets: financialAssets !== '' ? Number(toHalfWidthDigits(financialAssets)) : 0,
+        realEstateAssets: realEstateAssets !== '' ? Number(toHalfWidthDigits(realEstateAssets)) : 0,
+        carAssets: carAssets !== '' ? Number(toHalfWidthDigits(carAssets)) : 0,
+        watchAssets: watchAssets !== '' ? Number(toHalfWidthDigits(watchAssets)) : 0,
+        mortgageDebt: mortgageDebt !== '' ? Number(toHalfWidthDigits(mortgageDebt)) : 0,
+        carDebt: carDebt !== '' ? Number(toHalfWidthDigits(carDebt)) : 0,
+        scholarshipDebt: scholarshipDebt !== '' ? Number(toHalfWidthDigits(scholarshipDebt)) : 0,
+        otherDebt: otherDebt !== '' ? Number(toHalfWidthDigits(otherDebt)) : 0,
         academicDegree: academicDegree ? (academicDegree as DiagnosisInputV3['academicDegree']) : null,
         universityName: universityName.trim() !== '' ? universityName.trim() : null,
         customUniversityHensachi: customUniversityHensachi !== null ? Number(customUniversityHensachi) : null,
@@ -856,7 +836,7 @@ export default function HomePage() {
                 return (
                   <>
                     <h3 className="text-xs font-extrabold text-slate-200 uppercase tracking-wider flex items-center gap-2 mb-2">
-                      総資産 内訳 (万円) <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
+                      総資産 内訳 (万円) <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-bold text-[10px] border border-slate-700">未入力時は0</span>
                     </h3>
                     <div className="mb-3">
                       <button
@@ -948,7 +928,7 @@ export default function HomePage() {
                 return (
                   <>
                     <h3 className="text-xs font-extrabold text-slate-200 uppercase tracking-wider flex items-center gap-2 mb-2">
-                      負債 内訳 (万円) <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
+                      負債 内訳 (万円) <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-bold text-[10px] border border-slate-700">未入力時は0</span>
                     </h3>
                     <div className="mb-3">
                       <button
