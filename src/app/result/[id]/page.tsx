@@ -8,6 +8,7 @@ import RadarChart from '@/components/RadarChart';
 import CategoryCard from '@/components/CategoryCard';
 import SpecRankings from '@/components/SpecRankings';
 import SnsShareCard from '@/components/SnsShareCard';
+import InputDataModal from '@/components/InputDataModal';
 import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText } from 'lucide-react';
 import { runDiagnosisV3 } from '@/lib/score-engine';
 import { scoreToTopPercent } from '@/lib/score-engine/math-utils';
@@ -225,14 +226,18 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      {/* 戻るボタン */}
-      <div className="mb-6">
+      {/* 戻るボタン ＆ 入力データを見る */}
+      <div className="mb-6 flex items-center justify-between gap-3 flex-wrap">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-all bg-slate-900/60 px-4 py-2 rounded-full border border-slate-800"
         >
           <ArrowLeft className="w-4 h-4" /> 再診断・入力画面へ
         </Link>
+
+        {data.rawInput && (
+          <InputDataModal input={data.rawInput} />
+        )}
       </div>
 
       {/* モード切替タブ ＆ アニメーションテキスト誘導 */}
