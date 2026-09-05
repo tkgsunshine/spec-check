@@ -78,6 +78,16 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
   const [activeTab, setActiveTab] = useState<'JAPAN' | 'LOVE'>('JAPAN');
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const tabParam = searchParams.get('tab');
+      if (tabParam === 'love') {
+        setActiveTab('LOVE');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     async function fetchResult() {
       try {
         const res = await fetch(`/api/diagnosis/${id}`);
