@@ -132,18 +132,23 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput }: 
 
       {/* 伸びしろ・改善エリア */}
       <div className="glass-surface rounded-3xl p-6 relative overflow-hidden">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
-            <TrendingUp className="w-5 h-5" />
+        <div className="flex items-center justify-between gap-2 mb-6 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm md:text-base font-black text-slate-100">
+                伸びしろ・改善エリア
+              </h3>
+              <p className="text-[10px] font-bold tracking-wider uppercase text-rose-400">
+                YOUR WEAK POINTS
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-sm md:text-base font-black text-slate-100">
-              伸びしろ・改善エリア
-            </h3>
-            <p className="text-[10px] font-bold tracking-wider uppercase text-rose-400">
-              YOUR WEAK POINTS
-            </p>
-          </div>
+          {rawInput && (
+            <InputDataModal input={rawInput} />
+          )}
         </div>
 
         <div className="space-y-3">
