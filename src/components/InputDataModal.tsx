@@ -113,10 +113,19 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         throw new Error(data.error || '再計算に失敗しました');
       }
 
-      // キャッシュ更新＆遷移
+      // キャッシュ更新＆ドラフト同期＆遷移
       try {
         localStorage.setItem(`spec_check_result_${data.result.diagnosisId}`, JSON.stringify(data.result));
         localStorage.setItem('spec_check_latest_result', JSON.stringify(data.result));
+
+        const draft = {
+          nickname, gender, age, prefectureId, height, weight, bodyFat, faceRating,
+          annualIncome, financialAssets: parsedFinancial, otherAssets: parsedOtherAssets, otherDebt: parsedDebt,
+          academicDegree, universityName, customUniversityHensachi, iqScore,
+          occupationCode, employmentType, companyName, companyCategory,
+          instagramFollowers: snsFollowers, travelCount, maritalStatus, childrenCount,
+        };
+        localStorage.setItem('spec_check_draft_v3', JSON.stringify(draft));
       } catch {}
 
       setIsOpen(false);

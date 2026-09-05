@@ -120,51 +120,63 @@ export default function HomePage() {
 
   const DRAFT_KEY = 'spec_check_draft_v3';
 
-  // Restore draft form data from localStorage on mount (for browser back)
+  // Restore draft form data from localStorage on mount (or latest result fallback)
   useEffect(() => {
     try {
       const saved = localStorage.getItem(DRAFT_KEY);
-      if (!saved) return;
-      const data = JSON.parse(saved);
+      let data = saved ? JSON.parse(saved) : null;
+
+      if (!data) {
+        const latestResultStr = localStorage.getItem('spec_check_latest_result');
+        if (latestResultStr) {
+          const latestResult = JSON.parse(latestResultStr);
+          if (latestResult && latestResult.rawInput) {
+            data = latestResult.rawInput;
+          }
+        }
+      }
+
+      if (!data) return;
+      if (data.nickname !== undefined && data.nickname !== null) setNickname(data.nickname);
       if (data.gender !== undefined) setGender(data.gender);
-      if (data.age !== undefined) setAge(data.age);
+      if (data.age !== undefined && data.age !== null) setAge(String(data.age));
       if (data.prefectureId !== undefined) setPrefectureId(data.prefectureId);
-      if (data.height !== undefined) setHeight(data.height);
-      if (data.weight !== undefined) setWeight(data.weight);
-      if (data.bodyFat !== undefined) setBodyFat(data.bodyFat);
+      if (data.height !== undefined && data.height !== null) setHeight(String(data.height));
+      if (data.weight !== undefined && data.weight !== null) setWeight(String(data.weight));
+      if (data.bodyFat !== undefined && data.bodyFat !== null) setBodyFat(String(data.bodyFat));
       if (data.faceRating !== undefined) setFaceRating(data.faceRating);
       if (data.faceImageUrl !== undefined) {
         setFaceImageUrl(data.faceImageUrl);
         setPhotoPreview(data.faceImageUrl);
       }
-      if (data.annualIncome !== undefined) setAnnualIncome(data.annualIncome);
-      if (data.financialAssets !== undefined) setFinancialAssets(data.financialAssets);
-      if (data.realEstateAssets !== undefined) setRealEstateAssets(data.realEstateAssets);
-      if (data.carAssets !== undefined) setCarAssets(data.carAssets);
-      if (data.watchAssets !== undefined) setWatchAssets(data.watchAssets);
-      if (data.mortgageDebt !== undefined) setMortgageDebt(data.mortgageDebt);
-      if (data.carDebt !== undefined) setCarDebt(data.carDebt);
-      if (data.scholarshipDebt !== undefined) setScholarshipDebt(data.scholarshipDebt);
-      if (data.otherDebt !== undefined) setOtherDebt(data.otherDebt);
+      if (data.annualIncome !== undefined && data.annualIncome !== null) setAnnualIncome(String(data.annualIncome));
+      if (data.financialAssets !== undefined && data.financialAssets !== null) setFinancialAssets(String(data.financialAssets));
+      if (data.realEstateAssets !== undefined && data.realEstateAssets !== null) setRealEstateAssets(String(data.realEstateAssets));
+      if (data.carAssets !== undefined && data.carAssets !== null) setCarAssets(String(data.carAssets));
+      if (data.watchAssets !== undefined && data.watchAssets !== null) setWatchAssets(String(data.watchAssets));
+      if (data.mortgageDebt !== undefined && data.mortgageDebt !== null) setMortgageDebt(String(data.mortgageDebt));
+      if (data.carDebt !== undefined && data.carDebt !== null) setCarDebt(String(data.carDebt));
+      if (data.scholarshipDebt !== undefined && data.scholarshipDebt !== null) setScholarshipDebt(String(data.scholarshipDebt));
+      if (data.otherDebt !== undefined && data.otherDebt !== null) setOtherDebt(String(data.otherDebt));
       if (data.academicDegree !== undefined) setAcademicDegree(data.academicDegree);
-      if (data.universityName !== undefined) setUniversityName(data.universityName);
+      if (data.universityName !== undefined) setUniversityName(data.universityName || '');
       if (data.customUniversityHensachi !== undefined) setCustomUniversityHensachi(data.customUniversityHensachi);
-      if (data.iqScore !== undefined) setIqScore(data.iqScore);
+      if (data.iqScore !== undefined && data.iqScore !== null) setIqScore(String(data.iqScore));
       if (data.industryCode !== undefined) setIndustryCode(data.industryCode);
       if (data.occupationCode !== undefined) setOccupationCode(data.occupationCode);
       if (data.employmentType !== undefined) setEmploymentType(data.employmentType);
       if (data.positionCode !== undefined) setPositionCode(data.positionCode);
-      if (data.companyName !== undefined) setCompanyName(data.companyName);
+      if (data.companyName !== undefined) setCompanyName(data.companyName || '');
       if (data.companyCategory !== undefined) setCompanyCategory(data.companyCategory);
       if (data.userLanguages !== undefined) setUserLanguages(data.userLanguages);
-      if (data.instagramFollowers !== undefined) setInstagramFollowers(data.instagramFollowers);
-      if (data.xFollowers !== undefined) setXFollowers(data.xFollowers);
-      if (data.tikTokFollowers !== undefined) setTikTokFollowers(data.tikTokFollowers);
-      if (data.youTubeFollowers !== undefined) setYouTubeFollowers(data.youTubeFollowers);
+      if (data.instagramFollowers !== undefined && data.instagramFollowers !== null) setInstagramFollowers(Number(data.instagramFollowers));
+      if (data.xFollowers !== undefined && data.xFollowers !== null) setXFollowers(Number(data.xFollowers));
+      if (data.tikTokFollowers !== undefined && data.tikTokFollowers !== null) setTikTokFollowers(Number(data.tikTokFollowers));
+      if (data.youTubeFollowers !== undefined && data.youTubeFollowers !== null) setYouTubeFollowers(Number(data.youTubeFollowers));
       if (data.maritalStatus !== undefined) setMaritalStatus(data.maritalStatus);
-      if (data.childrenCount !== undefined) setChildrenCount(data.childrenCount);
+      if (data.childrenCount !== undefined && data.childrenCount !== null) setChildrenCount(String(data.childrenCount));
       if (data.mbti !== undefined) setMbti(data.mbti);
-      if (data.travelCount !== undefined && data.travelCount !== '0' && data.travelCount !== 0) setTravelCount(String(data.travelCount));
+      if (data.travelCount !== undefined && data.travelCount !== null && data.travelCount !== '0' && data.travelCount !== 0) setTravelCount(String(data.travelCount));
     } catch (e) {
       console.error('Failed to load draft form data', e);
     }
@@ -174,11 +186,11 @@ export default function HomePage() {
   useEffect(() => {
     try {
       const draft = {
-        gender, age, prefectureId, height, weight, bodyFat, faceRating, faceImageUrl,
+        nickname, gender, age, prefectureId, height, weight, bodyFat, faceRating, faceImageUrl,
         annualIncome, financialAssets, realEstateAssets, carAssets, watchAssets,
         mortgageDebt, carDebt, scholarshipDebt, otherDebt,
         academicDegree, universityName, customUniversityHensachi, iqScore,
-        industryCode, occupationCode, employmentType, positionCode, companyCategory,
+        industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
         userLanguages, instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
         maritalStatus, childrenCount, mbti, travelCount,
       };
@@ -187,7 +199,7 @@ export default function HomePage() {
       console.error('Failed to save draft form data', e);
     }
   }, [
-    gender, age, prefectureId, height, weight, bodyFat, faceRating, faceImageUrl,
+    nickname, gender, age, prefectureId, height, weight, bodyFat, faceRating, faceImageUrl,
     annualIncome, financialAssets, realEstateAssets, carAssets, watchAssets,
     mortgageDebt, carDebt, scholarshipDebt, otherDebt,
     academicDegree, universityName, customUniversityHensachi, iqScore,

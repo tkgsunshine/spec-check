@@ -144,7 +144,7 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
       ctx.textAlign = 'center';
       ctx.fillStyle = '#818cf8';
       ctx.font = 'bold 15px sans-serif';
-      ctx.fillText('SPEC CHECK OFFICIAL CARD', width / 2, 50);
+      ctx.fillText('人間スペック診断 公式カード', width / 2, 50);
 
       // User Profile Header
       ctx.fillStyle = '#ffffff';
@@ -285,7 +285,7 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
       ctx.textAlign = 'center';
       ctx.fillStyle = '#64748b';
       ctx.font = '12px monospace';
-      ctx.fillText('SPEC CHECK OFFICIAL DIAGNOSIS CARD', width / 2, height - 30);
+      ctx.fillText('人間スペック診断 公式カード', width / 2, height - 30);
 
       // Trigger Download
       const dataUrl = canvas.toDataURL('image/png');
@@ -321,8 +321,8 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
 
             {/* Card Graphic Container (十分な上部余白と完全レイアウト) */}
             <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 rounded-2xl pt-6 pb-5 px-3 border border-slate-800 shadow-2xl mb-4 text-center relative overflow-hidden shrink-0">
-              <div className="text-[10px] font-black tracking-widest text-indigo-400 uppercase mb-1">
-                SPEC CHECK OFFICIAL CARD
+              <div className="text-[11px] font-black tracking-widest text-indigo-400 uppercase mb-1">
+                人間スペック診断 公式カード
               </div>
 
               {/* ユーザープロフィール & ニックネーム */}
@@ -458,8 +458,8 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
                 </svg>
               </div>
 
-              <div className="text-[9px] text-slate-500 font-mono tracking-widest mt-3">
-                SPEC CHECK OFFICIAL DIAGNOSIS CARD
+              <div className="text-[10px] text-slate-500 font-bold tracking-widest mt-3">
+                人間スペック診断 公式カード
               </div>
             </div>
 
