@@ -1,15 +1,17 @@
 'use client';
 
-import { MetricScoreResult } from '@/types/spec-check';
+import { MetricScoreResult, DiagnosisInputV3 } from '@/types/spec-check';
 import { scoreToTopPercent, calcHighPrecisionTopPercent } from '@/lib/score-engine/math-utils';
 import { Trophy, AlertCircle, TrendingUp } from 'lucide-react';
+import InputDataModal from '@/components/InputDataModal';
 
 interface SpecRankingsProps {
   metrics: MetricScoreResult[];
   isLoveMode?: boolean;
+  rawInput?: DiagnosisInputV3 | null;
 }
 
-export default function SpecRankings({ metrics, isLoveMode = false }: SpecRankingsProps) {
+export default function SpecRankings({ metrics, isLoveMode = false, rawInput }: SpecRankingsProps) {
   // 恋愛関連項目の判定
   const isRomanceMetric = (m: MetricScoreResult) => {
     if (m.metricCode === 'LOVE_AGE' || m.metricCode === 'FAMILY') return true;
@@ -76,18 +78,23 @@ export default function SpecRankings({ metrics, isLoveMode = false }: SpecRankin
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
       {/* 強みのあるスペック TOP 5 */}
       <div className="glass-surface glass-surface-glow rounded-3xl p-6 relative overflow-hidden">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
-            <Trophy className="w-5 h-5" />
+        <div className="flex items-center justify-between gap-2 mb-6 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+              <Trophy className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm md:text-base font-black text-slate-100">
+                強みのあるスペック TOP 5
+              </h3>
+              <p className="text-[10px] font-bold tracking-wider uppercase text-amber-400">
+                YOUR STRONGEST SPECS
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-sm md:text-base font-black text-slate-100">
-              強みのあるスペック TOP 5
-            </h3>
-            <p className="text-[10px] font-bold tracking-wider uppercase text-amber-400">
-              YOUR STRONGEST SPECS
-            </p>
-          </div>
+          {rawInput && (
+            <InputDataModal input={rawInput} />
+          )}
         </div>
 
         <div className="space-y-3">
