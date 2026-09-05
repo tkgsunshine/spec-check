@@ -6,6 +6,8 @@ import { DiagnosisInputV3, Gender, MaritalStatus, FaceRating } from '@/types/spe
 import { PREFECTURES, COMMON_OCCUPATION_MASTER } from '@/lib/datasets/japan-stats';
 import { sanitizeNumericInput } from '@/lib/score-engine/math-utils';
 import { X, FileText, User, Landmark, GraduationCap, Globe, Sparkles, ChevronRight, Save, RotateCcw } from 'lucide-react';
+import UniversityAutocomplete from '@/components/UniversityAutocomplete';
+import CompanyAutocomplete from '@/components/CompanyAutocomplete';
 
 interface InputDataModalProps {
   input: DiagnosisInputV3;
@@ -38,9 +40,12 @@ export default function InputDataModal({ input }: InputDataModalProps) {
 
   const [academicDegree, setAcademicDegree] = useState<string>(input.academicDegree || 'BACHELOR');
   const [universityName, setUniversityName] = useState<string>(input.universityName || '');
+  const [customUniversityHensachi, setCustomUniversityHensachi] = useState<number | null>(input.customUniversityHensachi || null);
   const [iqScore, setIqScore] = useState<string>(input.iqScore ? String(input.iqScore) : '');
   const [occupationCode, setOccupationCode] = useState<string>(input.occupationCode || '01');
   const [employmentType, setEmploymentType] = useState<string>(input.employmentType || 'REGULAR');
+  const [companyName, setCompanyName] = useState<string>(input.companyName || '');
+  const [companyCategory, setCompanyCategory] = useState<DiagnosisInputV3['companyCategory'] | ''>(input.companyCategory || '');
 
   const [snsFollowers, setSnsFollowers] = useState<string>(
     String((input.instagramFollowers || 0) + (input.xFollowers || 0) + (input.tikTokFollowers || 0) + (input.youTubeFollowers || 0))
@@ -82,9 +87,12 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         otherDebt: parsedDebt,
         academicDegree: academicDegree ? (academicDegree as DiagnosisInputV3['academicDegree']) : 'BACHELOR',
         universityName: universityName.trim() || null,
+        customUniversityHensachi,
         iqScore: iqScore !== '' ? Number(iqScore) : null,
         occupationCode,
         employmentType: employmentType ? (employmentType as DiagnosisInputV3['employmentType']) : 'REGULAR',
+        companyName: companyName.trim() || null,
+        companyCategory: companyCategory !== '' ? (companyCategory as any) : null,
         instagramFollowers: snsFollowers !== '' ? Number(snsFollowers) : 0,
         xFollowers: 0,
         tikTokFollowers: 0,
@@ -325,14 +333,15 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       <option value="HIGH_SCHOOL">高等学校卒</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">出身大学名</label>
-                    <input
-                      type="text"
+                  <div className="sm:col-span-2">
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">出身大学・大学院名 (マスタ自動判定)</label>
+                    <UniversityAutocomplete
                       value={universityName}
-                      onChange={(e) => setUniversityName(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
-                      placeholder="例: 早稲田大学"
+                      customHensachi={customUniversityHensachi}
+                      onChange={(val, _isMatched, customH) => {
+                        setUniversityName(val);
+                        setCustomUniversityHensachi(customH || null);
+                      }}
                     />
                   </div>
                   <div>
@@ -346,7 +355,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       placeholder="空欄で自動推計"
                     />
                   </div>
-                  <div className="sm:col-span-2">
+                  <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">職種分類</label>
                     <select
                       value={occupationCode}
@@ -370,6 +379,34 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       <option value="FREELANCE">個人事業主・フリーランス</option>
                       <option value="CONTRACT">契約社員・派遣</option>
                       <option value="PART_TIME">パート・アルバイト</option>
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">勤務先・企業名 (上場・外資マスタ自動判定)</label>
+                    <CompanyAutocomplete
+                      value={companyName}
+                      companyCategory={companyCategory}
+                      onChange={(name, category) => {
+                        setCompanyName(name);
+                        if (category) {
+                          setCompanyCategory(category as any);
+                        }
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">企業規模区分</label>
+                    <select
+                      value={companyCategory || ''}
+                      onChange={(e) => setCompanyCategory(e.target.value as any)}
+                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                    >
+                      <option value="">指定なし / マスタ自動</option>
+                      <option value="LARGE_PRIME">プライム上場・外資トップ</option>
+                      <option value="LARGE">大手企業・上場企業</option>
+                      <option value="MEDIUM">中堅企業・メガベンチャー</option>
+                      <option value="SMALL">中小企業・スタートアップ</option>
+                      <option value="OTHER">その他・個人事業</option>
                     </select>
                   </div>
                 </div>
