@@ -22,29 +22,16 @@ function generateOverallEvaluationText(params: {
   prefectureName: string;
   categoryScores: { label: string; score: number }[];
 }): string {
-  const { isLoveMode, topPercent, gender, age, prefectureName, categoryScores } = params;
+  const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores } = params;
   const genderText = gender === 'MALE' ? '男性' : '女性';
 
   const sorted = [...categoryScores].sort((a, b) => b.score - a.score);
   const bestCategory = sorted[0];
   const secondBest = sorted[1];
+  const thirdBest = sorted[2] || sorted[1];
   const worstCategory = sorted[sorted.length - 1];
 
-  let evalTier = '';
-  const percentText = `上位${topPercent}%`;
-  if (topPercent <= 3.0) {
-    evalTier = `同世代（${age}歳・${prefectureName}）の${genderText}の中で${percentText}に入る極めて優秀なハイスペック結果です。`;
-  } else if (topPercent <= 15.0) {
-    evalTier = `同世代（${age}歳・${prefectureName}）の${genderText}の中で${percentText}と、ハイレベルなポジションを維持されています。`;
-  } else if (topPercent <= 50.0) {
-    evalTier = `同世代（${age}歳・${prefectureName}）の${genderText}の中で${percentText}に位置しており、バランスの取れたステータスです。`;
-  } else {
-    evalTier = `同世代（${age}歳・${prefectureName}）の${genderText}の中で${percentText}に位置しており、大きな伸びしろを残した状態です。`;
-  }
-
-  const strengthProse = `特に【${bestCategory.label}】(${bestCategory.score}pt)や【${secondBest.label}】(${secondBest.score}pt)において非常に高い数値を記録しており、個人の大きな強みとして全体スコアを強力に牽引しています。`;
-
-  // 後から変更不可能な項目（学歴・知性、学歴、年齢、恋愛市場年齢）を改善アドバイスの対象から除外
+  // 後から変更不可能な項目を改善アドバイスの対象から除外
   const UNCHANGEABLE_LABELS = new Set([
     '学歴・知性',
     '学歴',
@@ -55,20 +42,56 @@ function generateOverallEvaluationText(params: {
   const improvableCategories = sorted.filter(c => !UNCHANGEABLE_LABELS.has(c.label));
   const worstImprovable = improvableCategories.length > 0
     ? improvableCategories[improvableCategories.length - 1]
-    : null;
+    : worstCategory;
 
-  let improvementProse = '';
-  if (worstImprovable && worstImprovable.score < 60) {
-    improvementProse = `一方で【${worstImprovable.label}】(${worstImprovable.score}pt)に改善の余地が残されており、このエリアの強化・最適化を進めることで、さらなるステップアップが十分に期待できます。`;
+  // 1. 統計的母集団におけるポジション解析 (約200文字)
+  let section1 = '';
+  if (topPercent <= 3.0) {
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」という極めて突出したハイスペック・エリート領域に位置しています。全国および地域統計と比較しても全人口のわずか数パーセント未満しか到達できない卓越した水準であり、客観的なステータス評価において周囲から頭一つ抜けた存在感を放っています。`;
+  } else if (topPercent <= 15.0) {
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」というハイレベルな上位層に位置しています。公的統計における同世代平均値を大幅に上回っており、日頃の努力や自己研鑽の成果が各評価軸に明確な数値となって表れている優れたステータス状態です。`;
+  } else if (topPercent <= 50.0) {
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」という平均以上の安定した中央〜上位ゾーンに位置しています。極端な欠点がなくバランスの取れた能力バランスを保持しており、今後のアプローチ次第でさらなるハイスペック層へのステップアップが十分に狙える強固なベースを備えています。`;
   } else {
-    improvementProse = `各可変カテゴリ（年収・キャリア・容姿・身だしなみ・SNS影響力等）が高水準で安定しており、今後の努力項目にも隙のない優れたバランスを達成されています。`;
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」に位置しています。現在の数値は伸びしろを多く残した状態ですが、重点的な改善ポイントを意識してピンポイントでアプローチすることで、今後のスコア引き上げと急速なランクアップが最も期待できる発展途上の状態と言えます。`;
   }
 
-  const conclusion = isLoveMode
-    ? `パートナーシップ市場においても自身の強力なアピールポイントを前面に押し出す戦略が非常に有効です。`
-    : `今後も自身の強みを活かしつつ、伸びしろ領域を意識的にカバーしていくことで理想的なキャリアと個人の充実を目指せます。`;
+  // 2. コア強みカテゴリのシナジーとアドバンテージ分析 (約300文字)
+  let section2 = '';
+  if (!isLoveMode) {
+    section2 = `【主軸となる強みと相乗効果分析】\n特に【${bestCategory.label}】(${bestCategory.score}pt)および【${secondBest.label}】(${secondBest.score}pt)の2分野において極めて高いパフォーマンスを記録しており、全体スコアを強力に牽引しています。${bestCategory.label}における高い数値は、社会的な信用力や個人の能力の高さを客観的に証明する大きなアドバンテージです。さらに【${thirdBest.label}】(${thirdBest.score}pt)も高水準で安定しているため、これらの強みが相互に補完し合うことで、ビジネスシーンや日常の人間関係において強い説得力と高い評価を生み出す源泉となっています。`;
+  } else {
+    section2 = `【パートナーシップ市場における強力な武器】\n恋愛・婚活市場における評価軸では、特に【${bestCategory.label}】(${bestCategory.score}pt)と【${secondBest.label}】(${secondBest.score}pt)があなたの最大の魅力として光っています。${bestCategory.label}の高さはパートナーに対する強い安心感や魅力を与える要素であり、マッチングアプリや出会いの場においてもファーストインパクトで大きな好印象を残すことができます。また【${thirdBest.label}】(${thirdBest.score}pt)のバランスも良く、安定した関係性を構築する上での強力なアピールポイントとなります。`;
+  }
 
-  return `${evalTier}${strengthProse}${improvementProse}${conclusion}`;
+  // 3. ボトルネック・改善ポイントの精密分析と攻略法 (約300文字)
+  let section3 = '';
+  if (!isLoveMode) {
+    if (worstImprovable.score < 60) {
+      section3 = `【伸びしろ領域の特定と最適化戦略】\n一方で、今後のさらなる進化に向けたボトルネックとして【${worstImprovable.label}】(${worstImprovable.score}pt)に改善の余地が残されています。この項目は習慣の見直しや適切な自己投資、戦略的な目標設定によって比較的短期間での向上が見込める可変領域です。現状の強みである${bestCategory.label}を活かしつつ、${worstImprovable.label}の数値を底上げしていくことで、スキのない洗練された全方位型ハイスペックへと飛躍的に向上させることが可能です。`;
+    } else {
+      section3 = `【バランスの評価と微調整のアドバイス】\n全体的に各カテゴリ（年収・キャリア・身体・SNS影響力・グローバル力）が総じて高水準でまとまっており、目立った弱点が見当たらない非常に完成度の高いステータス構造です。現状維持にとどまらず、【${worstImprovable.label}】(${worstImprovable.score}pt)などの更なるブラッシュアップを図ることで、競合の少ない圧倒的な独自ポジションを確立できます。`;
+    }
+  } else {
+    if (worstImprovable.score < 60) {
+      section3 = `【婚活・パートナーシップでの注意点と対策】\n恋愛・結婚市場において、さらなる満足度を高めるポイントとして【${worstImprovable.label}】(${worstImprovable.score}pt)のケアが挙げられます。お相手選びやマッチングの場面では、ご自身の得意領域である${bestCategory.label}を前面に押し出しつつも、${worstImprovable.label}における懸念を丁寧なコミュニケーションや身だしなみ・生活像の共有によって補う姿勢が大切です。ここを意識的にカバーすることで、交際・結婚への発展率が大幅に向上します。`;
+    } else {
+      section3 = `【パートナーシップでの総合的完成度】\n恋愛市場における各評価項目（年齢・容姿・体型・経済力・家庭観）が極めてバランス良く整っており、理想的な出会いを引き寄せる準備が十分に整っています。自信を持ってご自身の魅力を開示しつつ、【${worstImprovable.label}】(${worstImprovable.score}pt)の細かなニュアンスや相手への寄り添いを意識することで、より深い信頼関係を築くことができます。`;
+    }
+  }
+
+  // 4. 居住地域および同世代層特有の傾向考察 (約200文字)
+  const section4 = `【${prefectureName}・同世代（${age}歳）における市場環境】\n${prefectureName}における${age}歳${genderText}の母集団データと照らし合わせると、年齢に応じた経験値や社会的責任が増す中で、あなたのステータス構成は地域内でも優位なポジションを確立しています。${prefectureName}特有の生活環境や物価水準、同世代の平均的な傾向を意識した上で、ご自身の強みをローカライズして発揮することが、プライベートや仕事での満足度向上に直結します。`;
+
+  // 5. 中長期的な戦略ロードマップと総括 (約200文字)
+  let section5 = '';
+  if (!isLoveMode) {
+    section5 = `【今後の総括とアクションプラン】\n総合的に見て、あなたはすでに優れた基盤を有しており、自身の強みである【${bestCategory.label}】を軸に主導権を握れるポテンシャルを持っています。自己成長のロードマップとして、定期的な数値チェックを行いながらボトルネック領域の改善に取り組むことで、人生のあらゆる局面で望む成果を引き寄せる持続可能なハイスペック・ライフを実現できるでしょう。`;
+  } else {
+    section5 = `【今後の総括とパートナーシップ戦略】\n総じて、あなたの恋愛市場におけるポテンシャルは非常に高く、自信を持ってパートナーシップに臨める好条件が揃っています。ご自身の強みである【${bestCategory.label}】をアピール軸として確立し、お相手との価値観のすり合わせを丁寧に行っていくことで、相思相愛の理想的なパートナーとの出逢いと関係成就を確実に手に入れることができるでしょう。`;
+  }
+
+  return `${section1}\n\n${section2}\n\n${section3}\n\n${section4}\n\n${section5}`;
 }
 
 export default function ResultPage({ params }: { params: Promise<{ id: string }> }) {
@@ -435,9 +458,9 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
               </h3>
             </div>
           </div>
-          <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-medium tracking-wide">
+          <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-3">
             {overallEvaluationText}
-          </p>
+          </div>
         </div>
       </section>
 
