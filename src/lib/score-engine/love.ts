@@ -20,6 +20,7 @@ export function calculateLoveScore(params: {
   bodyScore: number;
   incomeScore: number;
   careerScore: number;
+  snsScore?: number;
   maritalStatus?: MaritalStatus | null;
   childrenCount?: number | null;
   prefectureId: number;
@@ -35,7 +36,12 @@ export function calculateLoveScore(params: {
   };
   loveMetrics: MetricScoreResult[];
 } {
-  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, maritalStatus, childrenCount, prefectureId } = params;
+  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, snsScore, maritalStatus, childrenCount, prefectureId } = params;
+
+  // キャリア・影響力 (職歴・年収ステータス + SNS影響力/フォロワー数の合成スコア)
+  const combinedCareerScore = (snsScore !== undefined && snsScore !== null && snsScore > 0)
+    ? Math.max(careerScore, Math.round((careerScore * 0.7 + snsScore * 0.3) * 10) / 10)
+    : careerScore;
 
   // 1. 恋愛Age Score (モテ度・人気度年齢曲線モデル V5.0)
   let ageLoveScore = 80;
@@ -114,7 +120,7 @@ export function calculateLoveScore(params: {
       { code: 'AGE', score: ageLoveScore, defaultWeight: 0.25 },
       { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
       { code: 'INCOME', score: incomeScore, defaultWeight: 0.025 },
-      { code: 'CAREER', score: careerScore, defaultWeight: 0.025 },
+      { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.025 },
     ];
   } else {
     // 男性評価（女性視点: 年代別動的ウェイト）
@@ -125,17 +131,17 @@ export function calculateLoveScore(params: {
         { code: 'BODY', score: bodyScore, defaultWeight: 0.30 },
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.20 },
         { code: 'INCOME', score: incomeScore, defaultWeight: 0.05 },
-        { code: 'CAREER', score: careerScore, defaultWeight: 0.05 },
+        { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.05 },
         { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
       ];
     } else if (age < 30) {
-      // 20代後半: ルックス×社会人キャリア・経済力バランス型 (CAREER 20%へ増額)
+      // 20代後半: ルックス×プレ経済力 (CAREER 10%)
       availableMetrics = [
-        { code: 'FACE', score: faceScore, defaultWeight: 0.20 },
-        { code: 'BODY', score: bodyScore, defaultWeight: 0.20 },
-        { code: 'CAREER', score: careerScore, defaultWeight: 0.20 },
+        { code: 'FACE', score: faceScore, defaultWeight: 0.25 },
+        { code: 'BODY', score: bodyScore, defaultWeight: 0.25 },
         { code: 'INCOME', score: incomeScore, defaultWeight: 0.20 },
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.15 },
+        { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.10 },
         { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
       ];
     } else if (age < 45) {
@@ -144,7 +150,7 @@ export function calculateLoveScore(params: {
         { code: 'INCOME', score: incomeScore, defaultWeight: 0.25 },
         { code: 'FACE', score: faceScore, defaultWeight: 0.20 },
         { code: 'BODY', score: bodyScore, defaultWeight: 0.20 },
-        { code: 'CAREER', score: careerScore, defaultWeight: 0.15 },
+        { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.15 },
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.10 },
         { code: 'FAMILY', score: familyScore, defaultWeight: 0.10 },
       ];
@@ -152,7 +158,7 @@ export function calculateLoveScore(params: {
       // 45歳以上: ステータス×ダンディさ
       availableMetrics = [
         { code: 'INCOME', score: incomeScore, defaultWeight: 0.30 },
-        { code: 'CAREER', score: careerScore, defaultWeight: 0.20 },
+        { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.20 },
         { code: 'FACE', score: faceScore, defaultWeight: 0.15 },
         { code: 'BODY', score: bodyScore, defaultWeight: 0.15 },
         { code: 'FAMILY', score: familyScore, defaultWeight: 0.10 },
@@ -170,7 +176,7 @@ export function calculateLoveScore(params: {
       face: faceScore,
       body: bodyScore,
       income: incomeScore,
-      career: careerScore,
+      career: combinedCareerScore,
       family: familyScore,
     },
     loveMetrics: [ageMetric, familyMetric],

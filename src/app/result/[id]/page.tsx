@@ -21,8 +21,9 @@ function generateOverallEvaluationText(params: {
   age: number;
   prefectureName: string;
   categoryScores: { label: string; score: number }[];
+  socialScore?: number;
 }): string {
-  const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores } = params;
+  const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores, socialScore } = params;
   const genderText = gender === 'MALE' ? '男性' : '女性';
 
   const sorted = [...categoryScores].sort((a, b) => b.score - a.score);
@@ -61,7 +62,18 @@ function generateOverallEvaluationText(params: {
   if (!isLoveMode) {
     section2 = `【主軸となる強みと相乗効果分析】\n特に【${bestCategory.label}】(${bestCategory.score}pt)および【${secondBest.label}】(${secondBest.score}pt)の2分野において極めて高いパフォーマンスを記録しており、全体スコアを強力に牽引しています。${bestCategory.label}における高い数値は、社会的な信用力や個人の能力の高さを客観的に証明する大きなアドバンテージです。さらに【${thirdBest.label}】(${thirdBest.score}pt)も高水準で安定しているため、これらの強みが相互に補完し合うことで、ビジネスシーンや日常の人間関係において強い説得力と高い評価を生み出す源泉となっています。`;
   } else {
-    section2 = `【パートナーシップ市場における強力な武器】\n恋愛・婚活市場における評価軸では、特に【${bestCategory.label}】(${bestCategory.score}pt)と【${secondBest.label}】(${secondBest.score}pt)があなたの最大の魅力として光っています。${bestCategory.label}の高さはパートナーに対する強い安心感や魅力を与える要素であり、マッチングアプリや出会いの場においてもファーストインパクトで大きな好印象を残すことができます。また【${thirdBest.label}】(${thirdBest.score}pt)のバランスも良く、安定した関係性を構築する上での強力なアピールポイントとなります。`;
+    let snsParagraph = '';
+    if (socialScore !== undefined && socialScore !== null) {
+      if (socialScore >= 70) {
+        snsParagraph = `\nまた、SNSフォロワー数・発信力（SNS影響力スコア: ${socialScore}pt）の高さは、現代の恋愛・婚活市場において現代的知名度や優れたトレンド感という独自の強力な魅力を形作っています。感度の高いパートナーとの出会いにおいて、一目を置かれる大きなアピール要素となります。`;
+      } else if (socialScore >= 50) {
+        snsParagraph = `\nさらに、バランスの取れたSNS活用・ネットワーク領域（SNS影響力スコア: ${socialScore}pt）も、オープンな人柄や交友関係の広さをさりげなく演出する補足的なアピール材料となります。`;
+      } else {
+        snsParagraph = `\nなお、SNS発信領域（SNS影響力スコア: ${socialScore}pt）は控えめな数値ですが、これはプライベートのプライバシーを大切にする誠実で落ち着いた人物像としてポジティブに作用します。`;
+      }
+    }
+
+    section2 = `【パートナーシップ市場における強力な武器】\n恋愛・婚活市場における評価軸では、特に【${bestCategory.label}】(${bestCategory.score}pt)と【${secondBest.label}】(${secondBest.score}pt)があなたの最大の魅力として光っています。${bestCategory.label}の高さはパートナーに対する強い安心感や魅力を与える要素であり、マッチングアプリや出会いの場においてもファーストインパクトで大きな好印象を残すことができます。また【${thirdBest.label}】(${thirdBest.score}pt)のバランスも良く、安定した関係性を構築する上での強力なアピールポイントとなります。${snsParagraph}`;
   }
 
   // 3. ボトルネック・改善ポイントの精密分析と攻略法 (約300文字)
@@ -223,7 +235,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
     { labelJa: '容姿・写真', labelEn: 'FACE', score: data.loveCategoryScores.face },
     { labelJa: '体型・身長', labelEn: 'BODY', score: data.loveCategoryScores.body },
     { labelJa: '年収・純資産', labelEn: 'INCOME', score: data.loveCategoryScores.income },
-    { labelJa: 'キャリア', labelEn: 'CAREER', score: data.loveCategoryScores.career },
+    { labelJa: 'キャリア・影響力', labelEn: 'CAREER', score: data.loveCategoryScores.career },
     { labelJa: '家庭・結婚', labelEn: 'FAMILY', score: data.loveCategoryScores.family },
   ];
 
@@ -241,7 +253,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
         { label: '容姿・第一印象', score: data.loveCategoryScores.face },
         { label: '体型・身長', score: data.loveCategoryScores.body },
         { label: '年収・純資産', score: data.loveCategoryScores.income },
-        { label: 'キャリア', score: data.loveCategoryScores.career },
+        { label: 'キャリア・影響力', score: data.loveCategoryScores.career },
         { label: '家庭・結婚観', score: data.loveCategoryScores.family },
       ];
 
@@ -253,6 +265,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
     age: data.inputSummary.age,
     prefectureName: data.inputSummary.prefectureName,
     categoryScores: currentCategoryScores,
+    socialScore: data.categoryScores.social,
   });
 
   const currentEpithet = isLoveMode ? (data.loveEpithet || data.epithet) : data.epithet;
@@ -435,7 +448,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
               <CategoryCard labelJa="容姿" labelEn="FACE" score={data.loveCategoryScores.face} colorTheme="rose" />
               <CategoryCard labelJa="体型" labelEn="BODY" score={data.loveCategoryScores.body} colorTheme="rose" />
               <CategoryCard labelJa="年収・純資産" labelEn="INCOME" score={data.loveCategoryScores.income} colorTheme="rose" />
-              <CategoryCard labelJa="キャリア" labelEn="CAREER" score={data.loveCategoryScores.career} colorTheme="rose" />
+              <CategoryCard labelJa="キャリア・影響力" labelEn="CAREER" score={data.loveCategoryScores.career} colorTheme="rose" />
               <CategoryCard labelJa="家庭" labelEn="FAMILY" score={data.loveCategoryScores.family} colorTheme="rose" />
             </>
           )}

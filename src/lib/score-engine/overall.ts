@@ -118,6 +118,7 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
     bodyScore: bodyResult.totalBodyScore,
     incomeScore: totalEconomicScore,
     careerScore: careerResult.totalCareerScore,
+    snsScore: snsResult.snsScore.score,
     maritalStatus: input.maritalStatus,
     childrenCount: input.childrenCount,
     prefectureId: input.prefectureId,
