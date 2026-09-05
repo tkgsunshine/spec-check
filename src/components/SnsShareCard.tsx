@@ -18,6 +18,7 @@ interface SnsShareCardProps {
   age: number;
   nickname?: string;
   prefectureName?: string;
+  isLoveMode?: boolean;
   categoryScores: {
     body: number;
     economic: number;
@@ -38,6 +39,7 @@ export default function SnsShareCard({
   age,
   nickname,
   prefectureName,
+  isLoveMode,
   categoryScores,
   radarAxes,
   epithet,
@@ -60,7 +62,9 @@ export default function SnsShareCard({
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/share/${shareToken}` : '';
   const genderTextJa = gender === 'MALE' ? '男性' : '女性';
   const displayNickname = nickname || 'あなた';
-  const prefStr = prefectureName ? ` (${prefectureName})` : '';
+  const prefStr = prefectureName ? ` / ${prefectureName}` : '';
+  const modeTitle = isLoveMode ? '恋愛スペック診断' : '人間スペック診断';
+  const profileHeaderStr = `${displayNickname} / ${age}歳 / ${genderTextJa}${prefStr} の${modeTitle}結果`;
 
   const rankShareStr = (topPercent !== undefined && topPercent !== null)
     ? `【上位 ${topPercent}%】`
@@ -85,11 +89,11 @@ export default function SnsShareCard({
 
   const epithetShareStr = displayEpithetTitle ? `\n二つ名：『${displayEpithetTitle}』` : '';
 
-  const shareText = `【人間スペック診断 結果】
-${displayNickname}（${age}歳・${genderTextJa}${prefStr}）${epithetShareStr}
+  const shareText = `【${modeTitle} 結果】
+${profileHeaderStr} ${epithetShareStr}
 ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
 あなたの同世代順位＆市場価値は？
-#人間スペック診断 #スペック診断 #同世代順位 #市場価値`;
+#${modeTitle} #スペック診断 #同世代順位 #市場価値`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(shareUrl);
@@ -164,12 +168,12 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
       ctx.textAlign = 'center';
       ctx.fillStyle = '#818cf8';
       ctx.font = 'bold 15px sans-serif';
-      ctx.fillText('人間スペック診断 公式カード', width / 2, 50);
+      ctx.fillText(`${modeTitle} 公式カード`, width / 2, 50);
 
       // User Profile Header
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 18px sans-serif';
-      ctx.fillText(`${displayNickname} (${age}歳・${genderTextJa}${prefStr})`, width / 2, 78);
+      ctx.fillText(profileHeaderStr, width / 2, 78);
 
       // Epithet Block (結果画面と同デザイン)
       let currentY = 100;
@@ -373,8 +377,8 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
               </div>
 
               {/* ユーザープロフィール & ニックネーム */}
-              <div className="text-xs font-black text-slate-200 mb-2">
-                {displayNickname}（{age}歳・{genderTextJa}{prefStr}）
+              <div className="text-xs sm:text-sm font-black text-slate-200 mb-2">
+                {profileHeaderStr}
               </div>
 
               {/* 獲得二つ名 (結果画面と同デザインの豪華バナー) */}
@@ -521,7 +525,7 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
               </div>
 
               <div className="text-[10px] text-slate-500 font-bold tracking-widest mt-3">
-                人間スペック診断 公式カード
+                {modeTitle} 公式カード
               </div>
             </div>
 

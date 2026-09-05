@@ -510,6 +510,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
           age={data.inputSummary.age}
           nickname={data.inputSummary.nickname}
           prefectureName={data.inputSummary.prefectureName}
+          isLoveMode={isLoveMode}
           categoryScores={data.categoryScores}
           radarAxes={isLoveMode ? loveRadarAxes : japanRadarAxes}
           epithet={currentEpithet}
