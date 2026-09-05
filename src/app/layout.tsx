@@ -17,20 +17,95 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: "cover",
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://spec-check.vercel.app";
+
 export const metadata: Metadata = {
-  title: "人間スペック診断 | 年収・学歴・恋愛市場価値を政府統計データで同世代比較",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "人間スペック診断 | 年収・学歴・恋愛市場価値を同世代比較",
+    template: "%s | 人間スペック診断",
+  },
   description: "同世代の中であなたの年収、純資産、身長、学歴、IQ、SNS影響力、恋愛婚活価値が上位何％かを政府公式統計データ（国勢調査・賃金構造基本統計）に基づき精密測定・比較査定する本格診断ツール。",
-  keywords: ["人間スペック診断", "スペック診断", "年収順位", "同世代比較", "婚活スペック", "恋愛市場価値", "恋愛スペック", "資産ランキング", "市場価値診断"],
+  keywords: [
+    "人間スペック診断",
+    "スペック診断",
+    "年収順位",
+    "同世代比較",
+    "婚活スペック",
+    "恋愛市場価値",
+    "恋愛スペック",
+    "資産ランキング",
+    "市場価値診断",
+  ],
+  authors: [{ name: "人間スペック診断運営チーム" }],
+  creator: "人間スペック診断",
+  publisher: "人間スペック診断",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+  openGraph: {
+    title: "人間スペック診断 | 年収・学歴・恋愛市場価値を同世代比較",
+    description: "同世代の中であなたの年収、純資産、身長、学歴、IQ、SNS影響力、恋愛婚活価値が上位何％かを政府公式統計データに基づき精密測定する本格診断ツール。",
+    url: siteUrl,
+    siteName: "人間スペック診断",
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "人間スペック診断 | 年収・学歴・恋愛市場価値を同世代比較",
+    description: "同世代の中であなたの年収、純資産、身長、学歴、IQ、SNS影響力、恋愛婚活価値が上位何％かを政府公式統計データに基づき精密測定する本格診断ツール。",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "人間スペック診断",
+    "alternateName": "SPEC CHECK",
+    "url": siteUrl,
+    "description": "同世代の中であなたの年収、純資産、身長、学歴、IQ、SNS影響力、恋愛婚活価値が上位何％かを政府公式統計データに基づき精密測定・比較査定する本格診断ツール。",
+    "applicationCategory": "EntertainmentApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ja",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  };
+
   return (
     <html
       lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-slate-950 text-white">
         {/* Sticky Site Header */}
         <header className="w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50 shadow-lg">

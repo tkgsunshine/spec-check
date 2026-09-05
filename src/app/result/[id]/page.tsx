@@ -376,7 +376,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                 {isLoveMode ? '恋愛市場価値' : '総合評価'} :
               </div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight">
-                {topOverallPercent <= 50 ? (
+                {topOverallPercent <= 30 ? (
                   <span className="whitespace-nowrap">
                     上位 <span className={isLoveMode ? 'gradient-text-pink text-4xl sm:text-5xl md:text-6xl font-black' : 'gradient-text-indigo text-4xl sm:text-5xl md:text-6xl font-black'}>{topOverallPercent}%</span>
                   </span>
@@ -388,7 +388,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
               </h1>
 
               {/* 全国比較併記バッジ (中央寄せ) */}
-              {nationwideTopPercent !== null && nationwideTopPercent <= 50 && (
+              {nationwideTopPercent !== null && nationwideTopPercent <= 30 && (
                 <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-bold text-slate-300 shadow-inner">
                   <span className="text-slate-400">🇯🇵 全国の同世代ベース:</span>
                   <span className="text-emerald-400 font-black">

@@ -87,8 +87,8 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
         <span className={`absolute text-base font-black ${scoreTextColor}`}>{score}</span>
       </div>
 
-      {/* Top Percent Badge (Only display for top 50% or better to avoid unnatural '上位 99.9%' labels) */}
-      {topPercent !== undefined && topPercent !== null && topPercent <= 50 ? (
+      {/* Top Percent Badge (Only display for top 30% or better to avoid unnatural '上位 99.9%' labels) */}
+      {topPercent !== undefined && topPercent !== null && topPercent <= 30 ? (
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeStyle}`}>
           上位 {topPercent}%
         </span>
