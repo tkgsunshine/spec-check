@@ -18,13 +18,11 @@ import CompanyAutocomplete from '@/components/CompanyAutocomplete';
 import AnalysisLoadingScreen from '@/components/AnalysisLoadingScreen';
 import { Sparkles, Heart, ShieldCheck, UserCheck, ArrowRight, ArrowLeft, Plus, Trash2, Check } from 'lucide-react';
 
-// 全角数字 (０-９) ➔ 半角数字 (0-9) ＆ 全角ドット/記号正規化ヘルパー
+import { sanitizeNumericInput } from '@/lib/score-engine/math-utils';
+
+// 全角数字 (０-９) ➔ 半角数字 (0-9) ＆ 先頭ゼロ自動トリム・クリーンアップヘルパー
 export function toHalfWidthDigits(str: string): string {
-  if (!str) return '';
-  return str
-    .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
-    .replace(/[．。]/g, '.')
-    .replace(/[^0-9.]/g, '');
+  return sanitizeNumericInput(str);
 }
 
 export default function HomePage() {

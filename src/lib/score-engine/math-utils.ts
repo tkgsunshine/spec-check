@@ -99,3 +99,29 @@ export function renormalizeWeights(
     appliedWeights,
   };
 }
+
+/**
+ * 先頭の不要な「0」や全角数字を自動クリーンアップ・トリムする関数
+ * (例: "0170" ➔ "170", "00" ➔ "0", "0500" ➔ "500", "" ➔ "")
+ */
+export function sanitizeNumericInput(val: string | number | null | undefined): string {
+  if (val === null || val === undefined) return '';
+  const str = String(val);
+  if (!str) return '';
+
+  // 全角数字 (０-９) ➔ 半角数字 (0-9) ＆ 全角ドット/記号正規化
+  let clean = str
+    .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
+    .replace(/[．。]/g, '.')
+    .replace(/[^0-9.]/g, '');
+
+  if (!clean) return '';
+
+  // 小数点が無い場合、先頭の連続する0を削除 (ただし"0"自体の単独入力や"0.x"は維持)
+  if (clean.length > 1 && clean.startsWith('0') && !clean.startsWith('0.')) {
+    clean = clean.replace(/^0+/, '');
+    if (clean === '' || clean.startsWith('.')) clean = '0' + clean;
+  }
+
+  return clean;
+}

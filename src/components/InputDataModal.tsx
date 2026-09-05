@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DiagnosisInputV3, Gender, MaritalStatus, FaceRating } from '@/types/spec-check';
 import { PREFECTURES, COMMON_OCCUPATION_MASTER } from '@/lib/datasets/japan-stats';
+import { sanitizeNumericInput } from '@/lib/score-engine/math-utils';
 import { X, FileText, User, Landmark, GraduationCap, Globe, Sparkles, ChevronRight, Save, RotateCcw } from 'lucide-react';
 
 interface InputDataModalProps {
@@ -16,17 +17,17 @@ export default function InputDataModal({ input }: InputDataModalProps) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // 編集用ローカルステート
+  // 編集用ローカルステート (文字列型で全消去・先頭ゼロ問題に対応)
   const [nickname, setNickname] = useState<string>(input.nickname || 'あなた');
   const [gender, setGender] = useState<Gender>(input.gender || 'MALE');
-  const [age, setAge] = useState<number>(input.age || 25);
+  const [age, setAge] = useState<string>(input.age ? String(input.age) : '25');
   const [prefectureId, setPrefectureId] = useState<number>(input.prefectureId || 13);
-  const [height, setHeight] = useState<number>(input.height || 170);
-  const [weight, setWeight] = useState<number>(input.weight || 60);
+  const [height, setHeight] = useState<string>(input.height ? String(input.height) : '170');
+  const [weight, setWeight] = useState<string>(input.weight ? String(input.weight) : '60');
   const [bodyFat, setBodyFat] = useState<string>(input.bodyFat !== null && input.bodyFat !== undefined ? String(input.bodyFat) : '');
   const [faceRating, setFaceRating] = useState<FaceRating | ''>(input.faceRating || 'AVERAGE');
   
-  const [annualIncome, setAnnualIncome] = useState<number>(input.annualIncome || 400);
+  const [annualIncome, setAnnualIncome] = useState<string>(input.annualIncome ? String(input.annualIncome) : '400');
   const [financialAssets, setFinancialAssets] = useState<string>(input.financialAssets !== null && input.financialAssets !== undefined ? String(input.financialAssets) : '0');
   const [otherAssets, setOtherAssets] = useState<string>(
     String((input.realEstateAssets || 0) + (input.carAssets || 0) + (input.watchAssets || 0) + (input.otherAssets || 0))
@@ -41,8 +42,8 @@ export default function InputDataModal({ input }: InputDataModalProps) {
   const [occupationCode, setOccupationCode] = useState<string>(input.occupationCode || '01');
   const [employmentType, setEmploymentType] = useState<string>(input.employmentType || 'REGULAR');
 
-  const [snsFollowers, setSnsFollowers] = useState<number>(
-    (input.instagramFollowers || 0) + (input.xFollowers || 0) + (input.tikTokFollowers || 0) + (input.youTubeFollowers || 0)
+  const [snsFollowers, setSnsFollowers] = useState<string>(
+    String((input.instagramFollowers || 0) + (input.xFollowers || 0) + (input.tikTokFollowers || 0) + (input.youTubeFollowers || 0))
   );
   const [travelCount, setTravelCount] = useState<string>(input.travelCount ? String(input.travelCount) : '0');
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | ''>(input.maritalStatus || 'SINGLE');
@@ -84,7 +85,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         iqScore: iqScore !== '' ? Number(iqScore) : null,
         occupationCode,
         employmentType: employmentType ? (employmentType as DiagnosisInputV3['employmentType']) : 'REGULAR',
-        instagramFollowers: snsFollowers,
+        instagramFollowers: snsFollowers !== '' ? Number(snsFollowers) : 0,
         xFollowers: 0,
         tikTokFollowers: 0,
         youTubeFollowers: 0,
@@ -198,9 +199,10 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">年齢 (歳)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={age}
-                      onChange={(e) => setAge(Number(e.target.value))}
+                      onChange={(e) => setAge(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
@@ -220,16 +222,18 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">身長 (cm) / 体重 (kg)</label>
                     <div className="flex gap-1.5">
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         value={height}
-                        onChange={(e) => setHeight(Number(e.target.value))}
+                        onChange={(e) => setHeight(sanitizeNumericInput(e.target.value))}
                         className="w-1/2 px-2.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                         placeholder="身長"
                       />
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         value={weight}
-                        onChange={(e) => setWeight(Number(e.target.value))}
+                        onChange={(e) => setWeight(sanitizeNumericInput(e.target.value))}
                         className="w-1/2 px-2.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                         placeholder="体重"
                       />
@@ -260,36 +264,40 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">額面年収 (万円)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={annualIncome}
-                      onChange={(e) => setAnnualIncome(Number(e.target.value))}
+                      onChange={(e) => setAnnualIncome(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400 font-black focus:border-emerald-500 focus:outline-none"
                     />
                   </div>
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">金融資産 [預貯金・株] (万円)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={financialAssets}
-                      onChange={(e) => setFinancialAssets(e.target.value)}
+                      onChange={(e) => setFinancialAssets(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
                     />
                   </div>
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">その他動産・不動産資産合計 (万円)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={otherAssets}
-                      onChange={(e) => setOtherAssets(e.target.value)}
+                      onChange={(e) => setOtherAssets(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
                     />
                   </div>
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">各種負債合計 [ローン・奨学金等] (万円)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={otherDebt}
-                      onChange={(e) => setOtherDebt(e.target.value)}
+                      onChange={(e) => setOtherDebt(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
                     />
                   </div>
@@ -330,9 +338,10 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">IQ (智力指標)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={iqScore}
-                      onChange={(e) => setIqScore(e.target.value)}
+                      onChange={(e) => setIqScore(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                       placeholder="空欄で自動推計"
                     />
@@ -375,18 +384,20 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">SNS総フォロワー数 (人)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={snsFollowers}
-                      onChange={(e) => setSnsFollowers(Number(e.target.value))}
+                      onChange={(e) => setSnsFollowers(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     />
                   </div>
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">海外渡航歴 (か国)</label>
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
                       value={travelCount}
-                      onChange={(e) => setTravelCount(e.target.value)}
+                      onChange={(e) => setTravelCount(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     />
                   </div>
