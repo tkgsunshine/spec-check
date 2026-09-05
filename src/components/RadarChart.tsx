@@ -14,7 +14,7 @@ interface RadarChartProps {
 export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartProps) {
   const size = 460;
   const center = size / 2;
-  const radius = 105;
+  const radius = 148;
   const count = axes.length;
 
   const getCoordinates = (value: number, index: number) => {
@@ -28,7 +28,7 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
   const getLabelCoordinates = (index: number) => {
     const angle = (Math.PI * 2 / count) * index - Math.PI / 2;
     // 上下左右でノード円と被らないよう適切な距離(r)を保つ
-    const rDist = index === 0 ? radius + 40 : index === 3 ? radius + 42 : radius + 45;
+    const rDist = index === 0 ? radius + 32 : index === 3 ? radius + 34 : radius + 38;
     const x = center + rDist * Math.cos(angle);
     const y = center + rDist * Math.sin(angle);
     return { x, y };
