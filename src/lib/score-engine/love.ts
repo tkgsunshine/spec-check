@@ -128,13 +128,13 @@ export function calculateLoveScore(params: {
         { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
       ];
     } else if (age < 30) {
-      // 20代後半: ルックス×プレ経済力
+      // 20代後半: ルックス×社会人キャリア・経済力バランス型 (CAREER 20%へ増額)
       availableMetrics = [
-        { code: 'FACE', score: faceScore, defaultWeight: 0.25 },
-        { code: 'BODY', score: bodyScore, defaultWeight: 0.25 },
+        { code: 'FACE', score: faceScore, defaultWeight: 0.20 },
+        { code: 'BODY', score: bodyScore, defaultWeight: 0.20 },
+        { code: 'CAREER', score: careerScore, defaultWeight: 0.20 },
         { code: 'INCOME', score: incomeScore, defaultWeight: 0.20 },
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.15 },
-        { code: 'CAREER', score: careerScore, defaultWeight: 0.10 },
         { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
       ];
     } else if (age < 45) {
