@@ -443,20 +443,15 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
         {/* 総評テキスト分析ブロック (300〜400文字) */}
         <div className="mt-6 p-5 md:p-6 rounded-2xl glass-surface border border-indigo-500/30 bg-slate-900/60 shadow-xl">
-          <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-                <FileText className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-100">
-                  {isLoveMode ? '恋愛スペック診断 総評' : '総合スペック診断 総評'}
-                </h3>
-              </div>
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              <FileText className="w-4 h-4" />
             </div>
-            {data.rawInput && (
-              <InputDataModal input={data.rawInput} />
-            )}
+            <div>
+              <h3 className="text-sm font-bold text-slate-100">
+                {isLoveMode ? '恋愛スペック診断 総評' : '総合スペック診断 総評'}
+              </h3>
+            </div>
           </div>
           <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-3">
             {overallEvaluationText}
@@ -517,6 +512,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
           prefectureName={data.inputSummary.prefectureName}
           categoryScores={data.categoryScores}
           radarAxes={isLoveMode ? loveRadarAxes : japanRadarAxes}
+          epithetTitle={currentEpithet?.title}
         />
       </div>
 

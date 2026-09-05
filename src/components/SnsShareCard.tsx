@@ -25,6 +25,7 @@ interface SnsShareCardProps {
     ability?: number;
   };
   radarAxes?: RadarAxis[];
+  epithetTitle?: string;
 }
 
 export default function SnsShareCard({
@@ -37,6 +38,7 @@ export default function SnsShareCard({
   prefectureName,
   categoryScores,
   radarAxes,
+  epithetTitle,
 }: SnsShareCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -61,8 +63,10 @@ export default function SnsShareCard({
     ? `【上位 ${topPercent}%】`
     : '';
 
+  const epithetShareStr = epithetTitle ? `\n二つ名：『${epithetTitle}』` : '';
+
   const shareText = `【人間スペック診断 結果】
-${displayNickname}（${age}歳・${genderTextJa}${prefStr}）
+${displayNickname}（${age}歳・${genderTextJa}${prefStr}）${epithetShareStr}
 ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
 あなたの同世代順位＆市場価値は？
 #人間スペック診断 #スペック診断 #同世代順位 #市場価値`;
@@ -139,22 +143,30 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
       // Card Header Text
       ctx.textAlign = 'center';
       ctx.fillStyle = '#818cf8';
-      ctx.font = 'bold 16px sans-serif';
-      ctx.fillText('SPEC CHECK OFFICIAL RESULT', width / 2, 60);
+      ctx.font = 'bold 15px sans-serif';
+      ctx.fillText('SPEC CHECK OFFICIAL CARD', width / 2, 50);
 
       // User Profile Header
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 20px sans-serif';
-      ctx.fillText(`${displayNickname} (${age}歳・${genderTextJa}${prefStr})`, width / 2, 100);
+      ctx.font = 'bold 19px sans-serif';
+      ctx.fillText(`${displayNickname} (${age}歳・${genderTextJa}${prefStr})`, width / 2, 85);
+
+      // Epithet (ふたつ名)
+      if (epithetTitle) {
+        ctx.fillStyle = '#fcd34d';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.fillText(`『 ${epithetTitle} 』`, width / 2, 115);
+      }
 
       // Score Display
+      const scoreY = epithetTitle ? 175 : 160;
       ctx.fillStyle = '#ffffff';
-      ctx.font = '900 68px sans-serif';
-      ctx.fillText(score.toFixed(1), width / 2, 175);
+      ctx.font = '900 64px sans-serif';
+      ctx.fillText(score.toFixed(1), width / 2, scoreY);
 
       ctx.fillStyle = '#94a3b8';
-      ctx.font = 'bold 16px sans-serif';
-      ctx.fillText('/ 100 POINT', width / 2, 205);
+      ctx.font = 'bold 15px sans-serif';
+      ctx.fillText('/ 100 POINT', width / 2, scoreY + 28);
 
       // TOP % Pill
       if (topPercent !== undefined && topPercent !== null) {
@@ -307,16 +319,23 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
               <X className="w-5 h-5" />
             </button>
 
-            {/* OGP Card Graphic Container (十分な上部余白と完全レイアウト) */}
+            {/* Card Graphic Container (十分な上部余白と完全レイアウト) */}
             <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 rounded-2xl pt-6 pb-5 px-3 border border-slate-800 shadow-2xl mb-4 text-center relative overflow-hidden shrink-0">
               <div className="text-[10px] font-black tracking-widest text-indigo-400 uppercase mb-1">
-                SPEC CHECK OFFICIAL OGP
+                SPEC CHECK OFFICIAL CARD
               </div>
 
               {/* ユーザープロフィール & ニックネーム */}
-              <div className="text-xs font-black text-slate-200 mb-2">
+              <div className="text-xs font-black text-slate-200 mb-1">
                 {displayNickname}（{age}歳・{genderTextJa}{prefStr}）
               </div>
+
+              {/* 獲得二つ名 (ふたつ名) */}
+              {epithetTitle && (
+                <div className="inline-block text-xs font-black text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-1 mb-2 max-w-[300px] mx-auto truncate shadow-sm">
+                  『 {epithetTitle} 』
+                </div>
+              )}
 
               <div className="text-3xl sm:text-4xl font-black text-white tracking-tight">
                 {score.toFixed(1)}
