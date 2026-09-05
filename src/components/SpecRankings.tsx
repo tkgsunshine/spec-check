@@ -115,6 +115,7 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput }: 
                     ? item.topPercent
                     : scoreToTopPercent(item.score);
                   const topPct = calcHighPrecisionTopPercent(rawTop);
+                  if (topPct > 50) return null;
                   return (
                     <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 whitespace-nowrap">
                       上位 {topPct}%

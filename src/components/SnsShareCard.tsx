@@ -66,7 +66,7 @@ export default function SnsShareCard({
   const modeTitle = isLoveMode ? '恋愛スペック診断' : '人間スペック診断';
   const profileHeaderStr = `${displayNickname} / ${age}歳 / ${genderTextJa}${prefStr} の${modeTitle}結果`;
 
-  const rankShareStr = (topPercent !== undefined && topPercent !== null)
+  const rankShareStr = (topPercent !== undefined && topPercent !== null && topPercent <= 50)
     ? `【上位 ${topPercent}%】`
     : '';
 
@@ -220,7 +220,7 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
       ctx.fillText('/ 100 POINT', width / 2, scoreY + 28);
 
       // TOP % Pill
-      if (topPercent !== undefined && topPercent !== null) {
+      if (topPercent !== undefined && topPercent !== null && topPercent <= 50) {
         ctx.fillStyle = 'rgba(99, 102, 241, 0.25)';
         ctx.strokeStyle = '#818cf8';
         ctx.lineWidth = 1.5;
@@ -408,7 +408,7 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
               </div>
               <div className="text-[10px] text-slate-400 font-semibold mb-2">/ 100 POINT</div>
 
-              {topPercent !== undefined && topPercent !== null && (
+              {topPercent !== undefined && topPercent !== null && topPercent <= 50 && (
                 <div className="inline-block px-3 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-xs font-black mb-3">
                   上位 {topPercent}%
                 </div>

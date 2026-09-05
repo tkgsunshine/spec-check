@@ -376,13 +376,19 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                 {isLoveMode ? '恋愛市場価値' : '総合評価'} :
               </div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight">
-                <span className="whitespace-nowrap">
-                  上位 <span className={isLoveMode ? 'gradient-text-pink text-4xl sm:text-5xl md:text-6xl font-black' : 'gradient-text-indigo text-4xl sm:text-5xl md:text-6xl font-black'}>{topOverallPercent}%</span>
-                </span>
+                {topOverallPercent <= 50 ? (
+                  <span className="whitespace-nowrap">
+                    上位 <span className={isLoveMode ? 'gradient-text-pink text-4xl sm:text-5xl md:text-6xl font-black' : 'gradient-text-indigo text-4xl sm:text-5xl md:text-6xl font-black'}>{topOverallPercent}%</span>
+                  </span>
+                ) : (
+                  <span className="whitespace-nowrap text-slate-200">
+                    同世代 <span className={isLoveMode ? 'gradient-text-pink text-3xl sm:text-4xl md:text-5xl font-black' : 'gradient-text-indigo text-3xl sm:text-4xl md:text-5xl font-black'}>標準水準</span>
+                  </span>
+                )}
               </h1>
 
               {/* 全国比較併記バッジ (中央寄せ) */}
-              {nationwideTopPercent !== null && (
+              {nationwideTopPercent !== null && nationwideTopPercent <= 50 && (
                 <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-bold text-slate-300 shadow-inner">
                   <span className="text-slate-400">🇯🇵 全国の同世代ベース:</span>
                   <span className="text-emerald-400 font-black">
