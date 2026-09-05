@@ -49,7 +49,7 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
   return (
     <div className="flex flex-col items-center justify-center p-2 w-full">
       <div className="relative w-full max-w-[460px] aspect-square flex items-center justify-center">
-        <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full">
+        <svg viewBox="-60 -35 580 530" className="w-full h-full overflow-visible">
           {/* Concentric Grid Webs */}
           {webLevels.map(level => {
             const points = Array.from({ length: count })

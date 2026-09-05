@@ -331,7 +331,7 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
 
               {/* 6-Axis Hexagon Radar Chart SVG (各軸の点数付き) */}
               <div className="w-full flex justify-center items-center my-1 overflow-visible">
-                <svg width="320" height="270" viewBox="0 0 320 270" className="overflow-visible">
+                <svg width="320" height="270" viewBox="-25 -15 370 300" className="overflow-visible">
                   {/* Grid Hexagons */}
                   {gridLevels.map((lvl, idx) => (
                     <polygon
