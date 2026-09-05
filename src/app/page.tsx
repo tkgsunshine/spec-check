@@ -540,36 +540,36 @@ export default function HomePage() {
           </div>
 
           {/* Mode Selector Tabs */}
-          <div className="max-w-md mx-auto mb-8">
-            <div className="text-center mb-2">
-              <span className="text-[11px] sm:text-xs font-extrabold text-slate-400 inline-flex items-center gap-1.5 bg-slate-900/90 px-3.5 py-1 rounded-full border border-slate-800 shadow-sm">
+          <div className="max-w-md mx-auto mb-8 relative z-20">
+            <div className="text-center mb-2.5">
+              <span className="text-[11px] sm:text-xs font-extrabold text-slate-300 inline-flex items-center gap-1.5 bg-slate-900/90 px-4 py-1.5 rounded-full border border-slate-800 shadow-md">
                 <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> タップして診断モードを切り替え
               </span>
             </div>
-            <div className="flex rounded-2xl bg-slate-950/80 p-1.5 border border-slate-800/80 shadow-2xl backdrop-blur-2xl">
+            <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-950 p-1.5 border border-slate-800 shadow-2xl relative">
               <button
                 type="button"
                 onClick={() => setActiveTab('JAPAN')}
-                className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-black text-sm transition-all duration-300 ${
+                className={`flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl font-black text-xs sm:text-sm cursor-pointer transition-all duration-300 ${
                   activeTab === 'JAPAN'
-                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/40 scale-[1.02]'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/40 ring-2 ring-indigo-400/50 scale-[1.02]'
+                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/60'
                 }`}
               >
-                <Sparkles className="w-4 h-4" />
-                総合スペック診断
+                <Sparkles className="w-4 h-4 text-indigo-300 shrink-0" />
+                <span>総合スペック診断</span>
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('LOVE')}
-                className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-black text-sm transition-all duration-300 ${
+                className={`flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl font-black text-xs sm:text-sm cursor-pointer transition-all duration-300 ${
                   activeTab === 'LOVE'
-                    ? 'bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-lg shadow-rose-500/40 scale-[1.02]'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 text-white shadow-lg shadow-rose-500/40 ring-2 ring-rose-400/50 scale-[1.02]'
+                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/60'
                 }`}
               >
-                <Heart className="w-4 h-4" />
-                恋愛スペック診断
+                <Heart className="w-4 h-4 text-rose-300 fill-rose-300 shrink-0" />
+                <span>恋愛スペック診断</span>
               </button>
             </div>
           </div>
@@ -579,7 +579,16 @@ export default function HomePage() {
       {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex items-center justify-between text-xs font-extrabold text-slate-400 mb-2">
-          <span>STEP {currentStep} OF 6</span>
+          <div className="flex items-center gap-2">
+            <span>STEP {currentStep} OF 6</span>
+            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border transition-all ${
+              activeTab === 'LOVE'
+                ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-sm'
+                : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-sm'
+            }`}>
+              {activeTab === 'LOVE' ? '❤️ 恋愛スペックモード' : '✨ 総合スペックモード'}
+            </span>
+          </div>
           <div className="flex items-center gap-3">
             <span>
               {currentStep === 1 && '基本情報'}
