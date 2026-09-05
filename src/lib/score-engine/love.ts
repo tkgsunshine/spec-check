@@ -49,13 +49,14 @@ export function calculateLoveScore(params: {
     else if (age > 44) ageLoveScore = Math.max(35, 58 - (age - 45) * 1.5);
     else ageLoveScore = 90; // 18歳未満
   } else {
-    // 男性: 18-26歳(100pt Peak), 27-30歳(96-90pt), 31-35歳(87-75pt), 36-40歳(72-56pt), 41歳以上(25pt最低保証)
-    if (age >= 18 && age <= 26) ageLoveScore = 100;
-    else if (age > 26 && age <= 30) ageLoveScore = 96 - (age - 27) * 2;
-    else if (age > 30 && age <= 35) ageLoveScore = 87 - (age - 31) * 3;
-    else if (age > 35 && age <= 40) ageLoveScore = 72 - (age - 36) * 4;
-    else if (age > 40) ageLoveScore = Math.max(25, 52 - (age - 41) * 2.5);
-    else ageLoveScore = 85; // 18歳未満
+    // 男性: 24-32歳(100pt Peak モテ黄金期), 20-23歳(85-95.5pt フレッシュ期), 18-19歳(75-80pt 学生期), 33-37歳(96-86pt 大人モテ期), 38-42歳(83-71pt), 43歳以上(30pt最低保証)
+    if (age >= 24 && age <= 32) ageLoveScore = 100;
+    else if (age >= 20 && age < 24) ageLoveScore = 85 + (age - 20) * 3.5;
+    else if (age >= 18 && age < 20) ageLoveScore = 75 + (age - 18) * 5;
+    else if (age > 32 && age <= 37) ageLoveScore = 96 - (age - 33) * 2.5;
+    else if (age > 37 && age <= 42) ageLoveScore = 83 - (age - 38) * 3;
+    else if (age > 42) ageLoveScore = Math.max(30, 68 - (age - 43) * 2.5);
+    else ageLoveScore = 70; // 18歳未満
   }
   ageLoveScore = Math.max(15, Math.min(100, Math.round(ageLoveScore * 10) / 10));
 
