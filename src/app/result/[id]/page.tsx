@@ -512,7 +512,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
           prefectureName={data.inputSummary.prefectureName}
           categoryScores={data.categoryScores}
           radarAxes={isLoveMode ? loveRadarAxes : japanRadarAxes}
-          epithetTitle={currentEpithet?.title}
+          epithet={currentEpithet}
         />
       </div>
 

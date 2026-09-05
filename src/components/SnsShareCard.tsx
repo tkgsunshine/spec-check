@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Share2, Check, Copy, ExternalLink, X, Download } from 'lucide-react';
+import { MetricScoreResult, EpithetResult } from '@/types/spec-check';
 
 interface RadarAxis {
   labelJa: string;
@@ -25,6 +26,7 @@ interface SnsShareCardProps {
     ability?: number;
   };
   radarAxes?: RadarAxis[];
+  epithet?: EpithetResult | null;
   epithetTitle?: string;
 }
 
@@ -38,6 +40,7 @@ export default function SnsShareCard({
   prefectureName,
   categoryScores,
   radarAxes,
+  epithet,
   epithetTitle,
 }: SnsShareCardProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,7 +66,24 @@ export default function SnsShareCard({
     ? `【上位 ${topPercent}%】`
     : '';
 
-  const epithetShareStr = epithetTitle ? `\n二つ名：『${epithetTitle}』` : '';
+  const displayEpithetTitle = epithet?.title || epithetTitle;
+  const displayEpithetSubtitle = epithet?.subtitle;
+
+  const getTierText = () => {
+    if (epithet && epithet.rarityBadge) {
+      const b = epithet.rarityBadge;
+      if (b.startsWith('SS')) return 'SS TIER';
+      if (b.startsWith('S ')) return 'S TIER';
+      if (b.startsWith('A ')) return 'A TIER';
+    }
+    if (score >= 85) return 'SS TIER';
+    if (score >= 75) return 'S TIER';
+    if (score >= 65) return 'A TIER';
+    if (score >= 50) return 'B TIER';
+    return 'C TIER';
+  };
+
+  const epithetShareStr = displayEpithetTitle ? `\n二つ名：『${displayEpithetTitle}』` : '';
 
   const shareText = `【人間スペック診断 結果】
 ${displayNickname}（${age}歳・${genderTextJa}${prefStr}）${epithetShareStr}
@@ -148,18 +168,45 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
 
       // User Profile Header
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 19px sans-serif';
-      ctx.fillText(`${displayNickname} (${age}歳・${genderTextJa}${prefStr})`, width / 2, 85);
+      ctx.font = 'bold 18px sans-serif';
+      ctx.fillText(`${displayNickname} (${age}歳・${genderTextJa}${prefStr})`, width / 2, 78);
 
-      // Epithet (ふたつ名)
-      if (epithetTitle) {
-        ctx.fillStyle = '#fcd34d';
-        ctx.font = 'bold 16px sans-serif';
-        ctx.fillText(`『 ${epithetTitle} 』`, width / 2, 115);
+      // Epithet Block (結果画面と同デザイン)
+      let currentY = 100;
+      if (displayEpithetTitle) {
+        const tierStr = getTierText();
+        if (tierStr) {
+          ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+          ctx.lineWidth = 1.5;
+          const tPillW = 84;
+          const tPillH = 22;
+          ctx.beginPath();
+          ctx.roundRect(width / 2 - tPillW / 2, currentY - 14, tPillW, tPillH, 11);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#fde047';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText(tierStr, width / 2, currentY + 1);
+          currentY += 28;
+        }
+
+        ctx.fillStyle = '#f472b6';
+        ctx.font = '900 19px sans-serif';
+        ctx.fillText(`『 ${displayEpithetTitle} 』`, width / 2, currentY);
+        currentY += 24;
+
+        if (displayEpithetSubtitle) {
+          ctx.fillStyle = '#cbd5e1';
+          ctx.font = '500 12px sans-serif';
+          ctx.fillText(displayEpithetSubtitle, width / 2, currentY);
+          currentY += 28;
+        }
       }
 
       // Score Display
-      const scoreY = epithetTitle ? 175 : 160;
+      const scoreY = displayEpithetTitle ? currentY + 30 : 160;
       ctx.fillStyle = '#ffffff';
       ctx.font = '900 64px sans-serif';
       ctx.fillText(score.toFixed(1), width / 2, scoreY);
@@ -174,17 +221,17 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
         ctx.strokeStyle = '#818cf8';
         ctx.lineWidth = 1.5;
         const pillW = 180;
-        const pillH = 40;
+        const pillH = 38;
         const pillX = width / 2 - pillW / 2;
-        const pillY = 222;
+        const pillY = scoreY + 45;
         ctx.beginPath();
-        ctx.roundRect(pillX, pillY, pillW, pillH, 20);
+        ctx.roundRect(pillX, pillY, pillW, pillH, 19);
         ctx.fill();
         ctx.stroke();
 
         ctx.fillStyle = '#a5b4fc';
-        ctx.font = '900 20px sans-serif';
-        ctx.fillText(`上位 ${topPercent}%`, width / 2, 249);
+        ctx.font = '900 19px sans-serif';
+        ctx.fillText(`上位 ${topPercent}%`, width / 2, pillY + 25);
       }
 
       // Draw Hexagon Radar Chart in Canvas
@@ -326,14 +373,29 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
               </div>
 
               {/* ユーザープロフィール & ニックネーム */}
-              <div className="text-xs font-black text-slate-200 mb-1">
+              <div className="text-xs font-black text-slate-200 mb-2">
                 {displayNickname}（{age}歳・{genderTextJa}{prefStr}）
               </div>
 
-              {/* 獲得二つ名 (ふたつ名) */}
-              {epithetTitle && (
-                <div className="inline-block text-xs font-black text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-1 mb-2 max-w-[300px] mx-auto truncate shadow-sm">
-                  『 {epithetTitle} 』
+              {/* 獲得二つ名 (結果画面と同デザインの豪華バナー) */}
+              {displayEpithetTitle && (
+                <div className="my-2.5 p-3 rounded-2xl bg-slate-950/80 border border-amber-500/40 backdrop-blur-md shadow-lg text-center relative overflow-hidden">
+                  {/* Tier Badge */}
+                  <div className="inline-flex items-center px-3 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-black tracking-wider uppercase mb-1 shadow-sm">
+                    <span>{getTierText()}</span>
+                  </div>
+
+                  {/* Title with Gradient Text */}
+                  <div className={`text-xs sm:text-sm font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r ${epithet?.rarityColor || 'from-pink-300 via-rose-300 to-purple-300'} drop-shadow-md py-0.5`}>
+                    『 {displayEpithetTitle} 』
+                  </div>
+
+                  {/* Subtitle */}
+                  {displayEpithetSubtitle && (
+                    <p className="text-[10px] text-slate-300 font-medium mt-0.5 leading-snug max-w-xs mx-auto">
+                      {displayEpithetSubtitle}
+                    </p>
+                  )}
                 </div>
               )}
 
