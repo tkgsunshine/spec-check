@@ -30,14 +30,17 @@ export function toHalfWidthDigits(str: string): string {
 export default function HomePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'JAPAN' | 'LOVE'>('JAPAN');
-  const [currentStep, setCurrentStep] = useState<number>(() => {
+  const [currentStep, setCurrentStep] = useState<number>(1);
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const stepParam = Number(params.get('step'));
-      if (stepParam >= 1 && stepParam <= 6) return stepParam;
+      if (stepParam >= 1 && stepParam <= 6) {
+        setCurrentStep(stepParam);
+      }
     }
-    return 1;
-  });
+  }, []);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
