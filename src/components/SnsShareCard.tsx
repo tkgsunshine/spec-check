@@ -463,39 +463,50 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
               </div>
             </div>
 
-            {/* Action & Share Buttons */}
+            {/* Action & Share Buttons (2x2 Layout with Official Icons) */}
             <div className="space-y-2.5 shrink-0">
-              {/* 画像で保存 (ダウンロード) ボタン */}
-              <button
-                onClick={downloadCardImage}
-                disabled={downloading}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-indigo-500/20 active:scale-[0.98] transition-all"
-              >
-                <Download className="w-4 h-4" />
-                {downloading ? 'カード画像を生成中...' : '診断カード画像として保存'}
-              </button>
+              {/* 上段: 画像で保存 & リンクをコピー */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  onClick={downloadCardImage}
+                  disabled={downloading}
+                  className="py-3 px-2 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-white font-bold text-xs flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
+                >
+                  <Download className="w-3.5 h-3.5 text-slate-300" />
+                  <span>{downloading ? '保存中...' : '画像で保存'}</span>
+                </button>
 
-              <button
-                onClick={shareX}
-                className="w-full py-3 rounded-xl bg-black hover:bg-slate-900 border border-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
-              >
-                <ExternalLink className="w-4 h-4 text-sky-400" /> X (旧Twitter) でシェア
-              </button>
+                <button
+                  onClick={copyLink}
+                  className="py-3 px-2 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700/80 text-white font-bold text-xs flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-300" />}
+                  <span>{copied ? 'コピー完了' : 'リンクをコピー'}</span>
+                </button>
+              </div>
 
-              <button
-                onClick={shareLine}
-                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
-              >
-                <ExternalLink className="w-4 h-4" /> LINE でシェア
-              </button>
+              {/* 下段: Xでシェア & LINEでシェア (公式ロゴSVG) */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  onClick={shareX}
+                  className="py-3 px-2 rounded-full bg-black hover:bg-slate-900 border border-slate-700 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                  <span>X でシェア</span>
+                </button>
 
-              <button
-                onClick={copyLink}
-                className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
-              >
-                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                {copied ? 'URLをコピーしました！' : '共有URLをコピー'}
-              </button>
+                <button
+                  onClick={shareLine}
+                  className="py-3 px-2 rounded-full bg-[#06C755] hover:bg-[#05b34c] text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-[#06C755]/20 active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+                    <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.412-.105-.531-.283l-2.003-2.909v2.532c0 .344-.282.629-.628.629-.346 0-.628-.285-.628-.629V8.108c0-.345.282-.63.628-.63.208 0 .408.104.529.281l2.004 2.91V8.108c0-.345.282-.63.628-.63.348 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.628.629-.346 0-.628-.285-.628-.629V8.108c0-.345.282-.63.628-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+                  </svg>
+                  <span>LINE でシェア</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
