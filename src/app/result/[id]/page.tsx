@@ -346,12 +346,15 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
       <section className="glass-surface glass-surface-glow rounded-3xl p-6 md:p-10 mb-8 border border-slate-800">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex-1">
-            {/* 上部小バッジ (左寄せ) */}
-            <div className="text-left mb-3">
+            {/* 上部小バッジ (左寄せ) ＆ 入力データを見る */}
+            <div className="flex items-center justify-between gap-2 flex-wrap mb-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-semibold">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 {data.inputSummary.nickname || 'あなた'} {data.inputSummary.age}歳 {genderTextJa} ({data.inputSummary.prefectureName}) 査定結果
               </div>
+              {data.rawInput && (
+                <InputDataModal input={data.rawInput} />
+              )}
             </div>
 
             {/* タカシ 26歳男性（東京都） 恋愛スペック診断結果 (左寄せ) */}
@@ -448,15 +451,20 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
         {/* 総評テキスト分析ブロック (300〜400文字) */}
         <div className="mt-6 p-5 md:p-6 rounded-2xl glass-surface border border-indigo-500/30 bg-slate-900/60 shadow-xl">
-          <div className="flex items-center gap-2.5 mb-3">
-            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-              <FileText className="w-4 h-4" />
+          <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                <FileText className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-100">
+                  {isLoveMode ? '恋愛スペック診断 総評' : '総合スペック診断 総評'}
+                </h3>
+              </div>
             </div>
-            <div>
-              <h3 className="text-sm font-bold text-slate-100">
-                {isLoveMode ? '恋愛スペック診断 総評' : '総合スペック診断 総評'}
-              </h3>
-            </div>
+            {data.rawInput && (
+              <InputDataModal input={data.rawInput} />
+            )}
           </div>
           <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-3">
             {overallEvaluationText}
