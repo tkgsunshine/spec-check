@@ -289,10 +289,10 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
         </div>
 
         {/* タブ切り替えボタン */}
-        <div className="glass-surface p-1.5 rounded-full inline-flex border border-slate-800 shadow-2xl relative">
+        <div className="glass-surface p-1.5 rounded-full inline-flex gap-2.5 sm:gap-3.5 border border-slate-800 shadow-2xl relative bg-slate-950/80">
           <button
             onClick={() => setActiveTab('JAPAN')}
-            className={`flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all ${
+            className={`flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
               !isLoveMode
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                 : 'text-slate-300 hover:text-white ring-1 ring-indigo-500/50'
@@ -302,10 +302,10 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
           </button>
           <button
             onClick={() => setActiveTab('LOVE')}
-            className={`flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all ${
+            className={`flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
               isLoveMode
                 ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30'
-                : 'text-slate-300 hover:text-white ring-2 ring-rose-500/50 animate-pulse'
+                : 'text-slate-300 hover:text-white ring-1 ring-rose-500/50'
             }`}
           >
             <Heart className="w-4 h-4 text-rose-400 fill-rose-400" /> 恋愛スペック診断
@@ -483,10 +483,10 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             </span>
           </div>
 
-          <div className="glass-surface p-1.5 rounded-full inline-flex gap-1.5 sm:gap-2 border border-slate-800 shadow-2xl relative bg-slate-950/80">
+          <div className="glass-surface p-1.5 rounded-full inline-flex gap-2.5 sm:gap-3.5 border border-slate-800 shadow-2xl relative bg-slate-950/80">
             <button
               onClick={() => setActiveTab('JAPAN')}
-              className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all ${
+              className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
                 !isLoveMode
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -496,7 +496,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             </button>
             <button
               onClick={() => setActiveTab('LOVE')}
-              className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all ${
+              className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
                 isLoveMode
                   ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
