@@ -427,7 +427,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
       </section>
 
       {/* ④ Detailed Spec Ranking Table */}
-      <SpecRankings metrics={data.metrics} />
+      <SpecRankings metrics={data.metrics} isLoveMode={isLoveMode} />
 
       {/* ⑤ Mode Switcher Tabs & SNS Share Button */}
       <div className="mt-10">

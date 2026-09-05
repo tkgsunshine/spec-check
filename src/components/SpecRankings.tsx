@@ -6,9 +6,18 @@ import { Trophy, AlertCircle, TrendingUp } from 'lucide-react';
 
 interface SpecRankingsProps {
   metrics: MetricScoreResult[];
+  isLoveMode?: boolean;
 }
 
-export default function SpecRankings({ metrics }: SpecRankingsProps) {
+export default function SpecRankings({ metrics, isLoveMode = false }: SpecRankingsProps) {
+  // 恋愛関連項目の判定
+  const isRomanceMetric = (m: MetricScoreResult) => {
+    if (m.metricCode === 'LOVE_AGE' || m.metricCode === 'FAMILY') return true;
+    if (m.category === '恋愛' || m.category === '恋愛市場') return true;
+    if (m.metricName.includes('恋愛') || m.metricName.includes('婚姻') || m.metricName.includes('家庭')) return true;
+    return false;
+  };
+
   // ユーザーが明示的に自分で入力した確定指標のみを対象に強み・伸びしろをランキング算出
   const validMetrics = metrics.filter(m => {
     // 1. isOptionalUnentered (未入力のオプション項目) フラグのあるものは完全除外
@@ -22,7 +31,12 @@ export default function SpecRankings({ metrics }: SpecRankingsProps) {
     const rawStr = String(m.rawValue);
     if (rawStr.startsWith('未入力') || rawStr.startsWith('未選択')) return false;
 
-    // 3. 念のためのテキスト補完除外
+    // 3. 総合スペック診断モード(isLoveMode = false)の場合、恋愛関連項目を完全除外
+    if (!isLoveMode && isRomanceMetric(m)) {
+      return false;
+    }
+
+    // 4. 念のためのテキスト補完除外
     if (m.metricCode === 'BODY_FAT' && (rawStr.includes('未入力') || rawStr.includes('重み再正規化'))) return false;
     if (m.metricCode === 'IQ' && (rawStr.includes('学歴推計') || rawStr.includes('自動推計'))) return false;
     if (m.metricCode === 'SNS' && (rawStr.includes('未運用') || rawStr.includes('なし'))) return false;
