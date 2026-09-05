@@ -349,7 +349,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             {/* メイン見出し ＆ 入力データを見る */}
             <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
               <h2 className="text-white text-base sm:text-lg md:text-xl font-black tracking-wide leading-snug">
-                <span className="inline-block mr-1.5">{data.inputSummary.nickname || 'あなた'} {data.inputSummary.age}歳{genderTextJa}（{data.inputSummary.prefectureName}）</span>
+                <span className="inline-block mr-1.5">{data.inputSummary.nickname || 'あなた'} / {data.inputSummary.age}歳 / {genderTextJa} / {data.inputSummary.prefectureName} の</span>
                 <span className="inline-block">{isLoveMode ? '恋愛スペック診断結果' : '人間スペック診断結果'}</span>
               </h2>
               {data.rawInput && (
