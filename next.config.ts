@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   compress: true,
   reactStrictMode: true,
+  devIndicators: false,
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,

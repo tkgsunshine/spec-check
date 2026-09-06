@@ -153,10 +153,10 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
       </button>
 
-      {/* モーダルオーバーレイ */}
+      {/* モーダルオーバーレイ (完全不透明バックドロップで背後の文字透過・重なりバグを完全防止) */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-2xl max-h-[90vh] bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-slate-950/98 backdrop-blur-xl animate-fadeIn">
+          <div className="relative w-full max-w-2xl max-h-[92vh] bg-slate-900 border border-slate-700 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col">
             {/* モーダルヘッダー */}
             <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60 shrink-0">
               <div className="flex items-center gap-2.5">
@@ -186,7 +186,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
             )}
 
             {/* モーダルコンテンツ (インラインフォームスクロール) */}
-            <div className="p-5 sm:p-6 overflow-y-auto space-y-6 custom-scrollbar text-xs">
+            <div className="p-5 sm:p-6 overflow-y-auto space-y-6 custom-scrollbar text-xs bg-slate-900">
               {/* 基本情報 */}
               <div className="space-y-3">
                 <h4 className="text-xs font-black text-indigo-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">

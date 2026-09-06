@@ -492,7 +492,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-6 md:py-10">
+    <main className="max-w-3xl mx-auto px-4 pt-6 pb-32 md:py-10">
       {/* 🚀 Dedicated Full-Screen High-Tech AI Analysis Loading Screen */}
       {loading && (
         <AnalysisLoadingScreen
@@ -1409,7 +1409,7 @@ export default function HomePage() {
         )}
 
         {/* Step Navigation Controls */}
-        <div className="flex items-center justify-between border-t border-slate-800 pt-6 mt-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800 pt-6 mt-6 pb-6">
           {currentStep > 1 ? (
             <button
               type="button"
@@ -1417,19 +1417,19 @@ export default function HomePage() {
                 setErrorMsg('');
                 changeStep(currentStep - 1);
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-all cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" /> 戻る
             </button>
           ) : (
-            <div />
+            <div className="hidden sm:block" />
           )}
 
           {currentStep < 6 ? (
             <button
               type="button"
               onClick={handleNextStep}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all cursor-pointer"
             >
               次へ <ArrowRight className="w-4 h-4" />
             </button>
@@ -1438,10 +1438,10 @@ export default function HomePage() {
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-violet-600 to-rose-600 text-white font-black text-sm shadow-xl shadow-indigo-600/30 hover:scale-[1.02] transition-all disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-violet-600 to-rose-600 text-white font-black text-sm sm:text-base shadow-xl shadow-indigo-600/40 hover:scale-[1.02] transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? '解析中...' : 'スペック診断を実行する'}
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5" />
             </button>
           )}
         </div>
