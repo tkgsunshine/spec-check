@@ -400,14 +400,21 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
       {/* ② Radar Chart Visualization */}
       <section className="glass-surface rounded-3xl p-6 md:p-8 mb-8 border border-slate-800">
-        <div className="text-center mb-6">
-          <h2 className="text-sm xs:text-base sm:text-lg md:text-xl font-black text-slate-100 flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap tracking-tight">
-            {isLoveMode ? <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400 fill-rose-400 shrink-0" /> : <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 shrink-0" />}
-            <span>全6カテゴリ 多角比較バランス分析</span>
-          </h2>
-          <p className="text-[10px] font-extrabold tracking-widest text-slate-500 uppercase mt-1">
-            6-AXIS SPEC RADAR CHART ({data.inputSummary.prefectureName})
-          </p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+          <div className="text-center sm:text-left">
+            <h2 className="text-sm xs:text-base sm:text-lg md:text-xl font-black text-slate-100 flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 whitespace-nowrap tracking-tight">
+              {isLoveMode ? <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400 fill-rose-400 shrink-0" /> : <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 shrink-0" />}
+              <span>全6カテゴリ 多角比較バランス分析</span>
+            </h2>
+            <p className="text-[10px] font-extrabold tracking-widest text-slate-500 uppercase mt-1">
+              6-AXIS SPEC RADAR CHART ({data.inputSummary.prefectureName})
+            </p>
+          </div>
+          {data.rawInput && (
+            <div className="shrink-0">
+              <InputDataModal input={data.rawInput} />
+            </div>
+          )}
         </div>
 
         <RadarChart axes={isLoveMode ? loveRadarAxes : japanRadarAxes} colorTheme={isLoveMode ? 'rose' : 'violet'} />
