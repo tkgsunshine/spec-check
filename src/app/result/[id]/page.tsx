@@ -272,7 +272,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      {/* 戻るボタン ＆ 入力データを見る */}
+      {/* 戻るボタン */}
       <div className="mb-6 flex items-center justify-between gap-3 flex-wrap">
         <Link
           href="/"
@@ -280,10 +280,6 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
         >
           <ArrowLeft className="w-4 h-4" /> 再診断・入力画面へ
         </Link>
-
-        {data.rawInput && (
-          <InputDataModal input={data.rawInput} />
-        )}
       </div>
 
       {/* モード切替タブ ＆ アニメーションテキスト誘導 */}
@@ -359,15 +355,12 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
       <section className="glass-surface glass-surface-glow rounded-3xl p-6 md:p-10 mb-8 border border-slate-800">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex-1">
-            {/* メイン見出し ＆ 入力データを見る */}
-            <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+            {/* メイン見出し */}
+            <div className="mb-4">
               <h2 className="text-white text-base sm:text-lg md:text-xl font-black tracking-wide leading-snug">
                 <span className="inline-block mr-1.5">{data.inputSummary.nickname || 'あなた'} / {data.inputSummary.age}歳 / {genderTextJa} / {data.inputSummary.prefectureName} の</span>
                 <span className="inline-block">{isLoveMode ? '恋愛スペック診断結果' : '人間スペック診断結果'}</span>
               </h2>
-              {data.rawInput && (
-                <InputDataModal input={data.rawInput} />
-              )}
             </div>
 
             {/* 恋愛市場価値： 上位 XX% (中央寄せ - 常時上位%表示) */}
