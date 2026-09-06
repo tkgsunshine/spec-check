@@ -36,7 +36,7 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.35, rootMargin: '0px 0px -80px 0px' }
     );
 
     observer.observe(element);
