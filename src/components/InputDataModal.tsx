@@ -221,11 +221,11 @@ export default function InputDataModal({ input }: InputDataModalProps) {
           onClick={(e) => {
             if (e.target === e.currentTarget) setIsOpen(false);
           }}
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950/95 animate-fadeIn overflow-hidden touch-manipulation"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-0 sm:p-4 md:p-6 bg-slate-950/95 animate-fadeIn overflow-hidden touch-manipulation"
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-5xl md:max-w-6xl max-h-[94vh] sm:max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl sm:rounded-3xl shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col z-[100000]"
+            className="relative w-full h-[100dvh] sm:h-auto max-w-5xl md:max-w-6xl max-h-[100dvh] sm:max-h-[90vh] bg-slate-900 border-0 sm:border sm:border-slate-700 rounded-none sm:rounded-3xl shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col z-[100000]"
           >
             {/* モーダルヘッダー */}
             <div className="px-5 sm:px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 shrink-0">
@@ -262,7 +262,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
             )}
 
             {/* モーダルコンテンツ (大型グリッド表示) */}
-            <div className="p-5 sm:p-7 overflow-y-auto touch-pan-y overscroll-contain space-y-7 custom-scrollbar text-xs bg-slate-900">
+            <div className="p-4 sm:p-7 flex-1 min-h-0 overflow-y-auto touch-pan-y overscroll-contain space-y-5 sm:space-y-7 custom-scrollbar text-xs bg-slate-900">
               {/* 基本情報・身体データ */}
               <div className="space-y-3 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
                 <h4 className="text-xs font-black text-indigo-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2.5">
