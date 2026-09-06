@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { DiagnosisInputV3, Gender, MaritalStatus, FaceRating } from '@/types/spec-check';
 import {
@@ -24,8 +25,13 @@ interface InputDataModalProps {
 export default function InputDataModal({ input }: InputDataModalProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 編集用ローカルステート (全項目を診断フォーム画面 src/app/page.tsx と100%一致化)
   const [nickname, setNickname] = useState<string>(input.nickname || 'あなた');
@@ -209,10 +215,18 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
       </button>
 
-      {/* モーダルオーバーレイ (背景の結果画面を完全に遮蔽して消去＆画面いっぱいの大型モーダル) */}
-      {isOpen && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950 animate-fadeIn overflow-hidden">
-          <div className="relative w-full max-w-5xl md:max-w-6xl max-h-[94vh] sm:max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl sm:rounded-3xl shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col z-[100000]">
+      {/* モーダルオーバーレイ (React Portalでdocument.body直下に着脱レンダリングし、Safariのbackdrop-filter/transformトラップを完全回避) */}
+      {isOpen && mounted && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsOpen(false);
+          }}
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950/95 animate-fadeIn overflow-hidden touch-manipulation"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-5xl md:max-w-6xl max-h-[94vh] sm:max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl sm:rounded-3xl shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col z-[100000]"
+          >
             {/* モーダルヘッダー */}
             <div className="px-5 sm:px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 shrink-0">
               <div className="flex items-center gap-3">
@@ -734,7 +748,8 @@ export default function InputDataModal({ input }: InputDataModalProps) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
