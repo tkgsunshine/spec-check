@@ -113,7 +113,8 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput }: 
                 {(() => {
                   const rawTop = (item.topPercent !== null && item.topPercent !== undefined && item.topPercent > 0)
                     ? item.topPercent
-                    : scoreToTopPercent(item.score);
+                    : (item.hasOfficialTopPercent ? scoreToTopPercent(item.score) : null);
+                  if (rawTop === null || rawTop === undefined) return null;
                   const topPct = calcHighPrecisionTopPercent(rawTop);
                   if (topPct > 50) return null;
                   return (
