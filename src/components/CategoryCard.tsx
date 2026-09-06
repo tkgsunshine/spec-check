@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface CategoryCardProps {
   labelJa: string;
@@ -11,9 +11,32 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ labelJa, labelEn, score, topPercent, colorTheme }: CategoryCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
   const [displayScore, setDisplayScore] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
+    const element = cardRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+  useEffect(() => {
+    if (!hasAnimated) return;
+
     let startTimestamp: number | null = null;
     const duration = 1200; // 1.2s count up animation
 
@@ -30,7 +53,7 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
     };
 
     window.requestAnimationFrame(step);
-  }, [score]);
+  }, [score, hasAnimated]);
 
   const radius = 24;
   const circumference = 2 * Math.PI * radius;
@@ -77,7 +100,7 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
     : 'hover:border-indigo-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.25)]';
 
   return (
-    <div className={`glass-surface rounded-2xl p-4 flex flex-col items-center justify-between text-center relative overflow-hidden group transition-all duration-300 transform hover:-translate-y-1 ${borderHoverStyle}`}>
+    <div ref={cardRef} className={`glass-surface rounded-2xl p-4 flex flex-col items-center justify-between text-center relative overflow-hidden group transition-all duration-300 transform hover:-translate-y-1 ${borderHoverStyle}`}>
       <div className="flex flex-col items-center mb-2">
         <span className="text-xs font-black text-slate-100 group-hover:text-white transition-colors">{labelJa}</span>
         <span className="text-[9px] font-extrabold tracking-widest text-slate-500 uppercase">{labelEn}</span>

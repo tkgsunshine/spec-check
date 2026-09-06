@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface RadarAxis {
   labelJa: string;
@@ -14,20 +14,42 @@ interface RadarChartProps {
 }
 
 export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [animatedScores, setAnimatedScores] = useState<number[]>(axes.map(() => 0));
+  const [hasAnimated, setHasAnimated] = useState(false);
+
   const size = 460;
   const center = size / 2;
   const radius = 148;
   const count = axes.length;
 
-  const [animatedScores, setAnimatedScores] = useState<number[]>(axes.map(() => 0));
-
   useEffect(() => {
-    // コンポーネントマウント時・スコア変更時に中心から滑らかにアニメーション伸長
-    const timer = setTimeout(() => {
+    // 画面スクロールに合わせて交差（ビューポート進入）したタイミングで中心から拡張スタート
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            setAnimatedScores(axes.map(a => a.score));
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [axes, hasAnimated]);
+
+  // axes が更新された場合（タブ切り替え・データ修正等）
+  useEffect(() => {
+    if (hasAnimated) {
       setAnimatedScores(axes.map(a => a.score));
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [axes]);
+    }
+  }, [axes, hasAnimated]);
 
   const getCoordinates = (value: number, index: number) => {
     const angle = (Math.PI * 2 / count) * index - Math.PI / 2;
@@ -56,10 +78,10 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
     .join(' ');
 
   const strokeColor = colorTheme === 'rose' ? '#f43f5e' : '#8b5cf6';
-  const fillColor = colorTheme === 'rose' ? 'rgba(244, 63, 94, 0.32)' : 'rgba(139, 92, 246, 0.32)';
+  const fillColor = colorTheme === 'rose' ? 'rgba(244, 63, 94, 0.28)' : 'rgba(139, 92, 246, 0.28)';
 
   return (
-    <div className="flex flex-col items-center justify-center p-2 w-full">
+    <div ref={containerRef} className="flex flex-col items-center justify-center p-2 w-full">
       <div className="relative w-full max-w-[460px] aspect-square flex items-center justify-center">
         <svg viewBox="-60 -35 580 530" className="w-full h-full overflow-visible">
           {/* Concentric Grid Webs */}
@@ -97,39 +119,29 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
             );
           })}
 
-          {/* Score Polygon Fill & Stroke (中心からの拡張アニメーション) */}
+          {/* Score Polygon Fill & Stroke (画面スクロール交差時に中心から美しくアニメーション伸長) */}
           <polygon
             points={userPolygonPoints}
             fill={fillColor}
             stroke={strokeColor}
             strokeWidth="3"
-            className="transition-all duration-1000 ease-out filter drop-shadow-[0_0_12px_rgba(139,92,246,0.5)]"
+            className="transition-all duration-1000 ease-out"
           />
 
-          {/* Score Nodes with Pulsing Glow Animation */}
+          {/* Score Nodes (洗練されたクリーンな元デザイン) */}
           {animatedScores.map((scoreVal, i) => {
             const { x, y } = getCoordinates(scoreVal, i);
             return (
-              <g key={i} className="transition-all duration-1000 ease-out">
-                {/* 脈動する背後のグローリング */}
-                <circle
-                  cx={x}
-                  cy={y}
-                  r="9"
-                  fill={strokeColor}
-                  className="opacity-40 animate-ping"
-                />
-                {/* メインノード */}
-                <circle
-                  cx={x}
-                  cy={y}
-                  r="6"
-                  fill={strokeColor}
-                  stroke="#ffffff"
-                  strokeWidth="2.5"
-                  className="filter drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] cursor-pointer hover:scale-125 transition-transform"
-                />
-              </g>
+              <circle
+                key={i}
+                cx={x}
+                cy={y}
+                r="5"
+                fill={strokeColor}
+                stroke="#ffffff"
+                strokeWidth="2"
+                className="transition-all duration-1000 ease-out"
+              />
             );
           })}
 
