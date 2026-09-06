@@ -408,8 +408,27 @@ export default function HomePage() {
       setCurrentStep(4);
       return;
     }
+    if (!industryCode) {
+      setErrorMsg('業種を選択してください。');
+      setLoading(false);
+      setCurrentStep(4);
+      return;
+    }
+    if (!occupationCode) {
+      setErrorMsg('職種を選択してください。');
+      setLoading(false);
+      setCurrentStep(4);
+      return;
+    }
     if (!employmentType) {
       setErrorMsg('雇用形態を選択してください。');
+      setLoading(false);
+      setCurrentStep(4);
+      return;
+    }
+    const currentPositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || []) : [];
+    if (currentPositions.length > 0 && !positionCode) {
+      setErrorMsg('役職を選択してください。');
       setLoading(false);
       setCurrentStep(4);
       return;
@@ -1090,14 +1109,14 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-4">
               <div>
                 <label className="block text-xs font-semibold text-indigo-300 mb-2">
-                  1. 業種を選択
+                  1. 業種を選択 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
                 </label>
                 <select
                   value={industryCode}
                   onChange={e => handleIndustryChange(e.target.value)}
                   className="w-full bg-slate-900 border border-indigo-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-400"
                 >
-                  <option value="">選択してください</option>
+                  <option value="">選択してください ※必須</option>
                   {INDUSTRY_MASTER.map(ind => (
                     <option key={ind.id} value={ind.id}>
                       {ind.name}
@@ -1108,14 +1127,14 @@ export default function HomePage() {
 
               <div>
                 <label className="block text-xs font-semibold text-indigo-300 mb-2">
-                  2. 職種を選択
+                  2. 職種を選択 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
                 </label>
                 <select
                   value={occupationCode}
                   onChange={e => setOccupationCode(e.target.value)}
                   className="w-full bg-slate-900 border border-indigo-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-400"
                 >
-                  <option value="">{industryCode ? '選択してください' : '業種を先に選択してください'}</option>
+                  <option value="">{industryCode ? '選択してください ※必須' : '業種を先に選択してください ※必須'}</option>
                   {availableOccupations.map(occ => (
                     <option key={occ.id} value={occ.id}>
                       {occ.name}
@@ -1148,14 +1167,14 @@ export default function HomePage() {
               {availablePositions.length > 0 && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-2">
-                    役職
+                    役職 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
                   </label>
                   <select
                     value={positionCode}
                     onChange={e => setPositionCode(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
                   >
-                    <option value="">{employmentType ? '選択してください' : '雇用形態を先に選択してください'}</option>
+                    <option value="">{employmentType ? '選択してください ※必須' : '雇用形態を先に選択してください ※必須'}</option>
                     {availablePositions.map(p => (
                       <option key={p.code} value={p.code}>
                         {p.name}
