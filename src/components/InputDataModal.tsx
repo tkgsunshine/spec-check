@@ -77,14 +77,11 @@ export default function InputDataModal({ input }: InputDataModalProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
     } else {
       document.body.style.overflow = '';
-      document.body.style.touchAction = '';
     }
     return () => {
       document.body.style.overflow = '';
-      document.body.style.touchAction = '';
     };
   }, [isOpen]);
 
@@ -251,7 +248,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
             )}
 
             {/* モーダルコンテンツ (大型グリッド表示) */}
-            <div className="p-5 sm:p-7 overflow-y-auto overscroll-contain space-y-7 custom-scrollbar text-xs bg-slate-900">
+            <div className="p-5 sm:p-7 overflow-y-auto touch-pan-y overscroll-contain space-y-7 custom-scrollbar text-xs bg-slate-900">
               {/* 基本情報・身体データ */}
               <div className="space-y-3 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
                 <h4 className="text-xs font-black text-indigo-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2.5">
