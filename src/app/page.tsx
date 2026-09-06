@@ -574,12 +574,13 @@ export default function HomePage() {
         </>
       )}
 
-      {/* Progress Bar */}
+      {/* Progress Bar Header & Controls (Mobile responsive layout) */}
       <div className="mb-8">
-        <div className="flex items-center justify-between text-xs font-extrabold text-slate-400 mb-2">
-          <div className="flex items-center gap-2">
-            <span>STEP {currentStep} OF 6</span>
-            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border transition-all ${
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs font-extrabold text-slate-400 mb-3">
+          {/* 左側: ステップ番号 & モードバッジ */}
+          <div className="flex items-center gap-2 flex-wrap min-w-0">
+            <span className="whitespace-nowrap text-slate-300 font-bold">STEP {currentStep} OF 6</span>
+            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border whitespace-nowrap shrink-0 transition-all ${
               activeTab === 'LOVE'
                 ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-sm'
                 : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-sm'
@@ -587,8 +588,10 @@ export default function HomePage() {
               {activeTab === 'LOVE' ? '❤️ 恋愛スペックモード' : '✨ 総合スペックモード'}
             </span>
           </div>
-          <div className="flex items-center gap-3">
-            <span>
+
+          {/* 右側: ステップ名 & リセットボタン */}
+          <div className="flex items-center justify-between sm:justify-end gap-3 min-w-0">
+            <span className="text-slate-200 font-bold text-xs sm:text-sm truncate">
               {currentStep === 1 && '基本情報'}
               {currentStep === 2 && '身体・容姿'}
               {currentStep === 3 && '年収・純資産'}
@@ -599,13 +602,13 @@ export default function HomePage() {
             <button
               type="button"
               onClick={handleResetForm}
-              className="text-[10px] text-slate-500 hover:text-rose-400 border border-slate-800 hover:border-rose-500/50 rounded-lg px-2 py-0.5 transition-all"
+              className="text-[10px] text-slate-400 hover:text-rose-400 border border-slate-800 hover:border-rose-500/50 rounded-lg px-2.5 py-1 transition-all whitespace-nowrap shrink-0 cursor-pointer"
             >
               リセット
             </button>
           </div>
         </div>
-        <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+        <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800 shadow-inner">
           <div
             className="h-full bg-gradient-to-r from-indigo-500 via-violet-500 to-rose-500 transition-all duration-300"
             style={{ width: `${(currentStep / 6) * 100}%` }}
