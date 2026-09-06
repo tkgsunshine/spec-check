@@ -415,14 +415,21 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
       {/* ③ Category Scores Grid & Overall Evaluation Summary */}
       <section className="glass-surface rounded-3xl p-6 md:p-8 mb-8 border border-slate-800">
-        <div className="text-center mb-6">
-          <h2 className="text-lg md:text-xl font-black text-slate-100 flex items-center justify-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            同世代・政府統計データに基づくカテゴリ別比較スコア
-          </h2>
-          <p className="text-[10px] font-extrabold tracking-widest text-slate-500 uppercase mt-0.5">
-            CATEGORY SCORES
-          </p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+          <div className="text-center sm:text-left">
+            <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-100 flex items-center justify-center sm:justify-start gap-2">
+              <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+              同世代・政府統計データに基づくカテゴリ別比較スコア
+            </h2>
+            <p className="text-[10px] font-extrabold tracking-widest text-slate-500 uppercase mt-0.5">
+              CATEGORY SCORES
+            </p>
+          </div>
+          {data.rawInput && (
+            <div className="shrink-0">
+              <InputDataModal input={data.rawInput} />
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
