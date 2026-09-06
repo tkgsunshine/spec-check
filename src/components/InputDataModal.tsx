@@ -9,6 +9,7 @@ import {
   INDUSTRY_MASTER,
   POSITION_MASTER_BY_EMPLOYMENT,
   MBTI_MASTER,
+  SNS_FOLLOWER_BRACKETS,
   getOccupationsByIndustryId,
 } from '@/lib/datasets/japan-stats';
 import { sanitizeNumericInput } from '@/lib/score-engine/math-utils';
@@ -26,7 +27,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // 編集用ローカルステート (文字列型で全消去・先頭ゼロ問題に対応)
+  // 編集用ローカルステート (全項目を診断フォーム画面 src/app/page.tsx と100%一致化)
   const [nickname, setNickname] = useState<string>(input.nickname || 'あなた');
   const [gender, setGender] = useState<Gender>(input.gender || 'MALE');
   const [age, setAge] = useState<string>(input.age ? String(input.age) : '25');
@@ -36,15 +37,20 @@ export default function InputDataModal({ input }: InputDataModalProps) {
   const [bodyFat, setBodyFat] = useState<string>(input.bodyFat !== null && input.bodyFat !== undefined ? String(input.bodyFat) : '');
   const [faceRating, setFaceRating] = useState<FaceRating | ''>(input.faceRating || '');
   
+  // 年収・資産 (個別4項目)
   const [annualIncome, setAnnualIncome] = useState<string>(input.annualIncome ? String(input.annualIncome) : '400');
   const [financialAssets, setFinancialAssets] = useState<string>(input.financialAssets !== null && input.financialAssets !== undefined ? String(input.financialAssets) : '0');
-  const [otherAssets, setOtherAssets] = useState<string>(
-    String((input.realEstateAssets || 0) + (input.carAssets || 0) + (input.watchAssets || 0) + (input.otherAssets || 0))
-  );
-  const [otherDebt, setOtherDebt] = useState<string>(
-    String((input.mortgageDebt || 0) + (input.carDebt || 0) + (input.scholarshipDebt || 0) + (input.otherDebt || 0))
-  );
+  const [realEstateAssets, setRealEstateAssets] = useState<string>(input.realEstateAssets !== null && input.realEstateAssets !== undefined ? String(input.realEstateAssets) : '0');
+  const [carAssets, setCarAssets] = useState<string>(input.carAssets !== null && input.carAssets !== undefined ? String(input.carAssets) : '0');
+  const [watchAssets, setWatchAssets] = useState<string>(input.watchAssets !== null && input.watchAssets !== undefined ? String(input.watchAssets) : '0');
 
+  // 負債 (個別4項目)
+  const [mortgageDebt, setMortgageDebt] = useState<string>(input.mortgageDebt !== null && input.mortgageDebt !== undefined ? String(input.mortgageDebt) : '0');
+  const [carDebt, setCarDebt] = useState<string>(input.carDebt !== null && input.carDebt !== undefined ? String(input.carDebt) : '0');
+  const [scholarshipDebt, setScholarshipDebt] = useState<string>(input.scholarshipDebt !== null && input.scholarshipDebt !== undefined ? String(input.scholarshipDebt) : '0');
+  const [otherDebt, setOtherDebt] = useState<string>(input.otherDebt !== null && input.otherDebt !== undefined ? String(input.otherDebt) : '0');
+
+  // 学歴・キャリア
   const [academicDegree, setAcademicDegree] = useState<string>(input.academicDegree || '');
   const [universityName, setUniversityName] = useState<string>(input.universityName || '');
   const [customUniversityHensachi, setCustomUniversityHensachi] = useState<number | null>(input.customUniversityHensachi || null);
@@ -56,9 +62,13 @@ export default function InputDataModal({ input }: InputDataModalProps) {
   const [companyName, setCompanyName] = useState<string>(input.companyName || '');
   const [companyCategory, setCompanyCategory] = useState<DiagnosisInputV3['companyCategory'] | ''>(input.companyCategory || '');
 
-  const [snsFollowers, setSnsFollowers] = useState<string>(
-    String((input.instagramFollowers || 0) + (input.xFollowers || 0) + (input.tikTokFollowers || 0) + (input.youTubeFollowers || 0))
-  );
+  // SNSフォロワー (個別4プラットフォーム)
+  const [instagramFollowers, setInstagramFollowers] = useState<number>(input.instagramFollowers || 0);
+  const [xFollowers, setXFollowers] = useState<number>(input.xFollowers || 0);
+  const [tikTokFollowers, setTikTokFollowers] = useState<number>(input.tikTokFollowers || 0);
+  const [youTubeFollowers, setYouTubeFollowers] = useState<number>(input.youTubeFollowers || 0);
+
+  // 恋愛・ライフスタイル
   const [travelCount, setTravelCount] = useState<string>(input.travelCount ? String(input.travelCount) : '0');
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | ''>(input.maritalStatus || '');
   const [childrenCount, setChildrenCount] = useState<string>(input.childrenCount ? String(input.childrenCount) : '0');
@@ -73,9 +83,6 @@ export default function InputDataModal({ input }: InputDataModalProps) {
 
     try {
       const selectedPref = PREFECTURES[prefectureId - 1] || '東京都';
-      const parsedFinancial = financialAssets !== '' ? Number(financialAssets) : 0;
-      const parsedOtherAssets = otherAssets !== '' ? Number(otherAssets) : 0;
-      const parsedDebt = otherDebt !== '' ? Number(otherDebt) : 0;
 
       const payload: DiagnosisInputV3 = {
         ...input,
@@ -89,15 +96,14 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         bodyFat: bodyFat !== '' ? Number(bodyFat) : null,
         faceRating: faceRating ? (faceRating as FaceRating) : null,
         annualIncome: Number(annualIncome),
-        financialAssets: parsedFinancial,
-        realEstateAssets: 0,
-        carAssets: 0,
-        watchAssets: 0,
-        otherAssets: parsedOtherAssets,
-        mortgageDebt: 0,
-        carDebt: 0,
-        scholarshipDebt: 0,
-        otherDebt: parsedDebt,
+        financialAssets: financialAssets !== '' ? Number(financialAssets) : 0,
+        realEstateAssets: realEstateAssets !== '' ? Number(realEstateAssets) : 0,
+        carAssets: carAssets !== '' ? Number(carAssets) : 0,
+        watchAssets: watchAssets !== '' ? Number(watchAssets) : 0,
+        mortgageDebt: mortgageDebt !== '' ? Number(mortgageDebt) : 0,
+        carDebt: carDebt !== '' ? Number(carDebt) : 0,
+        scholarshipDebt: scholarshipDebt !== '' ? Number(scholarshipDebt) : 0,
+        otherDebt: otherDebt !== '' ? Number(otherDebt) : 0,
         academicDegree: academicDegree ? (academicDegree as DiagnosisInputV3['academicDegree']) : null,
         universityName: universityName.trim() || null,
         customUniversityHensachi,
@@ -108,10 +114,10 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         positionCode: positionCode || null,
         companyName: companyName.trim() || null,
         companyCategory: companyCategory !== '' ? (companyCategory as any) : null,
-        instagramFollowers: snsFollowers !== '' ? Number(snsFollowers) : 0,
-        xFollowers: 0,
-        tikTokFollowers: 0,
-        youTubeFollowers: 0,
+        instagramFollowers: Number(instagramFollowers) || 0,
+        xFollowers: Number(xFollowers) || 0,
+        tikTokFollowers: Number(tikTokFollowers) || 0,
+        youTubeFollowers: Number(youTubeFollowers) || 0,
         travelCount: travelCount !== '' ? Number(travelCount) : 0,
         maritalStatus: maritalStatus ? (maritalStatus as MaritalStatus) : null,
         childrenCount: childrenCount !== '' ? Number(childrenCount) : 0,
@@ -136,10 +142,12 @@ export default function InputDataModal({ input }: InputDataModalProps) {
 
         const draft = {
           nickname, gender, age, prefectureId, height, weight, bodyFat, faceRating,
-          annualIncome, financialAssets: parsedFinancial, otherAssets: parsedOtherAssets, otherDebt: parsedDebt,
+          annualIncome, financialAssets, realEstateAssets, carAssets, watchAssets,
+          mortgageDebt, carDebt, scholarshipDebt, otherDebt,
           academicDegree, universityName, customUniversityHensachi, iqScore,
           industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
-          instagramFollowers: snsFollowers, travelCount, maritalStatus, childrenCount, mbti,
+          instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
+          travelCount, maritalStatus, childrenCount, mbti,
         };
         localStorage.setItem('spec_check_draft_v3', JSON.stringify(draft));
       } catch {}
@@ -203,7 +211,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
 
             {/* モーダルコンテンツ (インラインフォームスクロール) */}
             <div className="p-5 sm:p-6 overflow-y-auto space-y-6 custom-scrollbar text-xs bg-slate-900">
-              {/* 基本情報 */}
+              {/* 基本情報・身体データ */}
               <div className="space-y-3">
                 <h4 className="text-xs font-black text-indigo-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
                   <User className="w-4 h-4" /> 基本情報・身体データ
@@ -300,12 +308,12 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                 </div>
               </div>
 
-              {/* 年収・資産 */}
+              {/* 年収・純資産データ (内訳完全展開) */}
               <div className="space-y-3">
                 <h4 className="text-xs font-black text-emerald-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                  <Landmark className="w-4 h-4" /> 年収・純資産データ
+                  <Landmark className="w-4 h-4" /> 年収・純資産データ (資産・負債の内訳)
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-3">
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">額面年収 (万円)</label>
                     <input
@@ -316,35 +324,99 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400 font-black focus:border-emerald-500 focus:outline-none"
                     />
                   </div>
-                  <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">金融資産 [預貯金・株] (万円)</label>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={financialAssets}
-                      onChange={(e) => setFinancialAssets(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
-                    />
+
+                  {/* 資産内訳 4項目 */}
+                  <div className="border-t border-slate-800/80 pt-2">
+                    <span className="text-[11px] font-extrabold text-slate-300 block mb-2">総資産 内訳 (万円)</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">金融資産 (預金・株)</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={financialAssets}
+                          onChange={(e) => setFinancialAssets(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">不動産評価額</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={realEstateAssets}
+                          onChange={(e) => setRealEstateAssets(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">車</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={carAssets}
+                          onChange={(e) => setCarAssets(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">時計・その他</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={watchAssets}
+                          onChange={(e) => setWatchAssets(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">その他動産・不動産資産合計 (万円)</label>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={otherAssets}
-                      onChange={(e) => setOtherAssets(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">各種負債合計 [ローン・奨学金等] (万円)</label>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={otherDebt}
-                      onChange={(e) => setOtherDebt(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
-                    />
+
+                  {/* 負債内訳 4項目 */}
+                  <div className="border-t border-slate-800/80 pt-2">
+                    <span className="text-[11px] font-extrabold text-slate-300 block mb-2">負債 内訳 (万円)</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">住宅ローン</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={mortgageDebt}
+                          onChange={(e) => setMortgageDebt(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">自動車ローン</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={carDebt}
+                          onChange={(e) => setCarDebt(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">奨学金・教育ローン</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={scholarshipDebt}
+                          onChange={(e) => setScholarshipDebt(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">その他借入・カード等</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={otherDebt}
+                          onChange={(e) => setOtherDebt(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -489,16 +561,54 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                 <h4 className="text-xs font-black text-purple-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
                   <Globe className="w-4 h-4" /> SNS・グローバル・パートナーシップ・MBTI
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">SNS総フォロワー数 (人)</label>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={snsFollowers}
-                      onChange={(e) => setSnsFollowers(sanitizeNumericInput(e.target.value))}
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">Instagram フォロワー</label>
+                    <select
+                      value={instagramFollowers}
+                      onChange={(e) => setInstagramFollowers(Number(e.target.value))}
                       className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
-                    />
+                    >
+                      {SNS_FOLLOWER_BRACKETS.map((b) => (
+                        <option key={b.value} value={b.value}>{b.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">X (Twitter) フォロワー</label>
+                    <select
+                      value={xFollowers}
+                      onChange={(e) => setXFollowers(Number(e.target.value))}
+                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                    >
+                      {SNS_FOLLOWER_BRACKETS.map((b) => (
+                        <option key={b.value} value={b.value}>{b.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">TikTok フォロワー</label>
+                    <select
+                      value={tikTokFollowers}
+                      onChange={(e) => setTikTokFollowers(Number(e.target.value))}
+                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                    >
+                      {SNS_FOLLOWER_BRACKETS.map((b) => (
+                        <option key={b.value} value={b.value}>{b.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">YouTube チャンネル登録者</label>
+                    <select
+                      value={youTubeFollowers}
+                      onChange={(e) => setYouTubeFollowers(Number(e.target.value))}
+                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                    >
+                      {SNS_FOLLOWER_BRACKETS.map((b) => (
+                        <option key={b.value} value={b.value}>{b.label}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">海外渡航歴 (か国)</label>
