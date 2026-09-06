@@ -64,9 +64,8 @@ export function calculateCareerScore(
   prefectureName?: string | null
 ): CareerScoreResult {
   // 1. 職種 & 役職Score (共通職種マスタより検索)
-  const occ = COMMON_OCCUPATION_MASTER.find(o => o.id === occupationCode) 
-    || COMMON_OCCUPATION_MASTER.find(o => o.name === occupationCode) 
-    || COMMON_OCCUPATION_MASTER[COMMON_OCCUPATION_MASTER.length - 1];
+  const defaultOcc = COMMON_OCCUPATION_MASTER.find(o => o.id === '37') || { id: '37', name: '一般・その他職種', baseScore: 65 };
+  const occ = (occupationCode && (COMMON_OCCUPATION_MASTER.find(o => o.id === occupationCode) || COMMON_OCCUPATION_MASTER.find(o => o.name === occupationCode))) || defaultOcc;
   
   // 雇用形態補正
   let empBonus = 0;
@@ -75,8 +74,11 @@ export function calculateCareerScore(
   if (employmentType === 'CONTRACT') empBonus = -5;
   if (employmentType === 'UNEMPLOYED') empBonus = -20;
 
-  // 役職補正 V3.0
-  const posItem = POSITION_MASTER.find(p => p.code === positionCode) || POSITION_MASTER[POSITION_MASTER.length - 1];
+  // 役職補正 V3.0 (未選択時は「一般社員・メンバー」0pt をデフォルトとし、無職補正-15ptの適用を防ぐ)
+  const defaultPos = POSITION_MASTER.find(p => p.code === 'STAFF') || { code: 'STAFF', name: '一般社員・メンバー', bonusScore: 0 };
+  const posItem = (positionCode && positionCode.trim() !== '') 
+    ? (POSITION_MASTER.find(p => p.code === positionCode) || defaultPos)
+    : defaultPos;
   const posBonus = posItem ? posItem.bonusScore : 0;
 
   const occupationScore = Math.max(10, Math.min(100, occ.baseScore + empBonus + posBonus));
