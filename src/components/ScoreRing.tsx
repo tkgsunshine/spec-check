@@ -21,15 +21,16 @@ export default function ScoreRing({
 
   useEffect(() => {
     let startTimestamp: number | null = null;
-    const duration = 1800; // 1.8s count up animation
+    const duration = 1400; // 1.4s smooth count up animation
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
 
-      // EaseOutCubic
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(easedProgress * score * 10) / 10;
+      // easeOutQuart: 終端にかけてスムーズに減速ソフトランディング
+      const easedProgress = 1 - Math.pow(1 - progress, 4);
+      // サブピクセル精度の浮動小数点のまま（Math.round の段階的カクつきを完全排除）
+      const current = easedProgress * score;
       setDisplayScore(current);
 
       if (progress < 1) {
@@ -76,7 +77,7 @@ export default function ScoreRing({
             fill="none"
           />
 
-          {/* Animated Progress Circle */}
+          {/* Animated Progress Circle (CSS transition-all を解除し requestAnimationFrame で直接60fps精密描画) */}
           <circle
             cx="120"
             cy="120"
@@ -87,7 +88,7 @@ export default function ScoreRing({
             strokeDashoffset={progressOffset}
             strokeLinecap="round"
             fill="none"
-            className="transition-all duration-300 ease-out"
+            className="filter drop-shadow-[0_0_8px_rgba(139,92,246,0.3)]"
           />
         </svg>
 
@@ -98,7 +99,7 @@ export default function ScoreRing({
           </span>
           <div className="flex items-baseline justify-center gap-1.5 my-0.5">
             <span className={`text-5xl md:text-7xl font-black tracking-tight text-white ${glowClass}`}>
-              {displayScore.toFixed(1)}
+              {(Math.round(displayScore * 10) / 10).toFixed(1)}
             </span>
             <span className="text-xs md:text-sm font-black text-indigo-300/90 tracking-wider">
               POINT
