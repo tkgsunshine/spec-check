@@ -33,7 +33,6 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
         entries.forEach(entry => {
           if (entry.isIntersecting && !hasAnimated) {
             setHasAnimated(true);
-            setAnimatedScores(axes.map(a => a.score));
           }
         });
       },
@@ -42,13 +41,30 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, [axes, hasAnimated]);
+  }, [hasAnimated]);
 
-  // axes が更新された場合（タブ切り替え・データ修正等）
+  // 交差開始時またはaxes変更時に requestAnimationFrame で 0 -> targetScore へ滑らかにアニメーション
   useEffect(() => {
-    if (hasAnimated) {
-      setAnimatedScores(axes.map(a => a.score));
-    }
+    if (!hasAnimated) return;
+
+    let startTimestamp: number | null = null;
+    const duration = 1000; // 1秒間の中心からの滑らかな拡張アニメーション
+    const targetScores = axes.map(a => a.score);
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3); // EaseOutCubic
+
+      const currentScores = targetScores.map(score => Math.round(score * easedProgress * 10) / 10);
+      setAnimatedScores(currentScores);
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    window.requestAnimationFrame(step);
   }, [axes, hasAnimated]);
 
   const getCoordinates = (value: number, index: number) => {
@@ -125,7 +141,6 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
             fill={fillColor}
             stroke={strokeColor}
             strokeWidth="3"
-            className="transition-all duration-1000 ease-out"
           />
 
           {/* Score Nodes (洗練されたクリーンな元デザイン) */}
@@ -140,7 +155,6 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
                 fill={strokeColor}
                 stroke="#ffffff"
                 strokeWidth="2"
-                className="transition-all duration-1000 ease-out"
               />
             );
           })}
