@@ -38,13 +38,13 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
     if (!hasAnimated) return;
 
     let startTimestamp: number | null = null;
-    const duration = 1200; // 1.2s count up animation
+    const duration = 1300; // 1.3s smooth count up animation
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const easedProgress = 1 - Math.pow(1 - progress, 3); // EaseOutCubic
-      const current = Math.round(easedProgress * score * 10) / 10;
+      const easedProgress = 1 - Math.pow(1 - progress, 4); // easeOutQuart
+      const current = easedProgress * score;
       setDisplayScore(current);
 
       if (progress < 1) {
@@ -127,11 +127,11 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
             strokeDashoffset={progressOffset}
             strokeLinecap="round"
             fill="none"
-            className="transition-all duration-700 ease-out filter drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]"
+            className="filter drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]"
           />
         </svg>
         <span className={`absolute text-base font-black ${scoreTextColor} tracking-tight`}>
-          {displayScore}
+          {Math.round(displayScore * 10) / 10}
         </span>
       </div>
 

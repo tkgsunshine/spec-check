@@ -43,20 +43,22 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
     return () => observer.disconnect();
   }, [hasAnimated]);
 
-  // 交差開始時またはaxes変更時に requestAnimationFrame で 0 -> targetScore へ滑らかにアニメーション
+  // 交差開始時またはaxes変更時に requestAnimationFrame で 0 -> targetScore へ極上の滑らかさでアニメーション
   useEffect(() => {
     if (!hasAnimated) return;
 
     let startTimestamp: number | null = null;
-    const duration = 1000; // 1秒間の中心からの滑らかな拡張アニメーション
+    const duration = 1300; // 1.3秒間の極めて滑らかな拡張アニメーション
     const targetScores = axes.map(a => a.score);
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const easedProgress = 1 - Math.pow(1 - progress, 3); // EaseOutCubic
+      // easeOutQuart: 終端にかけて滑らかにソフトランディング減速
+      const easedProgress = 1 - Math.pow(1 - progress, 4);
 
-      const currentScores = targetScores.map(score => Math.round(score * easedProgress * 10) / 10);
+      // 浮動小数点のまま高精度計算（Math.roundの丸めによるカクつき・量子化ステップを完全排除）
+      const currentScores = targetScores.map(score => score * easedProgress);
       setAnimatedScores(currentScores);
 
       if (progress < 1) {
