@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 interface RadarAxis {
   labelJa: string;
   labelEn: string;
@@ -16,6 +18,16 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
   const center = size / 2;
   const radius = 148;
   const count = axes.length;
+
+  const [animatedScores, setAnimatedScores] = useState<number[]>(axes.map(() => 0));
+
+  useEffect(() => {
+    // コンポーネントマウント時・スコア変更時に中心から滑らかにアニメーション伸長
+    const timer = setTimeout(() => {
+      setAnimatedScores(axes.map(a => a.score));
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [axes]);
 
   const getCoordinates = (value: number, index: number) => {
     const angle = (Math.PI * 2 / count) * index - Math.PI / 2;
@@ -36,15 +48,15 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
 
   const webLevels = [0.2, 0.4, 0.6, 0.8, 1.0];
 
-  const userPolygonPoints = axes
-    .map((axis, i) => {
-      const { x, y } = getCoordinates(axis.score, i);
+  const userPolygonPoints = animatedScores
+    .map((scoreVal, i) => {
+      const { x, y } = getCoordinates(scoreVal, i);
       return `${x},${y}`;
     })
     .join(' ');
 
   const strokeColor = colorTheme === 'rose' ? '#f43f5e' : '#8b5cf6';
-  const fillColor = colorTheme === 'rose' ? 'rgba(244, 63, 94, 0.28)' : 'rgba(139, 92, 246, 0.28)';
+  const fillColor = colorTheme === 'rose' ? 'rgba(244, 63, 94, 0.32)' : 'rgba(139, 92, 246, 0.32)';
 
   return (
     <div className="flex flex-col items-center justify-center p-2 w-full">
@@ -85,28 +97,39 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
             );
           })}
 
-          {/* Score Polygon Fill & Stroke */}
+          {/* Score Polygon Fill & Stroke (中心からの拡張アニメーション) */}
           <polygon
             points={userPolygonPoints}
             fill={fillColor}
             stroke={strokeColor}
             strokeWidth="3"
-            className="transition-all duration-700 ease-out"
+            className="transition-all duration-1000 ease-out filter drop-shadow-[0_0_12px_rgba(139,92,246,0.5)]"
           />
 
-          {/* Score Nodes */}
-          {axes.map((axis, i) => {
-            const { x, y } = getCoordinates(axis.score, i);
+          {/* Score Nodes with Pulsing Glow Animation */}
+          {animatedScores.map((scoreVal, i) => {
+            const { x, y } = getCoordinates(scoreVal, i);
             return (
-              <circle
-                key={i}
-                cx={x}
-                cy={y}
-                r="5"
-                fill={strokeColor}
-                stroke="#ffffff"
-                strokeWidth="2"
-              />
+              <g key={i} className="transition-all duration-1000 ease-out">
+                {/* 脈動する背後のグローリング */}
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="9"
+                  fill={strokeColor}
+                  className="opacity-40 animate-ping"
+                />
+                {/* メインノード */}
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="6"
+                  fill={strokeColor}
+                  stroke="#ffffff"
+                  strokeWidth="2.5"
+                  className="filter drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] cursor-pointer hover:scale-125 transition-transform"
+                />
+              </g>
             );
           })}
 

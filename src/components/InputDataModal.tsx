@@ -212,26 +212,32 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
       </button>
 
-      {/* モーダルオーバーレイ (完全不透明ソリッドバックドロップで背後の結果画面・文字の透け・重なりバグを完全遮断) */}
+      {/* モーダルオーバーレイ (背景の結果画面を完全に遮蔽して消去＆画面いっぱいの大型モーダル) */}
       {isOpen && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-slate-950 animate-fadeIn overflow-hidden">
-          <div className="relative w-full max-w-2xl max-h-[90dvh] sm:max-h-[85vh] bg-slate-900 border border-slate-700 rounded-2xl sm:rounded-3xl shadow-[0_0_80px_rgba(0,0,0,1)] overflow-hidden flex flex-col z-[100000]">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-950 animate-fadeIn overflow-hidden">
+          <div className="relative w-full max-w-5xl md:max-w-6xl max-h-[94vh] sm:max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl sm:rounded-3xl shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col z-[100000]">
             {/* モーダルヘッダー */}
-            <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+            <div className="px-5 sm:px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-100">診断データのインライン修正</h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    EDIT INPUT PARAMETERS & RECALCULATE
+                  <h3 className="text-base sm:text-lg font-black text-slate-100 flex items-center gap-2">
+                    診断データの修正・再計算
+                    <span className="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-extrabold text-[10px] border border-indigo-500/30">
+                      EDIT PARAMETERS
+                    </span>
+                  </h3>
+                  <p className="text-[10px] sm:text-xs font-bold text-slate-400">
+                    設定データを変更して「この内容で再計算する」を押すとスコアが更新されます
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 rounded-full text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 transition-all cursor-pointer"
+                className="p-2.5 rounded-full text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition-all cursor-pointer border border-slate-700"
+                title="閉じる"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -239,26 +245,26 @@ export default function InputDataModal({ input }: InputDataModalProps) {
 
             {/* エラーメッセージ */}
             {errorMsg && (
-              <div className="px-5 py-2.5 bg-rose-500/20 border-b border-rose-500/30 text-rose-300 text-xs font-bold shrink-0">
+              <div className="px-5 py-3 bg-rose-500/20 border-b border-rose-500/30 text-rose-300 text-xs font-bold shrink-0 flex items-center gap-2">
                 ⚠️ {errorMsg}
               </div>
             )}
 
-            {/* モーダルコンテンツ (インラインフォームスクロール) */}
-            <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-6 custom-scrollbar text-xs bg-slate-900">
+            {/* モーダルコンテンツ (大型グリッド表示) */}
+            <div className="p-5 sm:p-7 overflow-y-auto overscroll-contain space-y-7 custom-scrollbar text-xs bg-slate-900">
               {/* 基本情報・身体データ */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-black text-indigo-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                  <User className="w-4 h-4" /> 基本情報・身体データ
+              <div className="space-y-3 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
+                <h4 className="text-xs font-black text-indigo-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2.5">
+                  <User className="w-4 h-4 text-indigo-400" /> 基本情報・身体データ
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">ニックネーム</label>
                     <input
                       type="text"
                       value={nickname}
                       onChange={(e) => setNickname(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -266,7 +272,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={gender}
                       onChange={(e) => setGender(e.target.value as Gender)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                     >
                       <option value="MALE">男性</option>
                       <option value="FEMALE">女性</option>
@@ -279,7 +285,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       inputMode="numeric"
                       value={age}
                       onChange={(e) => setAge(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -287,7 +293,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={prefectureId}
                       onChange={(e) => setPrefectureId(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                     >
                       {PREFECTURES.map((pref, idx) => (
                         <option key={idx + 1} value={idx + 1}>{pref}</option>
@@ -302,7 +308,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         inputMode="numeric"
                         value={height}
                         onChange={(e) => setHeight(sanitizeNumericInput(e.target.value))}
-                        className="w-1/2 px-2.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                        className="w-1/2 px-2.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                         placeholder="身長"
                       />
                       <input
@@ -310,7 +316,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         inputMode="numeric"
                         value={weight}
                         onChange={(e) => setWeight(sanitizeNumericInput(e.target.value))}
-                        className="w-1/2 px-2.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                        className="w-1/2 px-2.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                         placeholder="体重"
                       />
                     </div>
@@ -322,16 +328,16 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       inputMode="decimal"
                       value={bodyFat}
                       onChange={(e) => setBodyFat(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                       placeholder="任意 (例: 15.5)"
                     />
                   </div>
-                  <div className="sm:col-span-3">
+                  <div className="sm:col-span-2">
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">雰囲気・第一印象の自己評価</label>
                     <select
                       value={faceRating || ''}
                       onChange={(e) => setFaceRating(e.target.value as any)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
                     >
                       <option value="">選択してください ※必須</option>
                       <option value="MODEL_LEVEL">モデル・インフルエンサー級 (美形・圧倒的ルックス)</option>
@@ -344,11 +350,11 @@ export default function InputDataModal({ input }: InputDataModalProps) {
               </div>
 
               {/* 年収・純資産データ (内訳完全展開) */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-black text-emerald-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                  <Landmark className="w-4 h-4" /> 年収・純資産データ (資産・負債の内訳)
+              <div className="space-y-3 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
+                <h4 className="text-xs font-black text-emerald-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2.5">
+                  <Landmark className="w-4 h-4 text-emerald-400" /> 年収・純資産データ (資産・負債の内訳)
                 </h4>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">額面年収 (万円)</label>
                     <input
@@ -356,14 +362,14 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       inputMode="numeric"
                       value={annualIncome}
                       onChange={(e) => setAnnualIncome(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400 font-black focus:border-emerald-500 focus:outline-none"
+                      className="w-full max-w-sm px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400 font-black text-sm focus:border-emerald-500 focus:outline-none"
                     />
                   </div>
 
                   {/* 資産内訳 4項目 */}
-                  <div className="border-t border-slate-800/80 pt-2">
-                    <span className="text-[11px] font-extrabold text-slate-300 block mb-2">総資産 内訳 (万円)</span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="border-t border-slate-800/80 pt-3">
+                    <span className="text-[11px] font-extrabold text-emerald-300 block mb-2">総資産 内訳 (万円)</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
                         <label className="text-slate-400 text-[10px] font-bold block mb-1">金融資産 (預金・株)</label>
                         <input
@@ -371,7 +377,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={financialAssets}
                           onChange={(e) => setFinancialAssets(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
                         />
                       </div>
                       <div>
@@ -381,7 +387,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={realEstateAssets}
                           onChange={(e) => setRealEstateAssets(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
                         />
                       </div>
                       <div>
@@ -391,7 +397,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={carAssets}
                           onChange={(e) => setCarAssets(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
                         />
                       </div>
                       <div>
@@ -401,16 +407,16 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={watchAssets}
                           onChange={(e) => setWatchAssets(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* 負債内訳 4項目 */}
-                  <div className="border-t border-slate-800/80 pt-2">
-                    <span className="text-[11px] font-extrabold text-slate-300 block mb-2">負債 内訳 (万円)</span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="border-t border-slate-800/80 pt-3">
+                    <span className="text-[11px] font-extrabold text-rose-300 block mb-2">負債 内訳 (万円)</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
                         <label className="text-slate-400 text-[10px] font-bold block mb-1">住宅ローン</label>
                         <input
@@ -418,7 +424,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={mortgageDebt}
                           onChange={(e) => setMortgageDebt(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
                         />
                       </div>
                       <div>
@@ -428,7 +434,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={carDebt}
                           onChange={(e) => setCarDebt(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
                         />
                       </div>
                       <div>
@@ -438,7 +444,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={scholarshipDebt}
                           onChange={(e) => setScholarshipDebt(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
                         />
                       </div>
                       <div>
@@ -448,7 +454,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                           inputMode="numeric"
                           value={otherDebt}
                           onChange={(e) => setOtherDebt(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -457,17 +463,17 @@ export default function InputDataModal({ input }: InputDataModalProps) {
               </div>
 
               {/* 学歴・キャリア */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-black text-amber-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                  <GraduationCap className="w-4 h-4" /> 学歴・知的指標・キャリア
+              <div className="space-y-3 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
+                <h4 className="text-xs font-black text-amber-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2.5">
+                  <GraduationCap className="w-4 h-4 text-amber-400" /> 学歴・知的指標・キャリア
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">最終学歴</label>
                     <select
                       value={academicDegree || ''}
                       onChange={(e) => setAcademicDegree(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                     >
                       <option value="">選択してください ※必須</option>
                       <option value="BACHELOR">大学卒 (学士)</option>
@@ -497,7 +503,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       inputMode="numeric"
                       value={iqScore}
                       onChange={(e) => setIqScore(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                       placeholder="空欄で自動推計"
                     />
                   </div>
@@ -511,7 +517,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         setIndustryCode(e.target.value);
                         setOccupationCode('');
                       }}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                     >
                       <option value="">選択してください ※必須</option>
                       {INDUSTRY_MASTER.map((ind) => (
@@ -526,7 +532,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={occupationCode}
                       onChange={(e) => setOccupationCode(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                     >
                       <option value="">{industryCode ? '選択してください ※必須' : '業種を先に選択してください ※必須'}</option>
                       {availableOccupations.map((occ) => (
@@ -541,7 +547,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={employmentType || ''}
                       onChange={(e) => setEmploymentType(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                     >
                       <option value="">選択してください ※必須</option>
                       <option value="EXECUTIVE">役員・経営者</option>
@@ -559,7 +565,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       <select
                         value={positionCode}
                         onChange={(e) => setPositionCode(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                       >
                         <option value="">{employmentType ? '選択してください ※必須' : '雇用形態を先に選択してください ※必須'}</option>
                         {availablePositions.map((p) => (
@@ -586,7 +592,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={companyCategory || ''}
                       onChange={(e) => setCompanyCategory(e.target.value as any)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                     >
                       <option value="">選択してください (未選択/指定なし)</option>
                       <option value="LARGE_PRIME">プライム上場・外資トップ・大手グローバル企業</option>
@@ -600,17 +606,17 @@ export default function InputDataModal({ input }: InputDataModalProps) {
               </div>
 
               {/* SNS・語学・恋愛観・MBTI */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-black text-purple-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                  <Globe className="w-4 h-4" /> SNS・グローバル・パートナーシップ・MBTI
+              <div className="space-y-3 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
+                <h4 className="text-xs font-black text-purple-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2.5">
+                  <Globe className="w-4 h-4 text-purple-400" /> SNS・グローバル・パートナーシップ・MBTI
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">Instagram フォロワー</label>
                     <select
                       value={instagramFollowers}
                       onChange={(e) => setInstagramFollowers(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     >
                       {SNS_FOLLOWER_BRACKETS.map((b) => (
                         <option key={b.value} value={b.value}>{b.label}</option>
@@ -622,7 +628,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={xFollowers}
                       onChange={(e) => setXFollowers(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     >
                       {SNS_FOLLOWER_BRACKETS.map((b) => (
                         <option key={b.value} value={b.value}>{b.label}</option>
@@ -634,7 +640,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={tikTokFollowers}
                       onChange={(e) => setTikTokFollowers(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     >
                       {SNS_FOLLOWER_BRACKETS.map((b) => (
                         <option key={b.value} value={b.value}>{b.label}</option>
@@ -642,11 +648,11 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">YouTube チャンネル登録者</label>
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">YouTube 登録者</label>
                     <select
                       value={youTubeFollowers}
                       onChange={(e) => setYouTubeFollowers(Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     >
                       {SNS_FOLLOWER_BRACKETS.map((b) => (
                         <option key={b.value} value={b.value}>{b.label}</option>
@@ -660,7 +666,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       inputMode="numeric"
                       value={travelCount}
                       onChange={(e) => setTravelCount(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -668,7 +674,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={maritalStatus}
                       onChange={(e) => setMaritalStatus(e.target.value as MaritalStatus)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     >
                       <option value="">選択してください</option>
                       <option value="SINGLE">未婚</option>
@@ -684,7 +690,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       inputMode="numeric"
                       value={childrenCount}
                       onChange={(e) => setChildrenCount(sanitizeNumericInput(e.target.value))}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -692,9 +698,9 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <select
                       value={mbti}
                       onChange={(e) => setMbti(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     >
-                      <option value="">選択してください (わからない/未測定)</option>
+                      <option value="">選択してください (未測定)</option>
                       {MBTI_MASTER.map((m) => (
                         <option key={m.code} value={m.code}>{m.nameJa}</option>
                       ))}
@@ -705,21 +711,21 @@ export default function InputDataModal({ input }: InputDataModalProps) {
             </div>
 
             {/* モーダルフッター */}
-            <div className="px-5 py-4 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between gap-3 shrink-0">
+            <div className="px-5 sm:px-7 py-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between gap-4 shrink-0">
               <button
                 onClick={() => setIsOpen(false)}
-                className="px-4 py-2.5 rounded-xl border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs transition-all cursor-pointer"
+                className="px-5 py-3 rounded-xl border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-white font-bold text-xs transition-all cursor-pointer"
               >
                 キャンセル
               </button>
               <button
                 onClick={handleRecalculate}
                 disabled={loading}
-                className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-black text-xs inline-flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-600/30 cursor-pointer disabled:opacity-50"
+                className="flex-1 sm:flex-none px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-black text-sm inline-flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-600/30 cursor-pointer disabled:opacity-50"
               >
                 {loading ? (
                   <>
-                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>再計算・AI解析中...</span>
                   </>
                 ) : (
