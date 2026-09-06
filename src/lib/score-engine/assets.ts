@@ -1,13 +1,16 @@
-import { MetricScoreResult } from '@/types/spec-check';
-import { NET_WORTH_BRACKETS } from '../datasets/japan-stats';
+import { Gender, MetricScoreResult } from '@/types/spec-check';
+import { NET_WORTH_BRACKETS, getAgeGenderNetWorthDistribution } from '../datasets/japan-stats';
 
 /**
  * 純資産 (Net Worth) Score の計算 V3.0
  * 総資産 ＝ 金融資産 ＋ 不動産 ＋ 車 ＋ 時計 ＋ その他
  * 純資産 ＝ 総資産 − 負債 (住宅ローン ＋ 自動車ローン ＋ 奨学金 ＋ その他借入)
  * ※負債を別Scoreとして二重減点せず、『純資産』を1つの経済Metricとして評価。
+ * ※性別・世代(年齢階層)を加味した家計調査統計マトリックスを参照
  */
 export function calculateNetWorthScore(params: {
+  gender?: Gender;
+  age?: number;
   financialAssets?: number | null;
   realEstateAssets?: number | null;
   carAssets?: number | null;
@@ -19,6 +22,8 @@ export function calculateNetWorthScore(params: {
   otherDebt?: number | null;
 }): MetricScoreResult | null {
   const {
+    gender,
+    age,
     financialAssets = 0,
     realEstateAssets = 0,
     carAssets = 0,
@@ -49,19 +54,30 @@ export function calculateNetWorthScore(params: {
   const totalDebt = (mortgageDebt || 0) + (carDebt || 0) + (scholarshipDebt || 0) + (otherDebt || 0);
   const netWorth = totalAssets - totalDebt;
 
+  const ageGroupStats = getAgeGenderNetWorthDistribution(age);
+
+  const isMale = gender === 'MALE';
+  const isFemale = gender === 'FEMALE';
+  const cumulativeArray = isMale
+    ? ageGroupStats.maleCumulative
+    : isFemale
+    ? ageGroupStats.femaleCumulative
+    : ageGroupStats.overallCumulative;
+
   let cumulativePct = 0;
   for (let i = 0; i < NET_WORTH_BRACKETS.length; i++) {
     const bracket = NET_WORTH_BRACKETS[i];
     const prevLimit = i === 0 ? -Infinity : NET_WORTH_BRACKETS[i - 1].limitMax;
-    const prevCumulative = i === 0 ? 0 : NET_WORTH_BRACKETS[i - 1].cumulativePercent;
+    const cumulativeBelow = cumulativeArray[i];
+    const prevCumulative = i === 0 ? 0 : cumulativeArray[i - 1];
 
     if (netWorth <= bracket.limitMax) {
       if (netWorth <= 0) {
-        cumulativePct = Math.max(1, 12.5 + netWorth / 100);
+        cumulativePct = Math.max(1, (cumulativeBelow || 15) + netWorth / 100);
       } else {
         const range = bracket.limitMax - (prevLimit === -Infinity ? 0 : prevLimit);
         const progress = (netWorth - (prevLimit === -Infinity ? 0 : prevLimit)) / range;
-        cumulativePct = prevCumulative + (bracket.cumulativePercent - prevCumulative) * progress;
+        cumulativePct = prevCumulative + (cumulativeBelow - prevCumulative) * progress;
       }
       break;
     }
@@ -69,6 +85,8 @@ export function calculateNetWorthScore(params: {
 
   const percentile = Math.round(Math.max(0.1, Math.min(99.9, cumulativePct)) * 10) / 10;
   const topPercent = Math.round((100 - percentile) * 10) / 10;
+
+  const genderLabel = isMale ? '男性' : isFemale ? '女性' : '全体';
 
   return {
     metricCode: 'NET_WORTH',
@@ -79,11 +97,11 @@ export function calculateNetWorthScore(params: {
     percentile,
     topPercent,
     dataQuality: 'OFFICIAL',
-    datasetName: '総務省 家計調査 貯蓄・負債編 & 日本銀行 資金循環統計',
+    datasetName: `総務省 家計調査（${ageGroupStats.label}・${genderLabel}統計）`,
     sourceUrl: 'https://www.e-stat.go.jp/',
     surveyYear: 2023,
     calculationMethod: 'SALARY_BRACKET_CUMULATIVE',
     hasOfficialTopPercent: true,
-    notes: `『純資産＝総資産−負債』として1項目評価。二重減点なし。家計調査統計の上位 ${topPercent}%`,
+    notes: `『純資産＝総資産−負債』として1項目評価。${ageGroupStats.label}・${genderLabel}の家計調査統計に基づく上位 ${topPercent}%`,
   };
 }

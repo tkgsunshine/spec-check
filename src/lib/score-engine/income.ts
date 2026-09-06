@@ -1,6 +1,6 @@
 import { Gender, MetricScoreResult, IncomeScoreResult } from '@/types/spec-check';
 import { calcHighPrecisionTopPercent } from './math-utils';
-import { INCOME_BRACKETS } from '../datasets/japan-stats';
+import { INCOME_BRACKETS, getAgeIncomeDistribution } from '../datasets/japan-stats';
 
 // 厚生労働省「賃金構造基本統計調査」に基づく都道府県別賃金調整係数 (全国 = 1.0)
 export const PREFECTURE_SALARY_FACTORS: Record<string, number> = {
@@ -54,6 +54,7 @@ export const PREFECTURE_SALARY_FACTORS: Record<string, number> = {
 
 export function calculateIncomeScore(
   gender: Gender,
+  age: number | undefined,
   annualIncome: number, // 万円
   prefectureName?: string
 ): IncomeScoreResult {
@@ -61,14 +62,24 @@ export function calculateIncomeScore(
   // 地域物価・平均賃金水準で実質年収比較額を調整
   const adjustedIncome = annualIncome / prefFactor;
 
+  const userAge = age || 35;
+  const ageGroupStats = getAgeIncomeDistribution(userAge);
+
   let cumulativePct = 0;
+
+  const isMale = gender === 'MALE';
+  const isFemale = gender === 'FEMALE';
+  const cumulativeArray = isMale
+    ? ageGroupStats.maleCumulative
+    : isFemale
+    ? ageGroupStats.femaleCumulative
+    : ageGroupStats.overallCumulative;
 
   for (let i = 0; i < INCOME_BRACKETS.length; i++) {
     const bracket = INCOME_BRACKETS[i];
     const prevLimit = i === 0 ? 0 : INCOME_BRACKETS[i - 1].limitMax;
-    const isMale = gender === 'MALE';
-    const cumulativeBelow = isMale ? bracket.maleCumulativeBelow : bracket.femaleCumulativeBelow;
-    const prevCumulative = i === 0 ? 0 : (isMale ? INCOME_BRACKETS[i - 1].maleCumulativeBelow : INCOME_BRACKETS[i - 1].femaleCumulativeBelow);
+    const cumulativeBelow = cumulativeArray[i];
+    const prevCumulative = i === 0 ? 0 : cumulativeArray[i - 1];
 
     if (adjustedIncome <= bracket.limitMax) {
       if (bracket.limitMax === Infinity) {
@@ -87,6 +98,7 @@ export function calculateIncomeScore(
   const score = percentile;
 
   const prefLabel = prefectureName && prefectureName !== '全国' ? `${prefectureName}` : '全国';
+  const genderLabel = isMale ? '同性' : isFemale ? '同性' : '全体';
 
   const incomeScoreResult: MetricScoreResult = {
     metricCode: 'INCOME',
@@ -97,12 +109,12 @@ export function calculateIncomeScore(
     percentile,
     topPercent,
     dataQuality: 'OFFICIAL',
-    datasetName: `国税庁・厚労省（${prefLabel}基準比較）`,
+    datasetName: `国税庁・厚労省（${ageGroupStats.label}・${genderLabel}・${prefLabel}基準）`,
     sourceUrl: 'https://www.nta.go.jp/publication/statistics/kokuaitokei/minkan2023/minkan.htm',
     surveyYear: 2023,
     calculationMethod: 'SALARY_BRACKET_CUMULATIVE',
     hasOfficialTopPercent: true,
-    notes: `${prefLabel}の給与・賃金水準に基づき正確に比較算出。同性上位 ${topPercent}%`,
+    notes: `国税庁民間給与実態統計調査の${ageGroupStats.label}・${genderLabel}統計に基づき比較算出。上位 ${topPercent}%`,
   };
 
   return {

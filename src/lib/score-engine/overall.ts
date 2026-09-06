@@ -27,11 +27,14 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
 
   const incomeResult = calculateIncomeScore(
     input.gender,
+    input.age,
     input.annualIncome,
     input.prefectureName
   );
 
   const netWorthResult = calculateNetWorthScore({
+    gender: input.gender,
+    age: input.age,
     financialAssets: input.financialAssets,
     realEstateAssets: input.realEstateAssets,
     carAssets: input.carAssets,

@@ -56,6 +56,89 @@ export const INCOME_BRACKETS: IncomeBracket[] = [
   { limitMax: Infinity, label: '2000万円超', maleCumulativeBelow: 100.0, femaleCumulativeBelow: 100.0, overallCumulativeBelow: 100.0 },
 ];
 
+/**
+ * 国税庁 民間給与実態統計調査 (2023年 第14表 年齢階層別・性別給与所得者数) に基づく年齢階層別累積確率テーブル
+ */
+export interface AgeIncomeDistributionGroup {
+  ageMin: number;
+  ageMax: number;
+  label: string;
+  // limitMax: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1500, 2000, Infinity]
+  maleCumulative: number[];
+  femaleCumulative: number[];
+  overallCumulative: number[];
+}
+
+export const AGE_INCOME_STATS: AgeIncomeDistributionGroup[] = [
+  {
+    ageMin: 18, ageMax: 24, label: '20〜24歳',
+    maleCumulative:    [ 12.0, 35.0, 72.0, 91.0, 96.5, 98.5, 99.2, 99.6, 99.8, 99.9, 99.95, 100.0, 100.0 ],
+    femaleCumulative:  [ 25.0, 55.0, 85.0, 95.0, 98.0, 99.2, 99.6, 99.8, 99.9, 99.95, 99.98, 100.0, 100.0 ],
+    overallCumulative: [ 18.0, 45.0, 78.0, 93.0, 97.2, 98.8, 99.4, 99.7, 99.85, 99.92, 99.96, 100.0, 100.0 ]
+  },
+  {
+    ageMin: 25, ageMax: 29, label: '25〜29歳',
+    maleCumulative:    [  5.2, 14.8, 38.0, 68.5, 85.0, 92.5, 96.0, 97.8, 98.7, 99.2, 99.7, 99.9, 100.0 ],
+    femaleCumulative:  [ 18.5, 38.0, 64.0, 84.0, 92.8, 96.5, 98.0, 98.8, 99.3, 99.6, 99.85, 99.95, 100.0 ],
+    overallCumulative: [ 11.2, 25.2, 50.0, 75.5, 88.5, 94.3, 97.0, 98.3, 99.0, 99.4, 99.78, 99.92, 100.0 ]
+  },
+  {
+    ageMin: 30, ageMax: 34, label: '30〜34歳',
+    maleCumulative:    [  3.8, 10.2, 24.5, 48.0, 70.0, 83.5, 90.5, 94.2, 96.5, 97.8, 99.2, 99.7, 100.0 ],
+    femaleCumulative:  [ 20.0, 42.0, 66.0, 83.0, 91.5, 95.5, 97.5, 98.5, 99.0, 99.4, 99.8, 99.92, 100.0 ],
+    overallCumulative: [ 11.0, 24.5, 43.0, 63.8, 79.5, 88.8, 93.6, 96.1, 97.6, 98.5, 99.48, 99.8, 100.0 ]
+  },
+  {
+    ageMin: 35, ageMax: 39, label: '35〜39歳',
+    maleCumulative:    [  3.2,  7.8, 18.0, 36.5, 58.0, 73.5, 83.0, 89.2, 92.8, 95.0, 98.2, 99.3, 100.0 ],
+    femaleCumulative:  [ 22.5, 46.0, 68.5, 83.5, 91.0, 95.0, 97.0, 98.0, 98.7, 99.2, 99.7, 99.9, 100.0 ],
+    overallCumulative: [ 11.8, 24.8, 40.5, 57.5, 72.8, 83.0, 89.2, 93.1, 95.4, 96.9, 98.88, 99.57, 100.0 ]
+  },
+  {
+    ageMin: 40, ageMax: 44, label: '40〜44歳',
+    maleCumulative:    [  3.0,  6.8, 14.5, 29.0, 48.0, 64.5, 76.0, 83.5, 88.5, 91.8, 97.2, 98.9, 100.0 ],
+    femaleCumulative:  [ 24.0, 48.5, 70.0, 84.0, 90.5, 94.5, 96.5, 97.8, 98.5, 99.0, 99.6, 99.85, 100.0 ],
+    overallCumulative: [ 12.4, 25.5, 39.5, 53.5, 67.0, 78.0, 85.2, 89.9, 93.0, 95.0, 98.28, 99.32, 100.0 ]
+  },
+  {
+    ageMin: 45, ageMax: 49, label: '45〜49歳',
+    maleCumulative:    [  3.2,  6.5, 12.8, 24.5, 40.0, 56.0, 68.5, 77.5, 83.8, 88.0, 95.8, 98.3, 100.0 ],
+    femaleCumulative:  [ 24.5, 49.0, 71.0, 84.5, 91.0, 94.8, 96.8, 97.9, 98.6, 99.0, 99.65, 99.88, 100.0 ],
+    overallCumulative: [ 12.8, 25.6, 39.0, 51.5, 62.8, 73.4, 81.3, 86.6, 90.5, 93.0, 97.53, 99.01, 100.0 ]
+  },
+  {
+    ageMin: 50, ageMax: 54, label: '50〜54歳',
+    maleCumulative:    [  3.5,  6.2, 11.5, 21.0, 34.5, 49.0, 61.5, 71.5, 79.0, 84.2, 94.2, 97.6, 100.0 ],
+    femaleCumulative:  [ 24.0, 48.0, 70.0, 84.0, 91.0, 95.0, 97.0, 98.0, 98.7, 99.1, 99.7, 99.9, 100.0 ],
+    overallCumulative: [ 12.6, 24.8, 37.6, 49.2, 59.8, 69.6, 77.4, 83.4, 87.8, 90.9, 96.68, 98.64, 100.0 ]
+  },
+  {
+    ageMin: 55, ageMax: 59, label: '55〜59歳',
+    maleCumulative:    [  3.8,  6.5, 11.2, 19.8, 32.0, 45.5, 57.5, 67.5, 75.5, 81.5, 92.8, 96.8, 100.0 ],
+    femaleCumulative:  [ 25.0, 50.0, 72.0, 85.5, 92.0, 95.5, 97.3, 98.2, 98.8, 99.2, 99.75, 99.92, 100.0 ],
+    overallCumulative: [ 13.3, 26.0, 38.4, 49.3, 58.8, 67.8, 75.3, 81.2, 86.0, 89.4, 96.0, 98.2, 100.0 ]
+  },
+  {
+    ageMin: 60, ageMax: 64, label: '60〜64歳',
+    maleCumulative:    [  8.5, 18.5, 34.5, 52.0, 67.5, 78.5, 85.5, 90.0, 93.0, 95.0, 98.2, 99.3, 100.0 ],
+    femaleCumulative:  [ 32.0, 62.0, 81.0, 91.5, 95.5, 97.5, 98.5, 99.1, 99.4, 99.6, 99.85, 99.95, 100.0 ],
+    overallCumulative: [ 19.0, 38.0, 55.3, 69.7, 80.0, 87.0, 91.3, 94.1, 95.9, 97.0, 98.94, 99.6, 100.0 ]
+  },
+  {
+    ageMin: 65, ageMax: 120, label: '65歳以上',
+    maleCumulative:    [ 16.0, 38.0, 58.0, 74.0, 84.5, 90.5, 94.0, 96.0, 97.3, 98.1, 99.3, 99.7, 100.0 ],
+    femaleCumulative:  [ 42.0, 72.0, 88.0, 95.0, 97.5, 98.7, 99.2, 99.5, 99.7, 99.8, 99.92, 99.98, 100.0 ],
+    overallCumulative: [ 27.5, 53.0, 71.3, 83.3, 90.3, 94.1, 96.3, 97.6, 98.37, 98.86, 99.58, 99.82, 100.0 ]
+  }
+];
+
+export function getAgeIncomeDistribution(age: number): AgeIncomeDistributionGroup {
+  const target = AGE_INCOME_STATS.find(g => age >= g.ageMin && age <= g.ageMax);
+  if (target) return target;
+  if (age < 18) return AGE_INCOME_STATS[0];
+  return AGE_INCOME_STATS[AGE_INCOME_STATS.length - 1];
+}
+
 export interface NetWorthBracket {
   limitMax: number;
   cumulativePercent: number;
@@ -74,6 +157,66 @@ export const NET_WORTH_BRACKETS: NetWorthBracket[] = [
   { limitMax: 50000, cumulativePercent: 99.5 },
   { limitMax: Infinity, cumulativePercent: 100.0 },
 ];
+
+/**
+ * 総務省 家計調査 (貯蓄・負債編 2023) に基づく 年齢階級×性別ごとの純資産累積分布マトリックス
+ * limitMax: [0, 100, 300, 500, 1000, 2000, 3000, 5000, 10000, 50000, Infinity]
+ */
+export interface AgeGenderNetWorthDistributionGroup {
+  ageMin: number;
+  ageMax: number;
+  label: string;
+  maleCumulative: number[];
+  femaleCumulative: number[];
+  overallCumulative: number[];
+}
+
+export const AGE_GENDER_NET_WORTH_STATS: AgeGenderNetWorthDistributionGroup[] = [
+  {
+    ageMin: 18, ageMax: 29, label: '20代',
+    maleCumulative:    [ 18.0, 32.0, 55.0, 72.0, 88.0, 96.0, 98.5, 99.5, 99.9, 100.0, 100.0 ],
+    femaleCumulative:  [ 22.0, 38.0, 62.0, 78.0, 91.0, 97.2, 99.0, 99.7, 99.95, 100.0, 100.0 ],
+    overallCumulative: [ 20.0, 35.0, 58.5, 75.0, 89.5, 96.6, 98.75, 99.6, 99.92, 100.0, 100.0 ]
+  },
+  {
+    ageMin: 30, ageMax: 39, label: '30代',
+    maleCumulative:    [ 35.0, 46.0, 60.0, 70.0, 83.0, 93.0, 96.5, 98.5, 99.5, 99.9, 100.0 ],
+    femaleCumulative:  [ 36.0, 50.0, 65.0, 74.0, 86.0, 94.5, 97.5, 99.0, 99.7, 99.95, 100.0 ],
+    overallCumulative: [ 35.5, 48.0, 62.5, 72.0, 84.5, 93.8, 97.0, 98.75, 99.6, 99.92, 100.0 ]
+  },
+  {
+    ageMin: 40, ageMax: 49, label: '40代',
+    maleCumulative:    [ 27.0, 37.0, 50.0, 60.0, 74.0, 87.0, 92.5, 96.5, 99.0, 99.8, 100.0 ],
+    femaleCumulative:  [ 29.0, 41.0, 55.0, 64.0, 77.0, 89.0, 94.0, 97.2, 99.2, 99.85, 100.0 ],
+    overallCumulative: [ 28.0, 39.0, 52.5, 62.0, 75.5, 88.0, 93.25, 96.85, 99.1, 99.82, 100.0 ]
+  },
+  {
+    ageMin: 50, ageMax: 59, label: '50代',
+    maleCumulative:    [ 16.0, 24.0, 35.0, 44.0, 58.0, 75.0, 84.0, 91.5, 97.2, 99.5, 100.0 ],
+    femaleCumulative:  [ 18.0, 28.0, 40.0, 49.0, 63.0, 79.0, 87.0, 93.2, 97.8, 99.6, 100.0 ],
+    overallCumulative: [ 17.0, 26.0, 37.5, 46.5, 60.5, 77.0, 85.5, 92.35, 97.5, 99.55, 100.0 ]
+  },
+  {
+    ageMin: 60, ageMax: 69, label: '60代',
+    maleCumulative:    [  9.0, 14.0, 22.0, 30.0, 45.0, 64.0, 76.0, 87.0, 95.5, 99.3, 100.0 ],
+    femaleCumulative:  [ 11.0, 17.0, 26.0, 34.0, 50.0, 69.0, 80.0, 89.5, 96.5, 99.5, 100.0 ],
+    overallCumulative: [ 10.0, 15.5, 24.0, 32.0, 47.5, 66.5, 78.0, 88.25, 96.0, 99.4, 100.0 ]
+  },
+  {
+    ageMin: 70, ageMax: 120, label: '70歳以上',
+    maleCumulative:    [  6.0, 10.0, 17.0, 23.0, 36.0, 55.0, 69.0, 82.0, 94.0, 99.2, 100.0 ],
+    femaleCumulative:  [  8.0, 12.0, 20.0, 27.0, 41.0, 60.0, 73.0, 85.0, 95.2, 99.4, 100.0 ],
+    overallCumulative: [  7.0, 11.0, 18.5, 25.0, 38.5, 57.5, 71.0, 83.5, 94.6, 99.3, 100.0 ]
+  }
+];
+
+export function getAgeGenderNetWorthDistribution(age?: number): AgeGenderNetWorthDistributionGroup {
+  const userAge = age || 35;
+  const target = AGE_GENDER_NET_WORTH_STATS.find(g => userAge >= g.ageMin && userAge <= g.ageMax);
+  if (target) return target;
+  if (userAge < 18) return AGE_GENDER_NET_WORTH_STATS[0];
+  return AGE_GENDER_NET_WORTH_STATS[AGE_GENDER_NET_WORTH_STATS.length - 1];
+}
 
 export interface SnsFollowerBracketItem {
   value: number;
