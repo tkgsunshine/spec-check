@@ -100,9 +100,9 @@ export default function UniversityAutocomplete({ value, customHensachi: initialH
           <Search className="w-4 h-4 text-slate-500 absolute right-3.5 pointer-events-none" />
         </div>
 
-        {/* Autocomplete Dropdown List */}
+        {/* Autocomplete Dropdown List (完全ソリッド遮蔽背景) */}
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full mt-2 bg-slate-950/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl z-50 max-h-64 overflow-y-auto divide-y divide-slate-800/60">
+          <div className="absolute left-0 right-0 top-full mt-2 bg-slate-950 border border-slate-700 rounded-2xl shadow-2xl z-[100] max-h-64 overflow-y-auto divide-y divide-slate-800/60">
             {suggestions.map(item => (
               <button
                 key={item.id}

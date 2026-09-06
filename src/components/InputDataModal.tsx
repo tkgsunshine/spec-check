@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DiagnosisInputV3, Gender, MaritalStatus, FaceRating } from '@/types/spec-check';
 import {
@@ -73,6 +73,20 @@ export default function InputDataModal({ input }: InputDataModalProps) {
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | ''>(input.maritalStatus || '');
   const [childrenCount, setChildrenCount] = useState<string>(input.childrenCount ? String(input.childrenCount) : '0');
   const [mbti, setMbti] = useState<string>(input.mbti || '');
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    };
+  }, [isOpen]);
 
   const availableOccupations = industryCode ? getOccupationsByIndustryId(industryCode) : COMMON_OCCUPATION_MASTER;
   const availablePositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || []) : [];
@@ -198,12 +212,12 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />
       </button>
 
-      {/* モーダルオーバーレイ (完全不透明バックドロップで背後の文字透過・重なりバグを完全防止) */}
+      {/* モーダルオーバーレイ (完全不透明ソリッドバックドロップで背後の結果画面・文字の透け・重なりバグを完全遮断) */}
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-slate-950/98 backdrop-blur-xl animate-fadeIn">
-          <div className="relative w-full max-w-2xl max-h-[92vh] bg-slate-900 border border-slate-700 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-slate-950 animate-fadeIn overflow-hidden">
+          <div className="relative w-full max-w-2xl max-h-[90dvh] sm:max-h-[85vh] bg-slate-900 border border-slate-700 rounded-2xl sm:rounded-3xl shadow-[0_0_80px_rgba(0,0,0,1)] overflow-hidden flex flex-col z-[100000]">
             {/* モーダルヘッダー */}
-            <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60 shrink-0">
+            <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                   <FileText className="w-5 h-5" />
@@ -231,7 +245,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
             )}
 
             {/* モーダルコンテンツ (インラインフォームスクロール) */}
-            <div className="p-5 sm:p-6 overflow-y-auto space-y-6 custom-scrollbar text-xs bg-slate-900">
+            <div className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-6 custom-scrollbar text-xs bg-slate-900">
               {/* 基本情報・身体データ */}
               <div className="space-y-3">
                 <h4 className="text-xs font-black text-indigo-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2">
