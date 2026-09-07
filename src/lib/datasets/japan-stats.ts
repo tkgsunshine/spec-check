@@ -554,10 +554,10 @@ export const PREFECTURES = [
 
 export const LANGUAGE_MASTER = [
   { code: 'JA', nameJa: '日本語', isNativeDefaultTarget: true },
-  { code: 'EN', nameJa: '英語 (English)', isNativeDefaultTarget: false },
-  { code: 'ZH', nameJa: '中国語 (中文)', isNativeDefaultTarget: false },
-  { code: 'KO', nameJa: '韓国語 (한국어)', isNativeDefaultTarget: false },
-  { code: 'ES', nameJa: 'スペイン語 (Español)', isNativeDefaultTarget: false },
-  { code: 'FR', nameJa: 'フランス語 (Français)', isNativeDefaultTarget: false },
-  { code: 'DE', nameJa: 'ドイツ語 (Deutsch)', isNativeDefaultTarget: false },
+  { code: 'EN', nameJa: '英語', isNativeDefaultTarget: false },
+  { code: 'ZH', nameJa: '中国語', isNativeDefaultTarget: false },
+  { code: 'KO', nameJa: '韓国語', isNativeDefaultTarget: false },
+  { code: 'ES', nameJa: 'スペイン語', isNativeDefaultTarget: false },
+  { code: 'FR', nameJa: 'フランス語', isNativeDefaultTarget: false },
+  { code: 'DE', nameJa: 'ドイツ語', isNativeDefaultTarget: false },
 ];
