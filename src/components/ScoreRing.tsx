@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ScoreRingProps {
   score: number;
@@ -17,9 +17,32 @@ export default function ScoreRing({
   subLabel = '/ 100 POINT',
   colorTheme = 'violet',
 }: ScoreRingProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [displayScore, setDisplayScore] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.35, rootMargin: '0px 0px -80px 0px' }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+  useEffect(() => {
+    if (!hasAnimated) return;
+
     let startTimestamp: number | null = null;
     const duration = 1400; // 1.4s smooth count up animation
 
@@ -39,7 +62,7 @@ export default function ScoreRing({
     };
 
     window.requestAnimationFrame(step);
-  }, [score]);
+  }, [score, hasAnimated]);
 
   const radius = 100;
   const circumference = 2 * Math.PI * radius;
@@ -50,7 +73,7 @@ export default function ScoreRing({
   const glowClass = isRose ? 'glow-text-rose' : 'glow-text-violet';
 
   return (
-    <div className="relative flex flex-col items-center justify-center py-6">
+    <div ref={containerRef} className="relative flex flex-col items-center justify-center py-6">
       <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
         {/* SVG Conic Progress Circle */}
         <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 240 240">
