@@ -294,6 +294,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <input
                       type="text"
                       inputMode="numeric"
+                      pattern="[0-9]*"
                       value={age}
                       onChange={(e) => setAge(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
@@ -317,6 +318,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       <input
                         type="text"
                         inputMode="numeric"
+                        pattern="[0-9]*"
                         value={height}
                         onChange={(e) => setHeight(sanitizeNumericInput(e.target.value))}
                         className="w-1/2 px-2.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
@@ -325,6 +327,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       <input
                         type="text"
                         inputMode="numeric"
+                        pattern="[0-9]*"
                         value={weight}
                         onChange={(e) => setWeight(sanitizeNumericInput(e.target.value))}
                         className="w-1/2 px-2.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
@@ -337,6 +340,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <input
                       type="text"
                       inputMode="decimal"
+                      pattern="[0-9.]*"
                       value={bodyFat}
                       onChange={(e) => setBodyFat(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"
@@ -371,6 +375,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <input
                       type="text"
                       inputMode="numeric"
+                      pattern="[0-9]*"
                       value={annualIncome}
                       onChange={(e) => setAnnualIncome(sanitizeNumericInput(e.target.value))}
                       className="w-full max-w-sm px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400 font-black text-sm focus:border-emerald-500 focus:outline-none"
@@ -386,6 +391,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={financialAssets}
                           onChange={(e) => setFinancialAssets(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
@@ -396,6 +402,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={realEstateAssets}
                           onChange={(e) => setRealEstateAssets(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
@@ -406,6 +413,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={carAssets}
                           onChange={(e) => setCarAssets(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
@@ -416,6 +424,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={watchAssets}
                           onChange={(e) => setWatchAssets(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
@@ -433,6 +442,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={mortgageDebt}
                           onChange={(e) => setMortgageDebt(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
@@ -443,6 +453,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={carDebt}
                           onChange={(e) => setCarDebt(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
@@ -453,6 +464,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={scholarshipDebt}
                           onChange={(e) => setScholarshipDebt(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
@@ -463,6 +475,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         <input
                           type="text"
                           inputMode="numeric"
+                          pattern="[0-9]*"
                           value={otherDebt}
                           onChange={(e) => setOtherDebt(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-rose-300 font-bold focus:border-rose-500 focus:outline-none"
@@ -512,6 +525,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <input
                       type="text"
                       inputMode="numeric"
+                      pattern="[0-9]*"
                       value={iqScore}
                       onChange={(e) => setIqScore(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
@@ -675,6 +689,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <input
                       type="text"
                       inputMode="numeric"
+                      pattern="[0-9]*"
                       value={travelCount}
                       onChange={(e) => setTravelCount(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
@@ -699,6 +714,7 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     <input
                       type="text"
                       inputMode="numeric"
+                      pattern="[0-9]*"
                       value={childrenCount}
                       onChange={(e) => setChildrenCount(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"

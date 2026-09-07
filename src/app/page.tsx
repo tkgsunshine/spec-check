@@ -695,6 +695,7 @@ export default function HomePage() {
                 <input
                   type="text"
                   inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="例: 28"
                   value={age}
                   onChange={e => setAge(toHalfWidthDigits(e.target.value))}
@@ -736,7 +737,8 @@ export default function HomePage() {
                 </label>
                 <input
                   type="text"
-                  inputMode="decimal"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="例: 172"
                   value={height}
                   onChange={e => setHeight(toHalfWidthDigits(e.target.value))}
@@ -750,7 +752,8 @@ export default function HomePage() {
                 </label>
                 <input
                   type="text"
-                  inputMode="decimal"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="例: 65"
                   value={weight}
                   onChange={e => setWeight(toHalfWidthDigits(e.target.value))}
@@ -765,6 +768,7 @@ export default function HomePage() {
                 <input
                   type="text"
                   inputMode="decimal"
+                  pattern="[0-9.]*"
                   placeholder="例: 15.5"
                   value={bodyFat}
                   onChange={e => setBodyFat(toHalfWidthDigits(e.target.value))}
@@ -845,6 +849,7 @@ export default function HomePage() {
               <input
                 type="text"
                 inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="例: 500"
                 value={annualIncome}
                 onChange={e => setAnnualIncome(toHalfWidthDigits(e.target.value))}
@@ -901,6 +906,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 1000 または 0"
                     value={financialAssets}
                     onChange={e => setFinancialAssets(toHalfWidthDigits(e.target.value))}
@@ -912,6 +918,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 3000 または 0"
                     value={realEstateAssets}
                     onChange={e => setRealEstateAssets(toHalfWidthDigits(e.target.value))}
@@ -923,6 +930,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 300 または 0"
                     value={carAssets}
                     onChange={e => setCarAssets(toHalfWidthDigits(e.target.value))}
@@ -934,6 +942,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 100 または 0"
                     value={watchAssets}
                     onChange={e => setWatchAssets(toHalfWidthDigits(e.target.value))}
@@ -993,6 +1002,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 2500"
                     value={mortgageDebt}
                     onChange={e => setMortgageDebt(toHalfWidthDigits(e.target.value))}
@@ -1004,6 +1014,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 200"
                     value={carDebt}
                     onChange={e => setCarDebt(toHalfWidthDigits(e.target.value))}
@@ -1015,6 +1026,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 150"
                     value={scholarshipDebt}
                     onChange={e => setScholarshipDebt(toHalfWidthDigits(e.target.value))}
@@ -1026,6 +1038,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="例: 50"
                     value={otherDebt}
                     onChange={e => setOtherDebt(toHalfWidthDigits(e.target.value))}
@@ -1098,6 +1111,7 @@ export default function HomePage() {
               <input
                 type="text"
                 inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="例: 115 (MENSA測定値や各種IQテスト数値)"
                 value={iqScore}
                 onChange={e => setIqScore(toHalfWidthDigits(e.target.value))}
@@ -1388,6 +1402,7 @@ export default function HomePage() {
                 <input
                   type="text"
                   inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="例: 0"
                   value={childrenCount}
                   onChange={e => setChildrenCount(toHalfWidthDigits(e.target.value))}
@@ -1421,6 +1436,7 @@ export default function HomePage() {
               <input
                 type="text"
                 inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="例: 3 (未入力可能)"
                 value={travelCount}
                 onChange={e => setTravelCount(toHalfWidthDigits(e.target.value))}

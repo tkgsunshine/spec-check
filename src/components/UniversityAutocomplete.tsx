@@ -173,6 +173,8 @@ export default function UniversityAutocomplete({ value, customHensachi: initialH
           <div className="flex items-center gap-3">
             <input
               type="number"
+              inputMode="decimal"
+              pattern="[0-9.]*"
               step="0.5"
               min="30"
               max="80"
