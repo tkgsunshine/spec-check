@@ -517,9 +517,16 @@ export default function HomePage() {
         minAnimationPromise,
       ]);
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || '計算エラーが発生しました。');
+      let data: any = null;
+      try {
+        const text = await res.text();
+        data = text ? JSON.parse(text) : null;
+      } catch (e) {
+        console.error('Failed to parse calculate API response:', e);
+      }
+
+      if (!res.ok || !data || !data.success) {
+        throw new Error(data?.error || `診断計算エラーが発生しました (HTTP ${res.status})。時間をおいて再度お試しください。`);
       }
 
       try {

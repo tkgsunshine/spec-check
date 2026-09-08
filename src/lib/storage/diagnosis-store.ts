@@ -13,17 +13,18 @@ export async function saveDiagnosis(result: OverallDiagnosisResultV3): Promise<v
   shareTokenMap.set(result.shareToken, result.diagnosisId);
 
   // Firestore DB が接続されていれば永続ドキュメントとして保存
-  const db = getAdminFirestore();
-  if (db) {
-    try {
-      await db.collection('diagnoses').doc(result.diagnosisId).set({
+  try {
+    const db = getAdminFirestore();
+    if (db) {
+      const sanitizedDoc = JSON.parse(JSON.stringify({
         ...result,
         shareToken: result.shareToken,
         createdAt: result.createdAt || new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error('Firestore saveDiagnosis error:', error);
+      }));
+      await db.collection('diagnoses').doc(result.diagnosisId).set(sanitizedDoc);
     }
+  } catch (error) {
+    console.error('Firestore saveDiagnosis error:', error);
   }
 }
 
