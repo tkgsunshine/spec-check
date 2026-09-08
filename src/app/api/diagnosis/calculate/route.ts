@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { DiagnosisInputV3 } from '@/types/spec-check';
-import { runDiagnosisV3Async } from '@/lib/score-engine';
+import { runDiagnosisV3, runDiagnosisV3Async } from '@/lib/score-engine';
 import { saveDiagnosis } from '@/lib/storage/diagnosis-store';
 
 export async function POST(request: Request) {
@@ -23,14 +23,26 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await runDiagnosisV3Async(body);
-    await saveDiagnosis(result);
+    // 1. スコア計算の実行 (Gemini AI非同期試行 ➔ 失敗時は安全な同期エンジンへフォールバック)
+    let result;
+    try {
+      result = await runDiagnosisV3Async(body);
+    } catch (calcError) {
+      console.error('Async diagnosis engine failed, falling back to sync engine:', calcError);
+      result = runDiagnosisV3(body);
+    }
+
+    // 2. DB保存処理 (完全非同期化・絶対エラー無視)
+    // 保存処理の失敗がユーザーへの結果返却を妨害しないよう独立保護
+    saveDiagnosis(result).catch(saveError => {
+      console.error('Background saveDiagnosis error (non-fatal):', saveError);
+    });
 
     return NextResponse.json({ success: true, result });
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error('Diagnosis calculation error:', error);
     return NextResponse.json(
-      { error: '診断スコアの計算中にエラーが発生しました。' },
+      { error: error?.message || '診断スコアの計算中にエラーが発生しました。' },
       { status: 500 }
     );
   }

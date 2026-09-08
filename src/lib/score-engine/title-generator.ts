@@ -9,10 +9,10 @@ export function generateEpithetTitle(
   metrics: MetricScoreResult[]
 ): EpithetResult {
   // 各メトリクスのスコア抽出
-  const incomeMetric = metrics.find(m => m.metricCode === 'ANNUAL_INCOME');
+  const incomeMetric = metrics.find(m => m.metricCode === 'INCOME' || m.metricCode === 'ANNUAL_INCOME');
   const assetMetric = metrics.find(m => m.metricCode === 'NET_WORTH');
-  const academicMetric = metrics.find(m => m.metricCode === 'ACADEMIC_BACKGROUND');
-  const companyMetric = metrics.find(m => m.metricCode === 'COMPANY');
+  const academicMetric = metrics.find(m => m.metricCode === 'ACADEMIC_DEGREE' || m.metricCode === 'ACADEMIC_BACKGROUND');
+  const companyMetric = metrics.find(m => m.metricCode === 'COMPANY' || m.metricCode === 'OCCUPATION');
   const iqMetric = metrics.find(m => m.metricCode === 'IQ_ESTIMATE');
 
   const incomeScore = incomeMetric ? incomeMetric.score : 0;
