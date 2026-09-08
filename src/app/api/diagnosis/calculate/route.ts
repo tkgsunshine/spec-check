@@ -14,6 +14,15 @@ export async function POST(request: Request) {
       );
     }
 
+    const hasCompanyName = Boolean(body.companyName && body.companyName.trim() !== '');
+    const hasCompanyCategory = Boolean(body.companyCategory && String(body.companyCategory).trim() !== '');
+    if (!hasCompanyName && !hasCompanyCategory) {
+      return NextResponse.json(
+        { error: '「勤務先・企業名」または「勤務先企業規模」のどちらか一方を必ず入力・選択してください。' },
+        { status: 400 }
+      );
+    }
+
     const result = await runDiagnosisV3Async(body);
     saveDiagnosis(result);
 
