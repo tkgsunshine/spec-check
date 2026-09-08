@@ -907,7 +907,7 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 1000 または 0"
+                    placeholder="例: 1000"
                     value={financialAssets}
                     onChange={e => setFinancialAssets(toHalfWidthDigits(e.target.value))}
                     className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
@@ -919,7 +919,7 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 3000 または 0"
+                    placeholder="例: 3000"
                     value={realEstateAssets}
                     onChange={e => setRealEstateAssets(toHalfWidthDigits(e.target.value))}
                     className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
@@ -931,7 +931,7 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 300 または 0"
+                    placeholder="例: 300"
                     value={carAssets}
                     onChange={e => setCarAssets(toHalfWidthDigits(e.target.value))}
                     className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
@@ -943,7 +943,7 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 100 または 0"
+                    placeholder="例: 100"
                     value={watchAssets}
                     onChange={e => setWatchAssets(toHalfWidthDigits(e.target.value))}
                     className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
