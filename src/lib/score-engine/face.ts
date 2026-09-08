@@ -29,17 +29,17 @@ export async function analyzeFaceWithGemini(params: {
     if (params.gender === 'FEMALE') genderLabel = '女性';
 
     const prompt = `あなたはプロのルックス・雰囲気診断AIです。
-添付された画像は【${ageLabel}・${genderLabel}】の人物の顔写真です。
-この年代および性別における相対的な雰囲気、清潔感、好印象度、ルックスポイントを分析し、以下のJSON形式でのみ回答してください。
+添付された画像は【${ageLabel}・日本人${genderLabel}】の人物の顔写真です。
+日本の${ageLabel}・日本人${genderLabel}における相対的な雰囲気、清潔感、好印象度、ルックスポイントを分析し、以下のJSON形式でのみ回答してください。
 
 【評価規則】
 1. isHuman: 人物の顔写真が適切に写っているか（動物、景色、イラスト、顔が見えない場合は false）
-2. scoreBonus: ${ageLabel}・${genderLabel}の基準における清潔感・魅力・好印象度の加算ボーナスポイント (5〜10の整数)
+2. scoreBonus: 日本の${ageLabel}・日本人${genderLabel}の基準における清潔感・魅力・好印象度の加算ボーナスポイント (5〜10の整数)
    - 清潔感があり非常に好印象な表情/雰囲気: 9〜10pt
    - 整っており好印象な雰囲気: 7〜8pt
    - 標準的・一般的な雰囲気: 5〜6pt
-3. comment: その年代・性別における魅力を評価するポジティブな一言短評（25文字以内の日本語）
-   例：「30代男性として清潔感のある引き締まった好印象な表情です」
+3. comment: 日本のその年代・性別における魅力を評価するポジティブな一言短評（25文字以内の日本語）
+   例：「30代日本人男性として清潔感のある引き締まった好印象な表情です」
 `;
 
     let mimeType = 'image/jpeg';
