@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { DiagnosisInputV3 } from '@/types/spec-check';
-import { runDiagnosisV3 } from '@/lib/score-engine';
+import { runDiagnosisV3Async } from '@/lib/score-engine';
 import { saveDiagnosis } from '@/lib/storage/diagnosis-store';
 
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = runDiagnosisV3(body);
+    const result = await runDiagnosisV3Async(body);
     saveDiagnosis(result);
 
     return NextResponse.json({ success: true, result });
