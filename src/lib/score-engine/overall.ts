@@ -70,7 +70,8 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
     input.universityName,
     input.customUniversityHensachi,
     input.prefectureName,
-    input.iqScore
+    input.iqScore,
+    input.age
   );
 
   const careerResult = calculateCareerScore(
@@ -270,7 +271,8 @@ export async function runDiagnosisV3Async(input: DiagnosisInputV3): Promise<Over
     input.universityName,
     input.customUniversityHensachi,
     input.prefectureName,
-    input.iqScore
+    input.iqScore,
+    input.age
   );
 
   const careerResult = calculateCareerScore(

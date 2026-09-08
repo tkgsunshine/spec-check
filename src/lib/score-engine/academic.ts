@@ -15,7 +15,9 @@ export const DEGREE_SCORES: Record<string, { label: string; score: number; topPe
   MIDDLE_SCHOOL: { label: '中学校卒', score: 25, topPercent: 98.0 },
 };
 
-// 文部科学省「学校基本調査」都道府県別大学進学率に基づく大卒・院卒の地域希少性ボーナス (pt)
+/**
+ * 文部科学省「学校基本調査」都道府県別大学進学率に基づく大卒・院卒の地域希少性ボーナス (pt)
+ */
 export const REGIONAL_UNIVERSITY_ADVANCEMENT_FACTORS: Record<string, number> = {
   '東京都': 0,
   '神奈川県': 0,
@@ -68,7 +70,57 @@ export const REGIONAL_UNIVERSITY_ADVANCEMENT_FACTORS: Record<string, number> = {
 };
 
 /**
- * 偏差値 $H$ から 100pt スコアへの換算式 (東大 75.0 = 100pt 基準)
+ * 文部科学省「学校基本調査」年代別大学・大学院進学率推移に基づく年代別学歴稀少性ボーナス (pt)
+ */
+export function calculateAgeGenerationalAcademicBonus(
+  age?: number | null,
+  academicDegree?: string | null
+): { bonusScore: number; adjustedTopPercentRatio: number; label: string } {
+  if (!age || !academicDegree) {
+    return { bonusScore: 0, adjustedTopPercentRatio: 1.0, label: '' };
+  }
+
+  const isGradSchool = academicDegree === 'MASTER' || academicDegree === 'DOCTOR';
+  const isBachelor = academicDegree === 'BACHELOR';
+
+  if (!isGradSchool && !isBachelor) {
+    return { bonusScore: 0, adjustedTopPercentRatio: 1.0, label: '' };
+  }
+
+  if (age >= 75) {
+    // 75歳以上 (昭和前期生まれ・大学進学率10%未満、院卒0.5%未満)
+    const bonusScore = isGradSchool ? 8 : 6;
+    const adjustedTopPercentRatio = isGradSchool ? 0.25 : 0.35;
+    return {
+      bonusScore,
+      adjustedTopPercentRatio,
+      label: `昭和前期世代(75歳以上)の${isGradSchool ? '大学院卒' : '大学卒'}希少価値ボーナス (+${bonusScore}pt)`,
+    };
+  } else if (age >= 65) {
+    // 65歳〜74歳 (高度成長期世代・大学進学率15-20%、院卒1.5%)
+    const bonusScore = isGradSchool ? 6 : 4;
+    const adjustedTopPercentRatio = isGradSchool ? 0.45 : 0.55;
+    return {
+      bonusScore,
+      adjustedTopPercentRatio,
+      label: `シニア世代(65〜74歳)の${isGradSchool ? '大学院卒' : '大学卒'}希少価値ボーナス (+${bonusScore}pt)`,
+    };
+  } else if (age >= 55) {
+    // 55歳〜64歳 (バブル期前後世代)
+    const bonusScore = isGradSchool ? 3 : 2;
+    const adjustedTopPercentRatio = isGradSchool ? 0.7 : 0.8;
+    return {
+      bonusScore,
+      adjustedTopPercentRatio,
+      label: `ミドルシニア世代(55〜64歳)の学歴希少価値ボーナス (+${bonusScore}pt)`,
+    };
+  }
+
+  return { bonusScore: 0, adjustedTopPercentRatio: 1.0, label: '' };
+}
+
+/**
+ * 偏差値 H から 100pt スコアへの換算式 (東大 75.0 = 100pt 基準)
  */
 export function hensachiToPoint(hensachi: number): number {
   return Math.min(100, Math.max(30, Math.round((hensachi - 35) * 2.5 * 10) / 10));
@@ -130,14 +182,16 @@ export function calculateIqMetric(
 }
 
 /**
- * 学歴・知性・大学・IQ Score (ACADEMIC_SCORE) の計算 V3.0
+ * 学歴・知性・大学・IQ Score (ACADEMIC_SCORE) の計算 V3.1
+ * 年齢世代別進学率 × 都道府県別大学進学率のダブル希少性補正モデル
  */
 export function calculateAcademicScore(
   academicDegree?: keyof typeof DEGREE_SCORES | null,
   universityName?: string | null,
   customUniversityHensachi?: number | null,
   prefectureName?: string | null,
-  iqScoreInput?: number | null
+  iqScoreInput?: number | null,
+  age?: number | null
 ): AcademicScoreResult {
   const isDegreeEntered = Boolean(academicDegree && DEGREE_SCORES[academicDegree]);
   const degreeConfig = isDegreeEntered ? DEGREE_SCORES[academicDegree!] : { label: '未選択 (標準値)', score: 50, topPercent: 50.0 };
@@ -148,7 +202,30 @@ export function calculateAcademicScore(
     ? REGIONAL_UNIVERSITY_ADVANCEMENT_FACTORS[prefectureName]
     : 0;
 
-  const adjustedDegreeScore = isDegreeEntered ? Math.min(100, degreeConfig.score + regionalRarityBonus) : 50;
+  // 年代別学歴希少性ボーナス (75歳以上や65歳以上の大卒/院卒への年代補正)
+  const generationalBonus = calculateAgeGenerationalAcademicBonus(age, academicDegree);
+
+  const adjustedDegreeScore = isDegreeEntered
+    ? Math.min(100, degreeConfig.score + regionalRarityBonus + generationalBonus.bonusScore)
+    : 50;
+
+  const calculatedTopPercent = isDegreeEntered
+    ? calcHighPrecisionTopPercent(degreeConfig.topPercent * generationalBonus.adjustedTopPercentRatio)
+    : 50.0;
+
+  let notesText = !isDegreeEntered ? '未選択のため平均値 (50pt) で試算。' : '文部科学省「学校基本調査」および総務省国勢調査構成比に基づく算出。';
+  if (isDegreeEntered) {
+    const notesParts: string[] = [];
+    if (generationalBonus.bonusScore > 0) {
+      notesParts.push(generationalBonus.label);
+    }
+    if (regionalRarityBonus > 0) {
+      notesParts.push(`${prefectureName}における進学率地域希少性ボーナス(+${regionalRarityBonus}pt)`);
+    }
+    if (notesParts.length > 0) {
+      notesText = `【学歴希少性加算】: ${notesParts.join(' ＋ ')}を適用。`;
+    }
+  }
 
   const academicDegreeMetric: MetricScoreResult = {
     metricCode: 'ACADEMIC_DEGREE',
@@ -157,18 +234,14 @@ export function calculateAcademicScore(
     rawValue: degreeConfig.label,
     score: adjustedDegreeScore,
     percentile: adjustedDegreeScore,
-    topPercent: degreeConfig.topPercent,
+    topPercent: calculatedTopPercent,
     dataQuality: isDegreeEntered ? 'OFFICIAL' : 'USER_INPUT',
-    datasetName: '総務省 国勢調査 / 文部科学省 学校基本調査',
+    datasetName: '総務省 国勢調査 / 文部科学省 学校基本調査 (世代・地域補正モデル)',
     sourceUrl: 'https://www.e-stat.go.jp/',
     surveyYear: 2024,
     calculationMethod: 'EXACT_PERCENTILE',
     hasOfficialTopPercent: isDegreeEntered,
-    notes: !isDegreeEntered
-      ? '未選択のため平均値 (50pt) で試算。'
-      : regionalRarityBonus > 0
-        ? `文部科学省「学校基本調査」都道府県別進学率適用。${prefectureName}における大卒・大学院卒の地域希少性ボーナス(+${regionalRarityBonus}pt)を加算。`
-        : `日本人同年代の学歴構成比に基づく算出。`,
+    notes: notesText,
   };
 
   let universityMetric: MetricScoreResult | null = null;
@@ -239,12 +312,10 @@ export function calculateAcademicScore(
   // IQ Metric の計算（入力値 または 大学偏差値・最終学歴からの自動推計）
   const iqMetric = calculateIqMetric(iqScoreInput, detectedHensachi, academicDegree);
 
-  // 大学の難易度(偏差値)が指定されている場合、大卒基礎点(75pt)の上限に囚われない実効学歴スコアを算出
   const effectiveDegreeScore = universityMetric
     ? Math.max(academicDegreeMetric.score, universityMetric.score)
     : academicDegreeMetric.score;
 
-  // 総合学歴・知性スコア (大学重視 50% + IQ 30% + 実効学歴 20% / 大学無しの場合 実効学歴 60% + IQ 40%)
   const totalAcademicScore = universityMetric
     ? Math.round((universityMetric.score * 0.50 + iqMetric.score * 0.30 + effectiveDegreeScore * 0.20) * 10) / 10
     : Math.round((effectiveDegreeScore * 0.60 + iqMetric.score * 0.40) * 10) / 10;
