@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     }
 
     const result = await runDiagnosisV3Async(body);
-    saveDiagnosis(result);
+    await saveDiagnosis(result);
 
     return NextResponse.json({ success: true, result });
   } catch (error: unknown) {
