@@ -3,10 +3,17 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  ShieldCheck, Database, RefreshCw, CheckCircle2, ArrowLeft, BarChart3,
-  Users, Calendar, Search, Eye, Download, FileText, Globe
+  ShieldCheck, Database, RefreshCw, ArrowLeft, BarChart3,
+  Users, Calendar, Search, Eye, Download, FileText, Globe,
+  User, Landmark, GraduationCap, Heart, Sparkles, X, Briefcase, Award, ArrowUpRight
 } from 'lucide-react';
-import { OverallDiagnosisResultV3 } from '@/types/spec-check';
+import { OverallDiagnosisResultV3, DiagnosisInputV3 } from '@/types/spec-check';
+import {
+  INDUSTRY_MASTER,
+  COMMON_OCCUPATION_MASTER,
+  MBTI_MASTER,
+  SNS_FOLLOWER_BRACKETS,
+} from '@/lib/datasets/japan-stats';
 
 interface AdminStatsSummary {
   totalCount: number;
@@ -18,13 +25,94 @@ interface AdminStatsSummary {
   topPrefectures: { pref: string; count: number }[];
 }
 
+// ヘルパー: 表示用ラベル変換
+const getFaceRatingLabel = (val?: string | null): string => {
+  switch (val) {
+    case 'MODEL_LEVEL': return 'モデル・インフルエンサー級 (美形・圧倒的)';
+    case 'ABOVE_AVERAGE': return '上位クラス (整った容姿・清潔感)';
+    case 'AVERAGE': return '平均的 (一般的・親しみやすい印象)';
+    case 'BELOW_AVERAGE': return '改善の余地あり';
+    default: return val ? String(val) : '未入力';
+  }
+};
+
+const getAcademicDegreeLabel = (val?: string | null): string => {
+  switch (val) {
+    case 'DOCTOR': return '大学院博士課程修了';
+    case 'MASTER': return '大学院修士課程修了';
+    case 'BACHELOR': return '大学卒 (学士)';
+    case 'JUNIOR_COLLEGE': return '短期大学卒';
+    case 'VOCATIONAL': return '専門学校卒';
+    case 'HIGH_SCHOOL': return '高等学校卒';
+    case 'MIDDLE_SCHOOL': return '中学校卒';
+    default: return val ? String(val) : '未入力';
+  }
+};
+
+const getEmploymentTypeLabel = (val?: string | null): string => {
+  switch (val) {
+    case 'EXECUTIVE': return '役員・経営者';
+    case 'REGULAR': return '正社員・常勤';
+    case 'CONTRACT': return '契約社員・派遣・パート';
+    case 'FREELANCE': return 'フリーランス・個人事業';
+    case 'UNEMPLOYED': return '無職・求職中・学生';
+    default: return val ? String(val) : '未入力';
+  }
+};
+
+const getCompanyCategoryLabel = (val?: string | null): string => {
+  switch (val) {
+    case 'LARGE_PRIME': return 'プライム上場・外資トップ';
+    case 'LARGE': return '大手企業・上場企業';
+    case 'MEDIUM': return '中堅企業・メガベンチャー';
+    case 'SMALL': return '中小企業・スタートアップ';
+    case 'OTHER': return 'その他・個人事業所';
+    default: return val ? String(val) : '未選択';
+  }
+};
+
+const getMaritalStatusLabel = (val?: string | null): string => {
+  switch (val) {
+    case 'SINGLE': return '未婚';
+    case 'MARRIED': return '既婚';
+    case 'DIVORCED': return '離婚歴あり';
+    case 'BEREAVED': return '死別';
+    default: return val ? String(val) : '未入力';
+  }
+};
+
+const getIndustryLabel = (code?: string | null): string => {
+  if (!code) return '未選択';
+  const found = INDUSTRY_MASTER.find(i => i.id === code);
+  return found ? found.name : code;
+};
+
+const getOccupationLabel = (code?: string | null): string => {
+  if (!code) return '未選択';
+  const found = COMMON_OCCUPATION_MASTER.find(o => o.id === code);
+  return found ? found.name : code;
+};
+
+const getMbtiLabel = (code?: string | null): string => {
+  if (!code) return '未入力 / 不明';
+  const found = MBTI_MASTER.find(m => m.code.toUpperCase() === code.toUpperCase());
+  return found ? `${found.code} (${found.nameJa})` : code;
+};
+
+const getSnsFollowerLabel = (num?: number | null): string => {
+  if (num === null || num === undefined) return '0人';
+  const found = SNS_FOLLOWER_BRACKETS.find(b => b.value === num);
+  if (found) return found.label;
+  if (num >= 10000) return `${(num / 10000).toFixed(1)}万人`;
+  return `${num.toLocaleString()}人`;
+};
+
 export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<AdminStatsSummary | null>(null);
   const [records, setRecords] = useState<OverallDiagnosisResultV3[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecord, setSelectedRecord] = useState<OverallDiagnosisResultV3 | null>(null);
-  const [successMsg, setSuccessMsg] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchAdminData = async () => {
@@ -106,6 +194,12 @@ export default function AdminPage() {
     );
   });
 
+  // 選択レコードの入力情報（安全な参照用）
+  const inp: Partial<DiagnosisInputV3> = selectedRecord?.rawInput || {};
+  const totalAssets = (inp.financialAssets || 0) + (inp.realEstateAssets || 0) + (inp.carAssets || 0) + (inp.watchAssets || 0);
+  const totalDebts = (inp.mortgageDebt || 0) + (inp.carDebt || 0) + (inp.scholarshipDebt || 0) + (inp.otherDebt || 0);
+  const netWorth = totalAssets - totalDebts;
+
   return (
     <main className="max-w-7xl mx-auto px-4 py-8 md:py-12">
       {/* Header Navigation */}
@@ -124,7 +218,7 @@ export default function AdminPage() {
           <button
             onClick={fetchAdminData}
             disabled={refreshing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all cursor-pointer"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             最新データに更新
@@ -132,7 +226,7 @@ export default function AdminPage() {
 
           <button
             onClick={handleExportCSV}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 transition-all cursor-pointer"
           >
             <Download className="w-4 h-4" />
             全ログCSV出力
@@ -305,13 +399,13 @@ export default function AdminPage() {
                     </td>
                     <td className="py-3 px-3 text-slate-300">{r.inputSummary?.prefectureName || '-'}</td>
                     <td className="py-3 px-3">
-                      <div className="text-slate-200">{r.rawInput?.academicDegree || '-'}</div>
+                      <div className="text-slate-200">{getAcademicDegreeLabel(r.rawInput?.academicDegree)}</div>
                       {r.rawInput?.universityName && (
                         <div className="text-[10px] text-indigo-400">{r.rawInput.universityName}</div>
                       )}
                     </td>
                     <td className="py-3 px-3">
-                      <div className="text-slate-200">{r.rawInput?.companyName || r.rawInput?.companyCategory || '-'}</div>
+                      <div className="text-slate-200">{r.rawInput?.companyName || getCompanyCategoryLabel(r.rawInput?.companyCategory) || '-'}</div>
                       <div className="text-[10px] text-emerald-400">年収 {r.rawInput?.annualIncome ?? '-'} 万円</div>
                     </td>
                     <td className="py-3 px-3 text-right font-black text-indigo-300 text-sm">
@@ -323,10 +417,10 @@ export default function AdminPage() {
                     <td className="py-3 px-3 text-center">
                       <button
                         onClick={() => setSelectedRecord(r)}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600/80 hover:bg-indigo-500 text-white font-bold rounded-lg text-[11px] transition-all"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600/80 hover:bg-indigo-500 text-white font-bold rounded-lg text-[11px] transition-all cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
-                        全項目表示
+                        詳細確認
                       </button>
                     </td>
                   </tr>
@@ -339,81 +433,354 @@ export default function AdminPage() {
 
       {/* Individual Raw Input & Score Detail Modal */}
       {selectedRecord && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedRecord(null);
+          }}
+          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
+        >
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl animate-fadeIn">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 shrink-0">
               <div>
-                <span className="text-xs text-indigo-400 font-mono">ID: {selectedRecord.diagnosisId}</span>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  {selectedRecord.inputSummary?.nickname} 様の個別の生データ・スコア詳細
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold border border-indigo-500/30">
+                    ID: {selectedRecord.diagnosisId}
+                  </span>
+                  <span className="text-xs text-slate-400">
+                    {selectedRecord.createdAt ? new Date(selectedRecord.createdAt).toLocaleString('ja-JP') : ''}
+                  </span>
+                </div>
+                <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                  <span>{inp.nickname || selectedRecord.inputSummary?.nickname || 'あなた'} 様の全入力データ & 診断結果</span>
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedRecord(null)}
-                className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold"
+                className="p-2 rounded-full text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all cursor-pointer border border-slate-700"
+                title="閉じる"
               >
-                閉じる (ESC)
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Modal Body: Raw Inputs */}
-            <div className="space-y-6 text-xs">
-              <div>
-                <h4 className="font-extrabold text-indigo-300 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1">
-                  1. 個別入力された全データ (rawInput)
+            {/* Modal Body */}
+            <div className="p-4 sm:p-6 flex-1 overflow-y-auto space-y-6 text-xs bg-slate-900/90 custom-scrollbar">
+              
+              {/* 1. 基本プロフィール & 身体ステータス */}
+              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
+                <h4 className="text-xs font-black text-indigo-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                  <User className="w-4 h-4 text-indigo-400" />
+                  1. 基本プロフィール & 身体・容姿データ
                 </h4>
-                <pre className="bg-slate-950 p-4 rounded-xl text-emerald-400 font-mono text-[11px] overflow-x-auto">
-                  {JSON.stringify(selectedRecord.rawInput, null, 2)}
-                </pre>
-              </div>
-
-              <div>
-                <h4 className="font-extrabold text-indigo-300 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1">
-                  2. 算出されたカテゴリ別スコア
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span className="text-slate-400">身体 (BODY)</span>
-                    <div className="text-lg font-bold text-white">{selectedRecord.categoryScores.body} Pt</div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">ニックネーム</span>
+                    <span className="font-bold text-white text-sm">{inp.nickname || '-'}</span>
                   </div>
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span className="text-slate-400">経済 (ECONOMIC)</span>
-                    <div className="text-lg font-bold text-white">{selectedRecord.categoryScores.economic} Pt</div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">性別 / 年齢</span>
+                    <span className="font-bold text-white text-sm">
+                      {inp.gender === 'MALE' ? '男性' : inp.gender === 'FEMALE' ? '女性' : 'その他'} / {inp.age}歳
+                    </span>
                   </div>
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span className="text-slate-400">キャリア (CAREER)</span>
-                    <div className="text-lg font-bold text-white">{selectedRecord.categoryScores.career} Pt</div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">居住地 (都道府県)</span>
+                    <span className="font-bold text-white text-sm">{inp.prefectureName || '-'}</span>
                   </div>
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span className="text-slate-400">学歴 (ACADEMIC)</span>
-                    <div className="text-lg font-bold text-white">{selectedRecord.categoryScores.academic} Pt</div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">身長 / 体重</span>
+                    <span className="font-bold text-white text-sm">
+                      {inp.height} cm / {inp.weight} kg
+                    </span>
                   </div>
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span className="text-slate-400">SNS (SOCIAL)</span>
-                    <div className="text-lg font-bold text-white">{selectedRecord.categoryScores.social} Pt</div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">体脂肪率</span>
+                    <span className="font-bold text-white text-sm">
+                      {inp.bodyFat !== null && inp.bodyFat !== undefined && inp.bodyFat !== ('' as any) ? `${inp.bodyFat}%` : '未入力'}
+                    </span>
                   </div>
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <span className="text-slate-400">能力 (GLOBAL)</span>
-                    <div className="text-lg font-bold text-white">{selectedRecord.categoryScores.ability} Pt</div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 sm:col-span-3">
+                    <span className="text-slate-400 text-[10px] block">容姿・第一印象の自己評価</span>
+                    <span className="font-bold text-indigo-300 text-sm">{getFaceRatingLabel(inp.faceRating)}</span>
                   </div>
                 </div>
               </div>
 
-              <div>
-                <h4 className="font-extrabold text-indigo-300 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1">
-                  3. 獲得称号
-                </h4>
-                <div className="bg-slate-950 p-3 rounded-xl text-amber-300 font-bold space-y-1">
-                  <div>【日本人称号】: {getEpithetStr(selectedRecord.epithet) || '称号なし'}</div>
-                  <div>【恋愛称号】: {getEpithetStr(selectedRecord.loveEpithet) || '称号なし'}</div>
+              {/* 2. 経済・年収・純資産 */}
+              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <h4 className="text-xs font-black text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                    <Landmark className="w-4 h-4 text-emerald-400" />
+                    2. 年収・資産・負債の内訳データ
+                  </h4>
+                  <div className="text-right">
+                    <span className="text-[10px] text-slate-400 mr-1.5">純資産 (資産-負債):</span>
+                    <span className={`font-black text-sm ${netWorth >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      {netWorth.toLocaleString()} 万円
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="bg-slate-900/90 p-3.5 rounded-xl border border-emerald-900/40 sm:col-span-3 flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <span className="text-slate-400 text-[10px] block">額面年収 (年間総収入)</span>
+                      <span className="text-xl font-black text-emerald-300">{inp.annualIncome?.toLocaleString() || 0} 万円</span>
+                    </div>
+                    <div className="flex gap-4 text-xs font-bold">
+                      <div className="bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+                        <span className="text-slate-400 text-[10px] block">総資産額</span>
+                        <span className="text-emerald-400 font-bold">{totalAssets.toLocaleString()} 万円</span>
+                      </div>
+                      <div className="bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+                        <span className="text-slate-400 text-[10px] block">総負債額</span>
+                        <span className="text-rose-400 font-bold">{totalDebts.toLocaleString()} 万円</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 資産内訳 4項目 */}
+                  <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800 space-y-1.5">
+                    <span className="text-[11px] font-extrabold text-emerald-400 block border-b border-slate-800 pb-1">
+                      💎 保有資産 内訳
+                    </span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">金融資産 (預金・株):</span>
+                      <span className="font-bold text-white">{inp.financialAssets?.toLocaleString() || 0} 万円</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">不動産評価額:</span>
+                      <span className="font-bold text-white">{inp.realEstateAssets?.toLocaleString() || 0} 万円</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">自動車資産:</span>
+                      <span className="font-bold text-white">{inp.carAssets?.toLocaleString() || 0} 万円</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">時計・美術品等:</span>
+                      <span className="font-bold text-white">{inp.watchAssets?.toLocaleString() || 0} 万円</span>
+                    </div>
+                  </div>
+
+                  {/* 負債内訳 4項目 */}
+                  <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800 space-y-1.5 sm:col-span-2">
+                    <span className="text-[11px] font-extrabold text-rose-400 block border-b border-slate-800 pb-1">
+                      💳 負債・借入 内訳
+                    </span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">住宅ローン:</span>
+                        <span className="font-bold text-rose-300">{inp.mortgageDebt?.toLocaleString() || 0} 万円</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">マイカーローン:</span>
+                        <span className="font-bold text-rose-300">{inp.carDebt?.toLocaleString() || 0} 万円</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">奨学金・教育:</span>
+                        <span className="font-bold text-rose-300">{inp.scholarshipDebt?.toLocaleString() || 0} 万円</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">その他借入:</span>
+                        <span className="font-bold text-rose-300">{inp.otherDebt?.toLocaleString() || 0} 万円</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              {/* 3. 学歴 & キャリア & 知能指数 */}
+              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
+                <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                  <GraduationCap className="w-4 h-4 text-amber-400" />
+                  3. 学歴・知的指標・キャリア
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">最終学歴</span>
+                    <span className="font-bold text-white text-sm">{getAcademicDegreeLabel(inp.academicDegree)}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">出身大学・大学院名</span>
+                    <span className="font-bold text-amber-300 text-sm">{inp.universityName || '未入力 / なし'}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">大学偏差値 (マスタ判定/カスタム)</span>
+                    <span className="font-bold text-white text-sm">
+                      {inp.customUniversityHensachi ? `偏差値 ${inp.customUniversityHensachi}` : '標準推計'}
+                    </span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">知能指数 (推定IQ)</span>
+                    <span className="font-bold text-white text-sm">{inp.iqScore ? `IQ ${inp.iqScore}` : '自動推計'}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">雇用形態</span>
+                    <span className="font-bold text-white text-sm">{getEmploymentTypeLabel(inp.employmentType)}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">業種</span>
+                    <span className="font-bold text-white text-sm">{getIndustryLabel(inp.industryCode)}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">職種 / 役職</span>
+                    <span className="font-bold text-white text-sm">
+                      {getOccupationLabel(inp.occupationCode)} {inp.positionCode ? `(${inp.positionCode})` : ''}
+                    </span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">勤務先企業名 / 企業規模</span>
+                    <span className="font-bold text-amber-300 text-sm">
+                      {inp.companyName || '-'} <span className="text-xs text-slate-400 font-normal">({getCompanyCategoryLabel(inp.companyCategory)})</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. SNS・渡航・グローバル */}
+              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
+                <h4 className="text-xs font-black text-purple-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                  <Globe className="w-4 h-4 text-purple-400" />
+                  4. SNSフォロワー・海外渡航歴
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">海外渡航歴</span>
+                    <span className="font-bold text-purple-300 text-sm">{inp.travelCount || 0} か国</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">Instagram</span>
+                    <span className="font-bold text-white text-sm">{getSnsFollowerLabel(inp.instagramFollowers)}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">X (Twitter)</span>
+                    <span className="font-bold text-white text-sm">{getSnsFollowerLabel(inp.xFollowers)}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">TikTok</span>
+                    <span className="font-bold text-white text-sm">{getSnsFollowerLabel(inp.tikTokFollowers)}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">YouTube</span>
+                    <span className="font-bold text-white text-sm">{getSnsFollowerLabel(inp.youTubeFollowers)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. 恋愛・パートナーシップ・MBTI */}
+              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
+                <h4 className="text-xs font-black text-rose-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                  <Heart className="w-4 h-4 text-rose-400" />
+                  5. パートナーシップ・経験人数・MBTI
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">配偶関係</span>
+                    <span className="font-bold text-white text-sm">{getMaritalStatusLabel(inp.maritalStatus)}</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">子どもの有無</span>
+                    <span className="font-bold text-white text-sm">{inp.childrenCount || 0} 人</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">これまでの経験人数</span>
+                    <span className="font-bold text-rose-300 text-sm">
+                      {inp.partnerCount !== null && inp.partnerCount !== undefined && inp.partnerCount !== ('' as any)
+                        ? `${inp.partnerCount} 人`
+                        : '未回答'}
+                    </span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">MBTI性格タイプ</span>
+                    <span className="font-bold text-indigo-300 text-sm">{getMbtiLabel(inp.mbti)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 6. 算出スコア・カテゴリ別得点・獲得称号 */}
+              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
+                <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                  <Award className="w-4 h-4 text-amber-400" />
+                  6. 算出された総合スコア & カテゴリ別得点 & 称号
+                </h4>
+                
+                {/* 総合スコア 2大軸 */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-indigo-950/40 p-4 rounded-xl border border-indigo-500/30 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-bold text-indigo-300 block">日本人総合スペック</span>
+                      <span className="text-2xl font-black text-white">{selectedRecord.japanOverallScore}</span>
+                      <span className="text-xs text-indigo-400 ml-1 font-normal">Pt</span>
+                    </div>
+                    <span className="text-xs font-bold text-indigo-400 bg-indigo-500/20 px-2 py-1 rounded">JAPAN</span>
+                  </div>
+                  <div className="bg-rose-950/40 p-4 rounded-xl border border-rose-500/30 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-bold text-rose-300 block">恋愛総合スペック</span>
+                      <span className="text-2xl font-black text-white">{selectedRecord.loveOverallScore}</span>
+                      <span className="text-xs text-rose-400 ml-1 font-normal">Pt</span>
+                    </div>
+                    <span className="text-xs font-bold text-rose-400 bg-rose-500/20 px-2 py-1 rounded">LOVE</span>
+                  </div>
+                </div>
+
+                {/* 6カテゴリ得点 */}
+                <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 pt-2">
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
+                    <span className="text-slate-400 text-[10px] block">身体 (BODY)</span>
+                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.body} Pt</div>
+                  </div>
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
+                    <span className="text-slate-400 text-[10px] block">経済 (ECON)</span>
+                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.economic} Pt</div>
+                  </div>
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
+                    <span className="text-slate-400 text-[10px] block">キャリア (CAR)</span>
+                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.career} Pt</div>
+                  </div>
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
+                    <span className="text-slate-400 text-[10px] block">学歴 (ACAD)</span>
+                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.academic} Pt</div>
+                  </div>
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
+                    <span className="text-slate-400 text-[10px] block">SNS (SOC)</span>
+                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.social} Pt</div>
+                  </div>
+                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
+                    <span className="text-slate-400 text-[10px] block">能力 (GLOB)</span>
+                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.ability} Pt</div>
+                  </div>
+                </div>
+
+                {/* 獲得称号 */}
+                <div className="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-amber-300 font-bold space-y-1.5 mt-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-indigo-400 text-xs shrink-0">【日本人称号】</span>
+                    <span className="text-white text-xs">{getEpithetStr(selectedRecord.epithet) || '称号なし'}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-rose-400 text-xs shrink-0">【恋愛称号】</span>
+                    <span className="text-white text-xs">{getEpithetStr(selectedRecord.loveEpithet) || '称号なし'}</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-800 text-right">
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between shrink-0">
+              <Link
+                href={`/result/${selectedRecord.diagnosisId}`}
+                target="_blank"
+                className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-bold"
+              >
+                実際の診断結果ページを開く
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
               <button
                 onClick={() => setSelectedRecord(null)}
-                className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs"
+                className="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition-all cursor-pointer"
               >
                 閉じる
               </button>
@@ -424,3 +791,4 @@ export default function AdminPage() {
     </main>
   );
 }
+
