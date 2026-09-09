@@ -113,6 +113,7 @@ export interface DiagnosisInputV3 {
   travelCount?: number | null;
   maritalStatus?: MaritalStatus | null;
   childrenCount?: number | null;
+  partnerCount?: number | null;
   mbti?: string | null;
   instagramFollowers?: number | null;
   xFollowers?: number | null;

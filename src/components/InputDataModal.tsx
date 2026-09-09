@@ -79,6 +79,7 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
   const [travelCount, setTravelCount] = useState<string>(input.travelCount ? String(input.travelCount) : '0');
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | ''>(input.maritalStatus || '');
   const [childrenCount, setChildrenCount] = useState<string>(input.childrenCount ? String(input.childrenCount) : '0');
+  const [partnerCount, setPartnerCount] = useState<string>(input.partnerCount !== null && input.partnerCount !== undefined ? String(input.partnerCount) : '');
   const [mbti, setMbti] = useState<string>(input.mbti || '');
 
   useEffect(() => {
@@ -162,6 +163,7 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
         travelCount: travelCount !== '' ? Number(travelCount) : 0,
         maritalStatus: maritalStatus ? (maritalStatus as MaritalStatus) : null,
         childrenCount: childrenCount !== '' ? Number(childrenCount) : 0,
+        partnerCount: partnerCount !== '' ? Number(partnerCount) : null,
         mbti: mbti !== '' ? mbti : null,
       };
 
@@ -188,7 +190,7 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
           academicDegree, universityName, customUniversityHensachi, iqScore,
           industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
           instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
-          travelCount, maritalStatus, childrenCount, mbti,
+          travelCount, maritalStatus, childrenCount, partnerCount, mbti,
         };
         localStorage.setItem('spec_check_draft_v3', JSON.stringify(draft));
       } catch {}
@@ -735,6 +737,18 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
                       pattern="[0-9]*"
                       value={childrenCount}
                       onChange={(e) => setChildrenCount(sanitizeNumericInput(e.target.value))}
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">これまでの経験人数 (人)</label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="例: 3"
+                      value={partnerCount}
+                      onChange={(e) => setPartnerCount(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-purple-500 focus:outline-none"
                     />
                   </div>

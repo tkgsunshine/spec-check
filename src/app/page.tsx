@@ -113,9 +113,10 @@ export default function HomePage() {
   const [tikTokFollowers, setTikTokFollowers] = useState<number>(0);
   const [youTubeFollowers, setYouTubeFollowers] = useState<number>(0);
 
-  // Step 6: 恋愛 & 海外渡航国数 & MBTI
+  // Step 6: 恋愛 & 経験人数 & MBTI
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | ''>('');
   const [childrenCount, setChildrenCount] = useState<string>('0');
+  const [partnerCount, setPartnerCount] = useState<string>('');
   const [mbti, setMbti] = useState<string>('');
   const [travelCount, setTravelCount] = useState<string>('');
 
@@ -176,6 +177,7 @@ export default function HomePage() {
       if (data.youTubeFollowers !== undefined && data.youTubeFollowers !== null) setYouTubeFollowers(Number(data.youTubeFollowers));
       if (data.maritalStatus !== undefined && data.maritalStatus !== null) setMaritalStatus(data.maritalStatus);
       if (data.childrenCount !== undefined && data.childrenCount !== null) setChildrenCount(String(data.childrenCount));
+      if (data.partnerCount !== undefined && data.partnerCount !== null) setPartnerCount(String(data.partnerCount));
       if (data.mbti !== undefined && data.mbti !== null) setMbti(data.mbti);
       if (data.travelCount !== undefined && data.travelCount !== null) setTravelCount(String(data.travelCount));
     } catch (e) {
@@ -196,7 +198,7 @@ export default function HomePage() {
         academicDegree, universityName, customUniversityHensachi, iqScore,
         industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
         userLanguages, instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
-        maritalStatus, childrenCount, mbti, travelCount,
+        maritalStatus, childrenCount, partnerCount, mbti, travelCount,
       };
       localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     } catch (e) {
@@ -209,7 +211,7 @@ export default function HomePage() {
     academicDegree, universityName, customUniversityHensachi, iqScore,
     industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
     userLanguages, instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
-    maritalStatus, childrenCount, mbti, travelCount,
+    maritalStatus, childrenCount, partnerCount, mbti, travelCount,
   ]);
 
   const handleResetForm = () => {
@@ -517,6 +519,7 @@ export default function HomePage() {
         travelCount: travelCount !== '' ? Number(toHalfWidthDigits(travelCount)) : null,
         maritalStatus: maritalStatus !== '' ? maritalStatus : null,
         childrenCount: childrenCount !== '' ? Number(toHalfWidthDigits(childrenCount)) : 0,
+        partnerCount: partnerCount !== '' ? Number(toHalfWidthDigits(partnerCount)) : null,
         mbti: mbti !== '' ? mbti : null,
         instagramFollowers: Number(instagramFollowers) || 0,
         xFollowers: Number(xFollowers) || 0,
@@ -1301,11 +1304,11 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Step 5: 語学 & SNS */}
+        {/* Step 5: 語学・渡航 & SNS */}
         {currentStep === 5 && (
           <div className="space-y-6">
             <h2 className="text-base font-bold text-slate-100 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-violet-400" /> 5. 語学能力 & SNSフォロワー数
+              <span className="w-2.5 h-2.5 rounded-full bg-violet-400" /> 5. 語学・渡航経験 & SNSフォロワー数
             </h2>
 
             <div>
@@ -1374,6 +1377,22 @@ export default function HomePage() {
               </button>
             </div>
 
+            {/* 渡航国数 */}
+            <div className="border-t border-slate-800 pt-4">
+              <label className="block text-xs font-semibold text-slate-300 mb-2">
+                渡航・訪問したことのある国・地域の数 (か国)
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                placeholder="例: 3 (未入力可能)"
+                value={travelCount}
+                onChange={e => setTravelCount(toHalfWidthDigits(e.target.value))}
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono"
+              />
+            </div>
+
             <div className="border-t border-slate-800 pt-4">
               <h3 className="text-xs font-extrabold text-slate-300 uppercase tracking-wider mb-3">
                 SNS フォロワー数
@@ -1440,11 +1459,11 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Step 6: 恋愛 & 渡航国数 & MBTI */}
+        {/* Step 6: 恋愛 & 経験人数 & MBTI */}
         {currentStep === 6 && (
           <div className="space-y-6">
             <h2 className="text-base font-bold text-slate-100 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-400" /> 6. 恋愛ステータス・渡航国数・MBTI
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-400" /> 6. 恋愛ステータス・経験人数・MBTI
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1497,15 +1516,15 @@ export default function HomePage() {
 
             <div className="border-t border-slate-800 pt-4">
               <label className="block text-xs font-semibold text-slate-300 mb-2">
-                渡航・訪問したことのある国・地域の数 (か国)
+                これまでの経験人数 (人)
               </label>
               <input
                 type="text"
                 inputMode="numeric"
                 pattern="[0-9]*"
                 placeholder="例: 3 (未入力可能)"
-                value={travelCount}
-                onChange={e => setTravelCount(toHalfWidthDigits(e.target.value))}
+                value={partnerCount}
+                onChange={e => setPartnerCount(toHalfWidthDigits(e.target.value))}
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono"
               />
             </div>
