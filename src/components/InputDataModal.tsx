@@ -20,9 +20,10 @@ import CompanyAutocomplete from '@/components/CompanyAutocomplete';
 
 interface InputDataModalProps {
   input: DiagnosisInputV3;
+  activeTab?: 'JAPAN' | 'LOVE';
 }
 
-export default function InputDataModal({ input }: InputDataModalProps) {
+export default function InputDataModal({ input, activeTab }: InputDataModalProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -195,8 +196,9 @@ export default function InputDataModal({ input }: InputDataModalProps) {
       setIsOpen(false);
       setLoading(false);
 
-      // 現在のURLパラメータ(?tab=love 等)を維持して更新遷移
-      const currentTab = new URLSearchParams(window.location.search).get('tab') || 'japan';
+      // 現在のURLパラメータ(?tab=love 等)またはアクティブタブを維持して更新遷移
+      const tabFromUrl = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('tab') : null;
+      const currentTab = activeTab ? activeTab.toLowerCase() : (tabFromUrl || 'japan');
       router.push(`/result/${data.result.diagnosisId}?tab=${currentTab}`);
       window.scrollTo(0, 0);
     } catch (err: any) {

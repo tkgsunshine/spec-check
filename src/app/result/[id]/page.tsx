@@ -122,6 +122,15 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
     }
   }, []);
 
+  const handleTabChange = (newTab: 'JAPAN' | 'LOVE') => {
+    setActiveTab(newTab);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', newTab.toLowerCase());
+      window.history.replaceState(null, '', url.toString());
+    }
+  };
+
   useEffect(() => {
     async function fetchResult() {
       try {
@@ -288,7 +297,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
       <div className="flex flex-col items-center mb-8 relative">
         {/* CSSアニメーション(animate-bounce)付き・背景枠なしの文字だけガイド */}
         <div
-          onClick={() => setActiveTab(isLoveMode ? 'JAPAN' : 'LOVE')}
+          onClick={() => handleTabChange(isLoveMode ? 'JAPAN' : 'LOVE')}
           className="mb-2.5 animate-bounce cursor-pointer group"
         >
           <span className={`text-xs sm:text-sm font-black flex items-center gap-1.5 transition-all ${
@@ -302,7 +311,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
         {/* タブ切り替えボタン */}
         <div className="glass-surface p-1.5 rounded-full inline-flex gap-2.5 sm:gap-3.5 border border-slate-800 shadow-2xl relative bg-slate-950/80">
           <button
-            onClick={() => setActiveTab('JAPAN')}
+            onClick={() => handleTabChange('JAPAN')}
             className={`flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
               !isLoveMode
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
@@ -312,7 +321,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             <Sparkles className="w-4 h-4 text-indigo-300" /> 総合スペック診断
           </button>
           <button
-            onClick={() => setActiveTab('LOVE')}
+            onClick={() => handleTabChange('LOVE')}
             className={`flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
               isLoveMode
                 ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30'
@@ -414,7 +423,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
           </div>
           {data.rawInput && (
             <div className="shrink-0">
-              <InputDataModal input={data.rawInput} />
+              <InputDataModal input={data.rawInput} activeTab={activeTab} />
             </div>
           )}
         </div>
@@ -436,7 +445,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
           </div>
           {data.rawInput && (
             <div className="shrink-0">
-              <InputDataModal input={data.rawInput} />
+              <InputDataModal input={data.rawInput} activeTab={activeTab} />
             </div>
           )}
         </div>
@@ -489,7 +498,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
         {/* SNSで共有の直前にも配置するモード切替タブ */}
         <div className="flex flex-col items-center mb-6 relative">
           <div
-            onClick={() => setActiveTab(isLoveMode ? 'JAPAN' : 'LOVE')}
+            onClick={() => handleTabChange(isLoveMode ? 'JAPAN' : 'LOVE')}
             className="mb-2.5 animate-bounce cursor-pointer group"
           >
             <span className={`text-xs sm:text-sm font-black flex items-center gap-1.5 transition-all ${
@@ -502,7 +511,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
           <div className="glass-surface p-1.5 rounded-full inline-flex gap-2.5 sm:gap-3.5 border border-slate-800 shadow-2xl relative bg-slate-950/80">
             <button
-              onClick={() => setActiveTab('JAPAN')}
+              onClick={() => handleTabChange('JAPAN')}
               className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
                 !isLoveMode
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
@@ -512,7 +521,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
               <Sparkles className="w-4 h-4 text-indigo-300" /> 総合スペック診断
             </button>
             <button
-              onClick={() => setActiveTab('LOVE')}
+              onClick={() => handleTabChange('LOVE')}
               className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-black transition-all cursor-pointer ${
                 isLoveMode
                   ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30'
