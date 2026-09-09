@@ -218,6 +218,7 @@ export default function HomePage() {
     if (!window.confirm('入力内容を全てリセットしてもよろしいですか？')) return;
     try {
       localStorage.removeItem(DRAFT_KEY);
+      localStorage.removeItem('spec_check_latest_result');
     } catch {}
     setNickname('あなた');
     setGender('MALE');
@@ -255,8 +256,9 @@ export default function HomePage() {
     setYouTubeFollowers(0);
     setMaritalStatus('');
     setChildrenCount('0');
+    setPartnerCount('');
     setMbti('');
-    setTravelCount('0');
+    setTravelCount('');
     setCurrentStep(1);
   };
 
