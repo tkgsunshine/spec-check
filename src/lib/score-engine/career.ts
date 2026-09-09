@@ -87,7 +87,7 @@ export function calculateCareerScore(
     metricCode: 'OCCUPATION',
     metricName: '職種・役職',
     category: '仕事',
-    rawValue: posItem ? `${occ.name} / ${posItem.name}` : occ.name,
+    rawValue: (employmentType === 'UNEMPLOYED' || employmentType === 'FREELANCE' || !positionCode || positionCode.trim() === '') ? occ.name : `${occ.name} / ${posItem.name}`,
     score: occupationScore,
     percentile: null,
     topPercent: null,

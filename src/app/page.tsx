@@ -99,7 +99,7 @@ export default function HomePage() {
   const [occupationCode, setOccupationCode] = useState<string>('');
 
   const [employmentType, setEmploymentType] = useState<DiagnosisInputV3['employmentType'] | ''>('');
-  const availablePositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || POSITION_MASTER_BY_EMPLOYMENT.REGULAR) : [];
+  const availablePositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || []) : [];
   const [positionCode, setPositionCode] = useState<string>('');
   const [companyName, setCompanyName] = useState<string>('');
   const [companyCategory, setCompanyCategory] = useState<DiagnosisInputV3['companyCategory'] | ''>('');

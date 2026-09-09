@@ -267,9 +267,7 @@ export const POSITION_MASTER_BY_EMPLOYMENT: Record<string, PositionMasterItem[]>
     { code: 'PART_TIME', name: 'パート・アルバイト', bonusScore: -2 },
   ],
   FREELANCE: [],
-  UNEMPLOYED: [
-    { code: 'UNEMPLOYED_STAFF', name: '無職・求職中・家事従事・学生', bonusScore: -15 },
-  ],
+  UNEMPLOYED: [],
 };
 
 export const POSITION_MASTER: PositionMasterItem[] = [
