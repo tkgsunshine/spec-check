@@ -267,6 +267,8 @@ export default function HomePage() {
     setEmploymentType(newType as DiagnosisInputV3['employmentType']);
     setPositionCode('');
     if (newType === 'UNEMPLOYED') {
+      setIndustryCode('');
+      setOccupationCode('');
       setCompanyName('');
       setCompanyCategory('');
     }
@@ -368,24 +370,24 @@ export default function HomePage() {
         setErrorMsg('最終学歴を選択してください。');
         return;
       }
-      if (!industryCode) {
-        setErrorMsg('業種を選択してください。');
-        return;
-      }
-      if (!occupationCode) {
-        setErrorMsg('職種を選択してください。');
-        return;
-      }
       if (!employmentType) {
         setErrorMsg('雇用形態を選択してください。');
         return;
       }
-      const currentPositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || []) : [];
-      if (currentPositions.length > 0 && !positionCode) {
-        setErrorMsg('役職を選択してください。');
-        return;
-      }
       if (employmentType !== 'UNEMPLOYED') {
+        if (!industryCode) {
+          setErrorMsg('業種を選択してください。');
+          return;
+        }
+        if (!occupationCode) {
+          setErrorMsg('職種を選択してください。');
+          return;
+        }
+        const currentPositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || []) : [];
+        if (currentPositions.length > 0 && !positionCode) {
+          setErrorMsg('役職を選択してください。');
+          return;
+        }
         const hasCompName = Boolean(companyName && companyName.trim() !== '');
         const hasCompCat = Boolean(companyCategory && companyCategory.trim() !== '');
         if (!hasCompName && !hasCompCat) {
@@ -442,32 +444,32 @@ export default function HomePage() {
       setCurrentStep(4);
       return;
     }
-    if (!industryCode) {
-      setErrorMsg('業種を選択してください。');
-      setLoading(false);
-      setCurrentStep(4);
-      return;
-    }
-    if (!occupationCode) {
-      setErrorMsg('職種を選択してください。');
-      setLoading(false);
-      setCurrentStep(4);
-      return;
-    }
     if (!employmentType) {
       setErrorMsg('雇用形態を選択してください。');
       setLoading(false);
       setCurrentStep(4);
       return;
     }
-    const currentPositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || []) : [];
-    if (currentPositions.length > 0 && !positionCode) {
-      setErrorMsg('役職を選択してください。');
-      setLoading(false);
-      setCurrentStep(4);
-      return;
-    }
     if (employmentType !== 'UNEMPLOYED') {
+      if (!industryCode) {
+        setErrorMsg('業種を選択してください。');
+        setLoading(false);
+        setCurrentStep(4);
+        return;
+      }
+      if (!occupationCode) {
+        setErrorMsg('職種を選択してください。');
+        setLoading(false);
+        setCurrentStep(4);
+        return;
+      }
+      const currentPositions = employmentType ? (POSITION_MASTER_BY_EMPLOYMENT[employmentType] || []) : [];
+      if (currentPositions.length > 0 && !positionCode) {
+        setErrorMsg('役職を選択してください。');
+        setLoading(false);
+        setCurrentStep(4);
+        return;
+      }
       const hasCompName = Boolean(companyName && companyName.trim() !== '');
       const hasCompCat = Boolean(companyCategory && companyCategory.trim() !== '');
       if (!hasCompName && !hasCompCat) {
@@ -1170,129 +1172,131 @@ export default function HomePage() {
               />
             </div>
 
-            {/* 業種 ➔ 職種 2段階絞り込み */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-4">
-              <div>
-                <label className="block text-xs font-semibold text-indigo-300 mb-2">
-                  1. 業種を選択 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
-                </label>
-                <select
-                  value={industryCode}
-                  onChange={e => handleIndustryChange(e.target.value)}
-                  className="w-full bg-slate-900 border border-indigo-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-400"
-                >
-                  <option value="">選択してください ※必須</option>
-                  {INDUSTRY_MASTER.map(ind => (
-                    <option key={ind.id} value={ind.id}>
-                      {ind.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-indigo-300 mb-2">
-                  2. 職種を選択 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
-                </label>
-                <select
-                  value={occupationCode}
-                  onChange={e => setOccupationCode(e.target.value)}
-                  className="w-full bg-slate-900 border border-indigo-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-400"
-                >
-                  <option value="">{industryCode ? '選択してください ※必須' : '業種を先に選択してください ※必須'}</option>
-                  {availableOccupations.map(occ => (
-                    <option key={occ.id} value={occ.id}>
-                      {occ.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* 雇用形態 */}
+            <div className="border-t border-slate-800 pt-4">
+              <label className="block text-xs font-semibold text-slate-300 mb-2">
+                雇用形態 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
+              </label>
+              <select
+                value={employmentType}
+                onChange={e => handleEmploymentTypeChange(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
+              >
+                <option value="">選択してください ※必須</option>
+                <option value="EXECUTIVE">役員・経営者</option>
+                <option value="REGULAR">正社員・常勤</option>
+                <option value="CONTRACT">契約社員・派遣・パート</option>
+                <option value="FREELANCE">フリーランス・個人事業</option>
+                <option value="UNEMPLOYED">無職・家事手伝い・求職中・学生</option>
+              </select>
             </div>
 
-            {/* 雇用形態と連動する役職 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
-                  雇用形態 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
-                </label>
-                <select
-                  value={employmentType}
-                  onChange={e => handleEmploymentTypeChange(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
-                >
-                  <option value="">選択してください ※必須</option>
-                  <option value="EXECUTIVE">役員・経営者</option>
-                  <option value="REGULAR">正社員・常勤</option>
-                  <option value="CONTRACT">契約社員・派遣・パート</option>
-                  <option value="FREELANCE">フリーランス・個人事業</option>
-                  <option value="UNEMPLOYED">無職・家事手伝い・求職中・学生</option>
-                </select>
-              </div>
-
-              {availablePositions.length > 0 && (
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">
-                    役職 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
-                  </label>
-                  <select
-                    value={positionCode}
-                    onChange={e => setPositionCode(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
-                  >
-                    <option value="">{employmentType ? '選択してください ※必須' : '雇用形態を先に選択してください ※必須'}</option>
-                    {availablePositions.map(p => (
-                      <option key={p.code} value={p.code}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </div>
-
-            {/* 勤務先・企業名 (オートコンプリート検索) & 企業規模 */}
+            {/* 業種・職種・役職・勤務先（無職時は完全非表示） */}
             {employmentType !== 'UNEMPLOYED' && (
-              <div className="border-t border-slate-800 pt-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-300">勤務先情報</span>
-                  <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">
-                    ※企業名または規模のどちらか一方必須
-                  </span>
+              <>
+                {/* 業種 ➔ 職種 2段階絞り込み */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-indigo-300 mb-2">
+                      1. 業種を選択 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
+                    </label>
+                    <select
+                      value={industryCode}
+                      onChange={e => handleIndustryChange(e.target.value)}
+                      className="w-full bg-slate-900 border border-indigo-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-400"
+                    >
+                      <option value="">選択してください ※必須</option>
+                      {INDUSTRY_MASTER.map(ind => (
+                        <option key={ind.id} value={ind.id}>
+                          {ind.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-indigo-300 mb-2">
+                      2. 職種を選択 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
+                    </label>
+                    <select
+                      value={occupationCode}
+                      onChange={e => setOccupationCode(e.target.value)}
+                      className="w-full bg-slate-900 border border-indigo-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-400"
+                    >
+                      <option value="">{industryCode ? '選択してください ※必須' : '業種を先に選択してください ※必須'}</option>
+                      {availableOccupations.map(occ => (
+                        <option key={occ.id} value={occ.id}>
+                          {occ.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">
-                    勤務先・企業名
-                    <span className="block text-[11px] text-slate-500 font-normal mt-0.5">（上場企業 / 有名外資マスタ自動判定）</span>
-                  </label>
-                  <CompanyAutocomplete
-                    value={companyName}
-                    companyCategory={companyCategory}
-                    onChange={(name, category) => {
-                      setCompanyName(name);
-                      if (category) {
-                        setCompanyCategory(category as any);
-                      }
-                    }}
-                  />
-                </div>
+                {/* 役職 */}
+                {availablePositions.length > 0 && (
+                  <div className="border-t border-slate-800 pt-4">
+                    <label className="block text-xs font-semibold text-slate-300 mb-2">
+                      役職 <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
+                    </label>
+                    <select
+                      value={positionCode}
+                      onChange={e => setPositionCode(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
+                    >
+                      <option value="">{employmentType ? '選択してください ※必須' : '雇用形態を先に選択してください ※必須'}</option>
+                      {availablePositions.map(p => (
+                        <option key={p.code} value={p.code}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">勤務先企業規模</label>
-                  <select
-                    value={companyCategory || ''}
-                    onChange={e => setCompanyCategory(e.target.value as any)}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
-                  >
-                    <option value="">選択してください (未選択/指定なし)</option>
-                    <option value="LARGE_PRIME">プライム上場・外資トップ・大手グローバル企業</option>
-                    <option value="LARGE">大手企業・上場企業・有名子会社</option>
-                    <option value="MEDIUM">中堅企業・メガベンチャー</option>
-                    <option value="SMALL">中小企業・スタートアップ</option>
-                    <option value="OTHER">その他・個人事業所</option>
-                  </select>
+                {/* 勤務先・企業名 (オートコンプリート検索) & 企業規模 */}
+                <div className="border-t border-slate-800 pt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-300">勤務先情報</span>
+                    <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">
+                      ※企業名または規模のどちらか一方必須
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-2">
+                      勤務先・企業名
+                      <span className="block text-[11px] text-slate-500 font-normal mt-0.5">（上場企業 / 有名外資マスタ自動判定）</span>
+                    </label>
+                    <CompanyAutocomplete
+                      value={companyName}
+                      companyCategory={companyCategory}
+                      onChange={(name, category) => {
+                        setCompanyName(name);
+                        if (category) {
+                          setCompanyCategory(category as any);
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-2">勤務先企業規模</label>
+                    <select
+                      value={companyCategory || ''}
+                      onChange={e => setCompanyCategory(e.target.value as any)}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
+                    >
+                      <option value="">選択してください (未選択/指定なし)</option>
+                      <option value="LARGE_PRIME">プライム上場・外資トップ・大手グローバル企業</option>
+                      <option value="LARGE">大手企業・上場企業・有名子会社</option>
+                      <option value="MEDIUM">中堅企業・メガベンチャー</option>
+                      <option value="SMALL">中小企業・スタートアップ</option>
+                      <option value="OTHER">その他・個人事業所</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         )}

@@ -101,25 +101,27 @@ export default function InputDataModal({ input }: InputDataModalProps) {
     try {
       const selectedPref = PREFECTURES[prefectureId - 1] || '東京都';
 
-      if (!industryCode) {
-        setErrorMsg('業種を選択してください。');
-        setLoading(false);
-        return;
-      }
-      if (!occupationCode) {
-        setErrorMsg('職種を選択してください。');
-        setLoading(false);
-        return;
-      }
       if (!employmentType) {
         setErrorMsg('雇用形態を選択してください。');
         setLoading(false);
         return;
       }
-      if (availablePositions.length > 0 && !positionCode) {
-        setErrorMsg('役職を選択してください。');
-        setLoading(false);
-        return;
+      if (employmentType !== 'UNEMPLOYED') {
+        if (!industryCode) {
+          setErrorMsg('業種を選択してください。');
+          setLoading(false);
+          return;
+        }
+        if (!occupationCode) {
+          setErrorMsg('職種を選択してください。');
+          setLoading(false);
+          return;
+        }
+        if (availablePositions.length > 0 && !positionCode) {
+          setErrorMsg('役職を選択してください。');
+          setLoading(false);
+          return;
+        }
       }
 
       const payload: DiagnosisInputV3 = {
@@ -534,39 +536,6 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                   </div>
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">
-                      業種分類 <span className="text-rose-400 ml-1 font-bold">※必須</span>
-                    </label>
-                    <select
-                      value={industryCode}
-                      onChange={(e) => {
-                        setIndustryCode(e.target.value);
-                        setOccupationCode('');
-                      }}
-                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
-                    >
-                      <option value="">選択してください ※必須</option>
-                      {INDUSTRY_MASTER.map((ind) => (
-                        <option key={ind.id} value={ind.id}>{ind.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">
-                      職種分類 <span className="text-rose-400 ml-1 font-bold">※必須</span>
-                    </label>
-                    <select
-                      value={occupationCode}
-                      onChange={(e) => setOccupationCode(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
-                    >
-                      <option value="">{industryCode ? '選択してください ※必須' : '業種を先に選択してください ※必須'}</option>
-                      {availableOccupations.map((occ) => (
-                        <option key={occ.id} value={occ.id}>{occ.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">
                       雇用形態 <span className="text-rose-400 ml-1 font-bold">※必須</span>
                     </label>
                     <select
@@ -576,6 +545,8 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                         setEmploymentType(val);
                         setPositionCode('');
                         if (val === 'UNEMPLOYED') {
+                          setIndustryCode('');
+                          setOccupationCode('');
                           setCompanyName('');
                           setCompanyCategory('');
                         }
@@ -590,25 +561,58 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       <option value="UNEMPLOYED">無職・家事手伝い・求職中・学生</option>
                     </select>
                   </div>
-                  {availablePositions.length > 0 && (
-                    <div>
-                      <label className="text-slate-400 text-[10px] font-bold block mb-1">
-                        役職 <span className="text-rose-400 ml-1 font-bold">※必須</span>
-                      </label>
-                      <select
-                        value={positionCode}
-                        onChange={(e) => setPositionCode(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
-                      >
-                        <option value="">{employmentType ? '選択してください ※必須' : '雇用形態を先に選択してください ※必須'}</option>
-                        {availablePositions.map((p) => (
-                          <option key={p.code} value={p.code}>{p.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
                   {employmentType !== 'UNEMPLOYED' && (
                     <>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">
+                          業種分類 <span className="text-rose-400 ml-1 font-bold">※必須</span>
+                        </label>
+                        <select
+                          value={industryCode}
+                          onChange={(e) => {
+                            setIndustryCode(e.target.value);
+                            setOccupationCode('');
+                          }}
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                        >
+                          <option value="">選択してください ※必須</option>
+                          {INDUSTRY_MASTER.map((ind) => (
+                            <option key={ind.id} value={ind.id}>{ind.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">
+                          職種分類 <span className="text-rose-400 ml-1 font-bold">※必須</span>
+                        </label>
+                        <select
+                          value={occupationCode}
+                          onChange={(e) => setOccupationCode(e.target.value)}
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                        >
+                          <option value="">{industryCode ? '選択してください ※必須' : '業種を先に選択してください ※必須'}</option>
+                          {availableOccupations.map((occ) => (
+                            <option key={occ.id} value={occ.id}>{occ.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                      {availablePositions.length > 0 && (
+                        <div>
+                          <label className="text-slate-400 text-[10px] font-bold block mb-1">
+                            役職 <span className="text-rose-400 ml-1 font-bold">※必須</span>
+                          </label>
+                          <select
+                            value={positionCode}
+                            onChange={(e) => setPositionCode(e.target.value)}
+                            className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                          >
+                            <option value="">{employmentType ? '選択してください ※必須' : '雇用形態を先に選択してください ※必須'}</option>
+                            {availablePositions.map((p) => (
+                              <option key={p.code} value={p.code}>{p.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                       <div className="sm:col-span-2">
                         <label className="text-slate-400 text-[10px] font-bold block mb-1">勤務先・企業名 (上場・外資マスタ自動判定)</label>
                         <CompanyAutocomplete

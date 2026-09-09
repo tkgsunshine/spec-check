@@ -127,7 +127,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
       try {
         const res = await fetch(`/api/diagnosis/${id}`);
         const json = await res.json();
-        if (json.success && json.result) {
+        if (json.success && json.result && json.result.diagnosisId && json.result.inputSummary) {
           setData(json.result);
           setLoading(false);
           return;
@@ -141,7 +141,9 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
         const cached = localStorage.getItem(`spec_check_result_${id}`) || localStorage.getItem('spec_check_latest_result');
         if (cached) {
           const parsed = JSON.parse(cached);
-          setData(parsed);
+          if (parsed && parsed.diagnosisId && parsed.inputSummary) {
+            setData(parsed);
+          }
         }
       } catch (e) {
         console.error('Failed to load result from localStorage', e);

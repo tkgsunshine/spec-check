@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ shareToken: string }> }
 ) {
   const { shareToken } = await params;
-  const shareResult = getPublicShareResult(shareToken);
+  const shareResult = await getPublicShareResult(shareToken);
 
   if (!shareResult) {
     return NextResponse.json({ error: '共有データが見つかりません。' }, { status: 404 });
