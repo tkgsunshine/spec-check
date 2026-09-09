@@ -88,10 +88,10 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
     x: input.xFollowers,
     tikTok: input.tikTokFollowers,
     youTube: input.youTubeFollowers,
-  });
+  }, input.age);
 
   const languageResult = calculateLanguageScore(input.languages);
-  const travelResult = calculateTravelScore(input.travelCount);
+  const travelResult = calculateTravelScore(input.travelCount, input.age);
 
   // グローバル・語学能力総合Score (語学 50% + 海外渡航 50%)
   const totalGlobalScore = Math.round((languageResult.score * 0.5 + travelResult.score * 0.5) * 10) / 10;
@@ -289,10 +289,10 @@ export async function runDiagnosisV3Async(input: DiagnosisInputV3): Promise<Over
     x: input.xFollowers,
     tikTok: input.tikTokFollowers,
     youTube: input.youTubeFollowers,
-  });
+  }, input.age);
 
   const languageResult = calculateLanguageScore(input.languages);
-  const travelResult = calculateTravelScore(input.travelCount);
+  const travelResult = calculateTravelScore(input.travelCount, input.age);
 
   const totalGlobalScore = Math.round((languageResult.score * 0.5 + travelResult.score * 0.5) * 10) / 10;
 

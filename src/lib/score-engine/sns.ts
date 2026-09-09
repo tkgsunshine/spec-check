@@ -23,7 +23,7 @@ export function calculateSnsScore(followers?: {
   x?: number | null;
   tikTok?: number | null;
   youTube?: number | null;
-}): SnsScoreResult {
+}, age?: number | null): SnsScoreResult {
   const activePlatforms: { name: string; followers: number; score: number }[] = [];
 
   if (followers?.instagram && followers.instagram > 0) {
@@ -56,6 +56,8 @@ export function calculateSnsScore(followers?: {
   }
 
   let finalSnsScore = 50.0; // デフォルト：SNS未運用・全0フォロワーは日本人平均 50.0点
+  let generationalBonus = 0;
+  let generationalNote = '';
 
   if (activePlatforms.length > 0) {
     // 降順ソート
@@ -63,6 +65,7 @@ export function calculateSnsScore(followers?: {
     
     // 最多フォロワーSNSのスコアをメインアンカーに採用
     const maxScore = activePlatforms[0].score;
+    const maxFollowers = activePlatforms[0].followers;
 
     // 他のサブSNSがあればマルチプラットフォーム効果として15%シナジー加点
     let synergyAdd = 0;
@@ -71,6 +74,34 @@ export function calculateSnsScore(followers?: {
     }
 
     finalSnsScore = Math.min(100, Math.round((maxScore + synergyAdd) * 10) / 10);
+
+    // 世代別オーソリティ・発信力希少性ボーナス
+    if (age) {
+      if (age >= 50) {
+        if (maxFollowers >= 3000) {
+          generationalBonus = 10;
+          generationalNote = '（50代以上のSNSフォロワー3,000人以上によるシニアオピニオンリーダー希少価値ボーナス +10pt）';
+        } else if (maxFollowers >= 500) {
+          generationalBonus = 5;
+          generationalNote = '（50代以上のSNSフォロワー500人以上による同世代発信力ボーナス +5pt）';
+        }
+      } else if (age >= 40) {
+        if (maxFollowers >= 10000) {
+          generationalBonus = 8;
+          generationalNote = '（40代のSNSフォロワー1万人以上による業界インフルエンス希少価値ボーナス +8pt）';
+        } else if (maxFollowers >= 1000) {
+          generationalBonus = 5;
+          generationalNote = '（40代のSNSフォロワー1,000人以上による同世代オピニオンリーダーボーナス +5pt）';
+        }
+      } else if (age >= 30) {
+        if (maxFollowers >= 1000) {
+          generationalBonus = 3;
+          generationalNote = '（30代のSNSフォロワー1,000人以上による発信力・ネットワーク優位性ボーナス +3pt）';
+        }
+      }
+    }
+
+    finalSnsScore = Math.min(100, Math.round((finalSnsScore + generationalBonus) * 10) / 10);
   }
 
   const rawSummary = activePlatforms.length > 0
@@ -86,13 +117,13 @@ export function calculateSnsScore(followers?: {
     percentile: null,
     topPercent: calcHighPrecisionTopPercent(Math.max(0.001, 100 - finalSnsScore)),
     dataQuality: 'PROPRIETARY',
-    datasetName: 'SPEC CHECK インフルエンサー影響力推計モデル',
+    datasetName: 'SPEC CHECK インフルエンサー影響力推計モデル V3.2 (世代別スケーリング)',
     sourceUrl: '',
     surveyYear: 2024,
     calculationMethod: 'MAX_PLATFORM_ANCHOR_WITH_SYNERGY',
     hasOfficialTopPercent: false,
     isOptionalUnentered: activePlatforms.length === 0,
-    notes: '未運用SNS(0フォロワー)は分母除外。最多フォロワーSNSの実績をメイン評価軸としマルチ展開をシナジー加点。',
+    notes: '未運用SNS(0フォロワー)は分母除外。最多フォロワーSNSの実績をメイン評価軸としマルチ展開をシナジー加点。' + generationalNote,
   };
 
   return {
