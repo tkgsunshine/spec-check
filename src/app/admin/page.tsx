@@ -13,6 +13,7 @@ import {
   COMMON_OCCUPATION_MASTER,
   MBTI_MASTER,
   SNS_FOLLOWER_BRACKETS,
+  LANGUAGE_MASTER,
 } from '@/lib/datasets/japan-stats';
 
 interface AdminStatsSummary {
@@ -107,6 +108,31 @@ const getSnsFollowerLabel = (num?: number | null): string => {
   return `${num.toLocaleString()}人`;
 };
 
+const getLanguageName = (code: string): string => {
+  const found = LANGUAGE_MASTER.find(l => l.code === code);
+  return found ? found.nameJa : code;
+};
+
+const getLanguageLevelLabel = (level: string): string => {
+  switch (level) {
+    case 'NATIVE': return 'ネイティブ';
+    case 'BUSINESS': return 'ビジネス';
+    case 'DAILY': return '日常会話';
+    case 'BASIC': return '基礎';
+    default: return level;
+  }
+};
+
+const getEpithetStr = (ep: any): string => {
+  if (!ep) return '';
+  if (typeof ep === 'string') return ep;
+  if (typeof ep === 'object') {
+    if (ep.title) return ep.title;
+    if (ep.fullTitle) return ep.fullTitle;
+  }
+  return '';
+};
+
 export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<AdminStatsSummary | null>(null);
@@ -173,24 +199,19 @@ export default function AdminPage() {
     document.body.removeChild(link);
   };
 
-  const getEpithetStr = (ep: any): string => {
-    if (!ep) return '';
-    if (typeof ep === 'string') return ep;
-    if (typeof ep === 'object' && ep.fullTitle) return ep.fullTitle;
-    return '';
-  };
-
   // フィルタリング処理
   const filteredRecords = records.filter(r => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     const epStr = getEpithetStr(r.epithet).toLowerCase();
+    const loveEpStr = getEpithetStr(r.loveEpithet).toLowerCase();
     return (
       (r.inputSummary?.nickname || '').toLowerCase().includes(q) ||
       (r.inputSummary?.prefectureName || '').toLowerCase().includes(q) ||
       (r.rawInput?.companyName || '').toLowerCase().includes(q) ||
       (r.rawInput?.universityName || '').toLowerCase().includes(q) ||
-      epStr.includes(q)
+      epStr.includes(q) ||
+      loveEpStr.includes(q)
     );
   });
 
@@ -355,7 +376,7 @@ export default function AdminPage() {
             <Search className="w-4 h-4 absolute left-3 top-3 text-slate-500" />
             <input
               type="text"
-              placeholder="名前、大学、企業、都道府県で検索..."
+              placeholder="名前、大学、企業、都道府県、称号で検索..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
@@ -638,13 +659,13 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* 4. SNS・渡航・グローバル */}
+              {/* 4. 語学・海外渡航歴・SNS */}
               <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
                 <h4 className="text-xs font-black text-purple-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
                   <Globe className="w-4 h-4 text-purple-400" />
-                  4. SNSフォロワー・海外渡航歴
+                  4. 語学・海外渡航歴・SNSフォロワー
                 </h4>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
                     <span className="text-slate-400 text-[10px] block">海外渡航歴</span>
                     <span className="font-bold text-purple-300 text-sm">{inp.travelCount || 0} か国</span>
@@ -665,7 +686,21 @@ export default function AdminPage() {
                     <span className="text-slate-400 text-[10px] block">YouTube</span>
                     <span className="font-bold text-white text-sm">{getSnsFollowerLabel(inp.youTubeFollowers)}</span>
                   </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">習得言語数</span>
+                    <span className="font-bold text-white text-sm">{inp.languages?.length || 1} 言語</span>
+                  </div>
                 </div>
+                {inp.languages && inp.languages.length > 0 && (
+                  <div className="pt-2 border-t border-slate-800/80 flex flex-wrap gap-2 items-center">
+                    <span className="text-[10px] text-slate-400 font-bold">習得言語内訳:</span>
+                    {inp.languages.map((l, i) => (
+                      <span key={i} className="px-2.5 py-1 bg-slate-900 border border-slate-800 rounded-lg text-slate-200 text-[11px] font-bold">
+                        {getLanguageName(l.languageCode)} ({getLanguageLevelLabel(l.level)})
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* 5. 恋愛・パートナーシップ・MBTI */}
@@ -698,70 +733,139 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* 6. 算出スコア・カテゴリ別得点・獲得称号 */}
-              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
+              {/* 6. 算出スコア・2大カテゴリ詳細得点・獲得称号 */}
+              <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-4">
                 <h4 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
                   <Award className="w-4 h-4 text-amber-400" />
-                  6. 算出された総合スコア & カテゴリ別得点 & 称号
+                  6. 算出スコア・2大カテゴリ詳細得点・獲得称号
                 </h4>
                 
                 {/* 総合スコア 2大軸 */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-indigo-950/40 p-4 rounded-xl border border-indigo-500/30 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-bold text-indigo-300 block">日本人総合スペック</span>
-                      <span className="text-2xl font-black text-white">{selectedRecord.japanOverallScore}</span>
-                      <span className="text-xs text-indigo-400 ml-1 font-normal">Pt</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* 日本人スペック */}
+                  <div className="bg-indigo-950/40 p-4 rounded-2xl border border-indigo-500/30 space-y-3">
+                    <div className="flex items-center justify-between border-b border-indigo-900/50 pb-2.5">
+                      <div>
+                        <span className="text-[10px] font-bold text-indigo-300 block">日本人総合スペック</span>
+                        <span className="text-3xl font-black text-white">{selectedRecord.japanOverallScore}</span>
+                        <span className="text-xs text-indigo-400 ml-1 font-normal">Pt</span>
+                      </div>
+                      <span className="text-xs font-bold text-indigo-300 bg-indigo-500/20 px-3 py-1 rounded-full border border-indigo-500/40">
+                        JAPAN
+                      </span>
                     </div>
-                    <span className="text-xs font-bold text-indigo-400 bg-indigo-500/20 px-2 py-1 rounded">JAPAN</span>
-                  </div>
-                  <div className="bg-rose-950/40 p-4 rounded-xl border border-rose-500/30 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-bold text-rose-300 block">恋愛総合スペック</span>
-                      <span className="text-2xl font-black text-white">{selectedRecord.loveOverallScore}</span>
-                      <span className="text-xs text-rose-400 ml-1 font-normal">Pt</span>
+
+                    {/* 日本人 獲得称号 */}
+                    <div className="bg-slate-900/90 p-3.5 rounded-xl border border-indigo-500/20 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-indigo-400">【日本人称号】</span>
+                        {selectedRecord.epithet?.rarityBadge && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                            {selectedRecord.epithet.rarityBadge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="font-black text-amber-300 text-sm">
+                        {selectedRecord.epithet?.title || (typeof selectedRecord.epithet === 'string' ? selectedRecord.epithet : '称号なし')}
+                      </div>
+                      {selectedRecord.epithet?.subtitle && (
+                        <p className="text-[11px] text-slate-400 leading-relaxed pt-0.5">{selectedRecord.epithet.subtitle}</p>
+                      )}
                     </div>
-                    <span className="text-xs font-bold text-rose-400 bg-rose-500/20 px-2 py-1 rounded">LOVE</span>
-                  </div>
-                </div>
 
-                {/* 6カテゴリ得点 */}
-                <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 pt-2">
-                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
-                    <span className="text-slate-400 text-[10px] block">身体 (BODY)</span>
-                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.body} Pt</div>
+                    {/* 日本人 6カテゴリ得点 */}
+                    <div>
+                      <span className="text-[10px] font-bold text-indigo-300 block mb-1.5">カテゴリ別得点 (日本人総合)</span>
+                      <div className="grid grid-cols-3 gap-1.5 text-center">
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">身体 (BODY)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.body ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">経済 (ECON)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.economic ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">キャリア (CAR)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.career ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">学歴 (ACAD)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.academic ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">SNS (SOC)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.social ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">能力 (GLOB)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.ability ?? '-'} Pt</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
-                    <span className="text-slate-400 text-[10px] block">経済 (ECON)</span>
-                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.economic} Pt</div>
-                  </div>
-                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
-                    <span className="text-slate-400 text-[10px] block">キャリア (CAR)</span>
-                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.career} Pt</div>
-                  </div>
-                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
-                    <span className="text-slate-400 text-[10px] block">学歴 (ACAD)</span>
-                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.academic} Pt</div>
-                  </div>
-                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
-                    <span className="text-slate-400 text-[10px] block">SNS (SOC)</span>
-                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.social} Pt</div>
-                  </div>
-                  <div className="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 text-center">
-                    <span className="text-slate-400 text-[10px] block">能力 (GLOB)</span>
-                    <div className="text-base font-bold text-white">{selectedRecord.categoryScores.ability} Pt</div>
-                  </div>
-                </div>
 
-                {/* 獲得称号 */}
-                <div className="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-amber-300 font-bold space-y-1.5 mt-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-indigo-400 text-xs shrink-0">【日本人称号】</span>
-                    <span className="text-white text-xs">{getEpithetStr(selectedRecord.epithet) || '称号なし'}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-rose-400 text-xs shrink-0">【恋愛称号】</span>
-                    <span className="text-white text-xs">{getEpithetStr(selectedRecord.loveEpithet) || '称号なし'}</span>
+                  {/* 恋愛スペック */}
+                  <div className="bg-rose-950/40 p-4 rounded-2xl border border-rose-500/30 space-y-3">
+                    <div className="flex items-center justify-between border-b border-rose-900/50 pb-2.5">
+                      <div>
+                        <span className="text-[10px] font-bold text-rose-300 block">恋愛総合スペック</span>
+                        <span className="text-3xl font-black text-white">{selectedRecord.loveOverallScore}</span>
+                        <span className="text-xs text-rose-400 ml-1 font-normal">Pt</span>
+                      </div>
+                      <span className="text-xs font-bold text-rose-300 bg-rose-500/20 px-3 py-1 rounded-full border border-rose-500/40">
+                        LOVE
+                      </span>
+                    </div>
+
+                    {/* 恋愛 獲得称号 */}
+                    <div className="bg-slate-900/90 p-3.5 rounded-xl border border-rose-500/20 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-rose-400">【恋愛称号】</span>
+                        {selectedRecord.loveEpithet?.rarityBadge && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                            {selectedRecord.loveEpithet.rarityBadge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="font-black text-pink-300 text-sm">
+                        {selectedRecord.loveEpithet?.title || (typeof selectedRecord.loveEpithet === 'string' ? selectedRecord.loveEpithet : '称号なし')}
+                      </div>
+                      {selectedRecord.loveEpithet?.subtitle && (
+                        <p className="text-[11px] text-slate-400 leading-relaxed pt-0.5">{selectedRecord.loveEpithet.subtitle}</p>
+                      )}
+                    </div>
+
+                    {/* 恋愛 6カテゴリ得点 */}
+                    <div>
+                      <span className="text-[10px] font-bold text-rose-300 block mb-1.5">カテゴリ別得点 (恋愛スペック)</span>
+                      <div className="grid grid-cols-3 gap-1.5 text-center">
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">年齢 (AGE)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.age ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">容姿・印象</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.face ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">身体 (BODY)</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.body ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">年収・経済</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.income ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">キャリア</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.career ?? '-'} Pt</div>
+                        </div>
+                        <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+                          <span className="text-slate-400 text-[9px] block">家族・関係</span>
+                          <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.family ?? '-'} Pt</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -791,4 +895,5 @@ export default function AdminPage() {
     </main>
   );
 }
+
 
