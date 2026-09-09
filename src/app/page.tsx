@@ -558,8 +558,8 @@ export default function HomePage() {
       {/* 1st View Hero Header & Mode Selector (Step 1 のみ表示) */}
       {currentStep === 1 && (
         <>
-          {/* 1st View Hero Banner (スマホ画面最大・迫力ズーム表示) */}
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl mb-8 border border-pink-500/40 shadow-2xl shadow-pink-500/15 bg-slate-950 -mx-4 sm:-mx-6 md:-mx-16 lg:-mx-28 hover:border-pink-500/60 transition-all duration-300">
+          {/* 1st View Hero Banner (スマホ画面最大・横溢れ防止レスポンシブ表示) */}
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl mb-8 border border-pink-500/40 shadow-2xl shadow-pink-500/15 bg-slate-950 -mx-4 sm:mx-0 hover:border-pink-500/60 transition-all duration-300">
             <h1 className="sr-only">
               人間スペック診断 - あなたの総合＆恋愛スペック、全国でどのレベル？ (20代オタク男子 年収300万、30代バリキャリ女子 年収700万、10代ギャルJK パパのお小遣い、40代居酒屋店長 年収500万、50代金持ち風紳士 年収3000万、恋愛婚活価値)
             </h1>

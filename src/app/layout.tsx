@@ -106,7 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-950 text-white">
+      <body className="min-h-full flex flex-col bg-slate-950 text-white overflow-x-hidden w-full max-w-full">
         {/* Sticky Site Header */}
         <header className="w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50 shadow-lg">
           <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -129,7 +129,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </header>
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 w-full max-w-full overflow-x-hidden">{children}</div>
       </body>
     </html>
   );
