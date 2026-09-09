@@ -49,16 +49,21 @@ export function calculateTravelScore(travelCount?: number | null, age?: number |
   let generationalNote = '';
 
   if (count > 0 && age) {
-    if (age <= 24) {
-      // U-25若年層プレミアム: 基礎点45からの加点分を1.25倍
+    if (age <= 25) {
+      // 25歳以下若年層プレミアム: 基礎点45からの加点分を1.50倍
       const delta = baseScore - 45;
-      finalScore = 45 + delta * 1.25;
-      generationalNote = '（U-25若年層の複数カ国渡航による世代希少価値プレミアム加算1.25倍適用）';
-    } else if (age <= 34) {
-      // 25〜34歳: 基礎点45からの加点分を1.10倍
+      finalScore = 45 + delta * 1.5;
+      generationalNote = '（25歳以下の複数カ国渡航による世代希少価値プレミアム加算1.50倍適用）';
+    } else if (age <= 30) {
+      // 26〜30歳: 基礎点45からの加点分を1.30倍
       const delta = baseScore - 45;
-      finalScore = 45 + delta * 1.10;
-      generationalNote = '（20代後半〜30代前半の自費渡航実績による世代加点1.10倍適用）';
+      finalScore = 45 + delta * 1.3;
+      generationalNote = '（26〜30歳若手キャリア期の自費渡航実績による世代加点1.30倍適用）';
+    } else if (age <= 40) {
+      // 31〜40歳: 基礎点45からの加点分を1.15倍
+      const delta = baseScore - 45;
+      finalScore = 45 + delta * 1.15;
+      generationalNote = '（31〜40歳世代の海外渡航実績による世代加点1.15倍適用）';
     }
   } else if (count === 0 && age && age >= 50) {
     generationalNote = '（50代以上の渡航歴なし基準値40pt適用）';
