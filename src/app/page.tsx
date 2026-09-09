@@ -349,6 +349,15 @@ export default function HomePage() {
         setErrorMsg('額面年収を入力してください。');
         return;
       }
+      // 未入力の資産・負債項目を「0」に自動補完
+      if (financialAssets === '') setFinancialAssets('0');
+      if (realEstateAssets === '') setRealEstateAssets('0');
+      if (carAssets === '') setCarAssets('0');
+      if (watchAssets === '') setWatchAssets('0');
+      if (mortgageDebt === '') setMortgageDebt('0');
+      if (carDebt === '') setCarDebt('0');
+      if (scholarshipDebt === '') setScholarshipDebt('0');
+      if (otherDebt === '') setOtherDebt('0');
     }
     if (currentStep === 4) {
       if (!academicDegree) {
