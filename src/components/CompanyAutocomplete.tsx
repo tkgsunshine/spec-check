@@ -88,7 +88,7 @@ export default function CompanyAutocomplete({ value, companyCategory, onChange }
           onChange={handleInputChange}
           onFocus={() => query.trim() && setIsOpen(true)}
           placeholder="勤務先・企業名を入力 (例: トヨタ自動車, キーエンス, Google)"
-          className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-10 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-all"
+          className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-10 py-3 text-base sm:text-sm text-white focus:outline-none focus:border-indigo-500 transition-all"
         />
         <Search className="w-4 h-4 text-slate-500 absolute right-3.5 pointer-events-none" />
       </div>

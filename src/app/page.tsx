@@ -576,7 +576,7 @@ export default function HomePage() {
       {currentStep === 1 && (
         <>
           {/* 1st View Hero Banner (スマホ画面最大・横溢れ防止レスポンシブ表示) */}
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl mb-8 border border-pink-500/40 shadow-2xl shadow-pink-500/15 bg-slate-950 -mx-4 sm:mx-0 hover:border-pink-500/60 transition-all duration-300">
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl mb-8 border border-pink-500/40 shadow-2xl shadow-pink-500/15 bg-slate-950 mx-0 hover:border-pink-500/60 transition-all duration-300">
             <h1 className="sr-only">
               人間スペック診断 - あなたの総合＆恋愛スペック、全国でどのレベル？ (20代オタク男子 年収300万、30代バリキャリ女子 年収700万、10代ギャルJK パパのお小遣い、40代居酒屋店長 年収500万、50代金持ち風紳士 年収3000万、恋愛婚活価値)
             </h1>
@@ -958,10 +958,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 1000"
+                    placeholder="0 (未入力可)"
                     value={financialAssets}
                     onChange={e => setFinancialAssets(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
                 <div>
@@ -970,10 +970,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 3000"
+                    placeholder="0 (未入力可)"
                     value={realEstateAssets}
                     onChange={e => setRealEstateAssets(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
                 <div>
@@ -982,10 +982,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 300"
+                    placeholder="0 (未入力可)"
                     value={carAssets}
                     onChange={e => setCarAssets(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
                 <div>
@@ -994,10 +994,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 100"
+                    placeholder="0 (未入力可)"
                     value={watchAssets}
                     onChange={e => setWatchAssets(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
               </div>
@@ -1054,10 +1054,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 2500"
+                    placeholder="0 (未入力可)"
                     value={mortgageDebt}
                     onChange={e => setMortgageDebt(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
                 <div>
@@ -1066,10 +1066,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 200"
+                    placeholder="0 (未入力可)"
                     value={carDebt}
                     onChange={e => setCarDebt(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
                 <div>
@@ -1078,10 +1078,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 150"
+                    placeholder="0 (未入力可)"
                     value={scholarshipDebt}
                     onChange={e => setScholarshipDebt(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
                 <div>
@@ -1090,10 +1090,10 @@ export default function HomePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    placeholder="例: 50"
+                    placeholder="0 (未入力可)"
                     value={otherDebt}
                     onChange={e => setOtherDebt(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>
               </div>

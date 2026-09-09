@@ -145,22 +145,48 @@ export default function UniversityAutocomplete({ value, customHensachi: initialH
         )}
       </div>
 
-      {/* 2. 偏差値 表示・入力欄 (下) */}
+      {/* Selected Master Status Badge */}
+      {selectedItem && (
+        <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-200 text-xs font-bold">
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{selectedItem.name} （偏差値: {selectedItem.hensachi.toFixed(1)}）</span>
+          </div>
+          <span className="text-[10px] text-indigo-300 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-700/50">
+            マスタ判定済
+          </span>
+        </div>
+      )}
+
+      {/* 2. 手動偏差値設定 (下) */}
       {selectedItem ? (
-        <div className="flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
-          <div className="flex items-center gap-2 min-w-0">
-            {selectedItem.isMedicalSchool ? (
-              <Stethoscope className="w-4 h-4 text-rose-400 shrink-0" />
-            ) : (
-              <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-            )}
-            <span className="truncate">
-              {selectedItem.name} ({selectedItem.establishmentType === 'NATIONAL' ? '国立' : selectedItem.establishmentType === 'PUBLIC' ? '公立' : '私立'})
+        <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-300">
+            <span className="flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+              偏差値を微調整・上書き指定 (任意):
+            </span>
+            <span className="text-indigo-400 font-mono">
+              適用値: {(customHensachi !== '' && !isNaN(Number(customHensachi))) ? Number(customHensachi).toFixed(1) : selectedItem.hensachi.toFixed(1)}
             </span>
           </div>
-          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-200 font-bold text-[11px] shrink-0">
-            偏差値 {selectedItem.hensachi}
-          </span>
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              inputMode="decimal"
+              pattern="[0-9.]*"
+              step="0.5"
+              min="30"
+              max="80"
+              value={customHensachi}
+              onChange={handleCustomHensachiChange}
+              placeholder={`例: ${selectedItem.hensachi.toFixed(1)}`}
+              className="w-32 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-base sm:text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+            />
+            <span className="text-[11px] text-slate-400">
+              ※プルダウン一覧にない大学の場合、偏差値を直接入力できます
+            </span>
+          </div>
         </div>
       ) : (
         <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
