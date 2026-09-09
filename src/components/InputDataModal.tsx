@@ -149,9 +149,9 @@ export default function InputDataModal({ input }: InputDataModalProps) {
         industryCode,
         occupationCode,
         employmentType: employmentType ? (employmentType as DiagnosisInputV3['employmentType']) : 'REGULAR',
-        positionCode,
-        companyName: companyName.trim() || null,
-        companyCategory: companyCategory !== '' ? (companyCategory as any) : null,
+        positionCode: employmentType === 'UNEMPLOYED' ? null : positionCode,
+        companyName: employmentType === 'UNEMPLOYED' ? null : (companyName.trim() || null),
+        companyCategory: employmentType === 'UNEMPLOYED' ? null : (companyCategory !== '' ? (companyCategory as any) : null),
         instagramFollowers: Number(instagramFollowers) || 0,
         xFollowers: Number(xFollowers) || 0,
         tikTokFollowers: Number(tikTokFollowers) || 0,
@@ -571,7 +571,15 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                     </label>
                     <select
                       value={employmentType || ''}
-                      onChange={(e) => setEmploymentType(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEmploymentType(val);
+                        setPositionCode('');
+                        if (val === 'UNEMPLOYED') {
+                          setCompanyName('');
+                          setCompanyCategory('');
+                        }
+                      }}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
                     >
                       <option value="">選択してください ※必須</option>
@@ -599,34 +607,38 @@ export default function InputDataModal({ input }: InputDataModalProps) {
                       </select>
                     </div>
                   )}
-                  <div className="sm:col-span-2">
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">勤務先・企業名 (上場・外資マスタ自動判定)</label>
-                    <CompanyAutocomplete
-                      value={companyName}
-                      companyCategory={companyCategory}
-                      onChange={(name, category) => {
-                        setCompanyName(name);
-                        if (category) {
-                          setCompanyCategory(category as any);
-                        }
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">勤務先企業規模 (任意区分)</label>
-                    <select
-                      value={companyCategory || ''}
-                      onChange={(e) => setCompanyCategory(e.target.value as any)}
-                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
-                    >
-                      <option value="">選択してください (未選択/指定なし)</option>
-                      <option value="LARGE_PRIME">プライム上場・外資トップ・大手グローバル企業</option>
-                      <option value="LARGE">大手企業・上場企業・有名子会社</option>
-                      <option value="MEDIUM">中堅企業・メガベンチャー</option>
-                      <option value="SMALL">中小企業・スタートアップ</option>
-                      <option value="OTHER">その他・個人事業所</option>
-                    </select>
-                  </div>
+                  {employmentType !== 'UNEMPLOYED' && (
+                    <>
+                      <div className="sm:col-span-2">
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">勤務先・企業名 (上場・外資マスタ自動判定)</label>
+                        <CompanyAutocomplete
+                          value={companyName}
+                          companyCategory={companyCategory}
+                          onChange={(name, category) => {
+                            setCompanyName(name);
+                            if (category) {
+                              setCompanyCategory(category as any);
+                            }
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">勤務先企業規模 (任意区分)</label>
+                        <select
+                          value={companyCategory || ''}
+                          onChange={(e) => setCompanyCategory(e.target.value as any)}
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-amber-500 focus:outline-none"
+                        >
+                          <option value="">選択してください (未選択/指定なし)</option>
+                          <option value="LARGE_PRIME">プライム上場・外資トップ・大手グローバル企業</option>
+                          <option value="LARGE">大手企業・上場企業・有名子会社</option>
+                          <option value="MEDIUM">中堅企業・メガベンチャー</option>
+                          <option value="SMALL">中小企業・スタートアップ</option>
+                          <option value="OTHER">その他・個人事業所</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

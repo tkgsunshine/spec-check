@@ -14,13 +14,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const hasCompanyName = Boolean(body.companyName && body.companyName.trim() !== '');
-    const hasCompanyCategory = Boolean(body.companyCategory && String(body.companyCategory).trim() !== '');
-    if (!hasCompanyName && !hasCompanyCategory) {
-      return NextResponse.json(
-        { error: '「勤務先・企業名」または「勤務先企業規模」のどちらか一方を必ず入力・選択してください。' },
-        { status: 400 }
-      );
+    if (body.employmentType !== 'UNEMPLOYED') {
+      const hasCompanyName = Boolean(body.companyName && body.companyName.trim() !== '');
+      const hasCompanyCategory = Boolean(body.companyCategory && String(body.companyCategory).trim() !== '');
+      if (!hasCompanyName && !hasCompanyCategory) {
+        return NextResponse.json(
+          { error: '「勤務先・企業名」または「勤務先企業規模」のどちらか一方を必ず入力・選択してください。' },
+          { status: 400 }
+        );
+      }
     }
 
     // 1. スコア計算の実行 (Gemini AI非同期試行 ➔ 失敗時は安全な同期エンジンへフォールバック)

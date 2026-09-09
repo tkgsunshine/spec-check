@@ -266,6 +266,10 @@ export default function HomePage() {
   const handleEmploymentTypeChange = (newType: string) => {
     setEmploymentType(newType as DiagnosisInputV3['employmentType']);
     setPositionCode('');
+    if (newType === 'UNEMPLOYED') {
+      setCompanyName('');
+      setCompanyCategory('');
+    }
   };
 
   const addLanguage = () => {
@@ -381,11 +385,13 @@ export default function HomePage() {
         setErrorMsg('役職を選択してください。');
         return;
       }
-      const hasCompName = Boolean(companyName && companyName.trim() !== '');
-      const hasCompCat = Boolean(companyCategory && companyCategory.trim() !== '');
-      if (!hasCompName && !hasCompCat) {
-        setErrorMsg('「勤務先・企業名」または「勤務先企業規模」のどちらか一方を必ず入力・選択してください。');
-        return;
+      if (employmentType !== 'UNEMPLOYED') {
+        const hasCompName = Boolean(companyName && companyName.trim() !== '');
+        const hasCompCat = Boolean(companyCategory && companyCategory.trim() !== '');
+        if (!hasCompName && !hasCompCat) {
+          setErrorMsg('「勤務先・企業名」または「勤務先企業規模」のどちらか一方を必ず入力・選択してください。');
+          return;
+        }
       }
     }
     changeStep(currentStep + 1);
@@ -461,13 +467,15 @@ export default function HomePage() {
       setCurrentStep(4);
       return;
     }
-    const hasCompName = Boolean(companyName && companyName.trim() !== '');
-    const hasCompCat = Boolean(companyCategory && companyCategory.trim() !== '');
-    if (!hasCompName && !hasCompCat) {
-      setErrorMsg('「勤務先・企業名」または「勤務先企業規模」のどちらか一方を必ず入力・選択してください。');
-      setLoading(false);
-      setCurrentStep(4);
-      return;
+    if (employmentType !== 'UNEMPLOYED') {
+      const hasCompName = Boolean(companyName && companyName.trim() !== '');
+      const hasCompCat = Boolean(companyCategory && companyCategory.trim() !== '');
+      if (!hasCompName && !hasCompCat) {
+        setErrorMsg('「勤務先・企業名」または「勤務先企業規模」のどちらか一方を必ず入力・選択してください。');
+        setLoading(false);
+        setCurrentStep(4);
+        return;
+      }
     }
 
     try {
@@ -501,8 +509,8 @@ export default function HomePage() {
         occupationCode,
         employmentType: employmentType || 'REGULAR',
         positionCode: positionCode !== '' ? positionCode : null,
-        companyName: companyName.trim() !== '' ? companyName.trim() : null,
-        companyCategory: companyCategory !== '' ? (companyCategory as any) : null,
+        companyName: employmentType === 'UNEMPLOYED' ? null : (companyName.trim() !== '' ? companyName.trim() : null),
+        companyCategory: employmentType === 'UNEMPLOYED' ? null : (companyCategory !== '' ? (companyCategory as any) : null),
         languages: userLanguages,
         travelCount: travelCount !== '' ? Number(toHalfWidthDigits(travelCount)) : null,
         maritalStatus: maritalStatus !== '' ? maritalStatus : null,
@@ -1243,47 +1251,49 @@ export default function HomePage() {
             </div>
 
             {/* 勤務先・企業名 (オートコンプリート検索) & 企業規模 */}
-            <div className="border-t border-slate-800 pt-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300">勤務先情報</span>
-                <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">
-                  ※企業名または規模のどちらか一方必須
-                </span>
-              </div>
+            {employmentType !== 'UNEMPLOYED' && (
+              <div className="border-t border-slate-800 pt-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-300">勤務先情報</span>
+                  <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">
+                    ※企業名または規模のどちらか一方必須
+                  </span>
+                </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
-                  勤務先・企業名
-                  <span className="block text-[11px] text-slate-500 font-normal mt-0.5">（上場企業 / 有名外資マスタ自動判定）</span>
-                </label>
-                <CompanyAutocomplete
-                  value={companyName}
-                  companyCategory={companyCategory}
-                  onChange={(name, category) => {
-                    setCompanyName(name);
-                    if (category) {
-                      setCompanyCategory(category as any);
-                    }
-                  }}
-                />
-              </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">
+                    勤務先・企業名
+                    <span className="block text-[11px] text-slate-500 font-normal mt-0.5">（上場企業 / 有名外資マスタ自動判定）</span>
+                  </label>
+                  <CompanyAutocomplete
+                    value={companyName}
+                    companyCategory={companyCategory}
+                    onChange={(name, category) => {
+                      setCompanyName(name);
+                      if (category) {
+                        setCompanyCategory(category as any);
+                      }
+                    }}
+                  />
+                </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">勤務先企業規模</label>
-                <select
-                  value={companyCategory || ''}
-                  onChange={e => setCompanyCategory(e.target.value as any)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
-                >
-                  <option value="">選択してください (未選択/指定なし)</option>
-                  <option value="LARGE_PRIME">プライム上場・外資トップ・大手グローバル企業</option>
-                  <option value="LARGE">大手企業・上場企業・有名子会社</option>
-                  <option value="MEDIUM">中堅企業・メガベンチャー</option>
-                  <option value="SMALL">中小企業・スタートアップ</option>
-                  <option value="OTHER">その他・個人事業所</option>
-                </select>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">勤務先企業規模</label>
+                  <select
+                    value={companyCategory || ''}
+                    onChange={e => setCompanyCategory(e.target.value as any)}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
+                  >
+                    <option value="">選択してください (未選択/指定なし)</option>
+                    <option value="LARGE_PRIME">プライム上場・外資トップ・大手グローバル企業</option>
+                    <option value="LARGE">大手企業・上場企業・有名子会社</option>
+                    <option value="MEDIUM">中堅企業・メガベンチャー</option>
+                    <option value="SMALL">中小企業・スタートアップ</option>
+                    <option value="OTHER">その他・個人事業所</option>
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
