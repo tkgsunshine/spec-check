@@ -9,4 +9,6 @@ export * from './face';
 export * from './language';
 export * from './travel';
 export * from './love';
+export * from './mbti';
+export * from './experience';
 export * from './overall';

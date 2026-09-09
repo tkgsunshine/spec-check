@@ -132,6 +132,7 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
     snsScore: snsResult.snsScore.score,
     maritalStatus: input.maritalStatus,
     childrenCount: input.childrenCount,
+    partnerCount: input.partnerCount,
     prefectureId: input.prefectureId,
     mbti: input.mbti,
   });
@@ -338,6 +339,7 @@ export async function runDiagnosisV3Async(input: DiagnosisInputV3): Promise<Over
     snsScore: snsResult.snsScore.score,
     maritalStatus: input.maritalStatus,
     childrenCount: input.childrenCount,
+    partnerCount: input.partnerCount,
     prefectureId: input.prefectureId,
     mbti: input.mbti,
   });

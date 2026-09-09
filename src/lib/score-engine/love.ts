@@ -1,6 +1,7 @@
 import { Gender, MaritalStatus, MetricScoreResult } from '@/types/spec-check';
 import { renormalizeWeights } from './math-utils';
 import { getMbtiLoveBonus } from './mbti';
+import { calculateExperienceScore } from './experience';
 
 /**
  * 恋愛・モテ度スペック (LOVE_SCORE V5.0 恋愛人気・年齢動的ウェイトモデル)
@@ -24,6 +25,7 @@ export function calculateLoveScore(params: {
   snsScore?: number;
   maritalStatus?: MaritalStatus | null;
   childrenCount?: number | null;
+  partnerCount?: number | null;
   prefectureId: number;
   mbti?: string | null;
 }): {
@@ -38,7 +40,7 @@ export function calculateLoveScore(params: {
   };
   loveMetrics: MetricScoreResult[];
 } {
-  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, snsScore, maritalStatus, childrenCount, prefectureId, mbti } = params;
+  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, snsScore, maritalStatus, childrenCount, partnerCount, prefectureId, mbti } = params;
 
   // キャリア・影響力 (職歴・年収ステータス + SNS影響力/フォロワー数の合成スコア)
   const combinedCareerScore = (snsScore !== undefined && snsScore !== null && snsScore > 0)
@@ -139,7 +141,13 @@ export function calculateLoveScore(params: {
     notes: '総務省国勢調査による年代別未婚率実態データ',
   };
 
-  // 3. 男女別・年齢動的市場需要傾斜ウェイト設定
+  // 3. 経験人数スコア算出 (男性: 案B 対数モテモデル / 女性: 案A 逆U字ベルカーブモデル)
+  const experienceMetric = calculateExperienceScore(partnerCount, gender, age);
+  const finalFamilyScore = (partnerCount !== null && partnerCount !== undefined)
+    ? Math.round((familyScore * 0.65 + experienceMetric.score * 0.35) * 10) / 10
+    : familyScore;
+
+  // 4. 男女別・年齢動的市場需要傾斜ウェイト設定
   let availableMetrics;
   if (gender === 'FEMALE') {
     // 女性評価（男性視点）
@@ -147,7 +155,7 @@ export function calculateLoveScore(params: {
       { code: 'FACE', score: faceScore, defaultWeight: 0.35 },
       { code: 'BODY', score: bodyScore, defaultWeight: 0.30 },
       { code: 'AGE', score: ageLoveScore, defaultWeight: 0.25 },
-      { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
+      { code: 'FAMILY', score: finalFamilyScore, defaultWeight: 0.05 },
       { code: 'INCOME', score: incomeScore, defaultWeight: 0.025 },
       { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.025 },
     ];
@@ -161,7 +169,7 @@ export function calculateLoveScore(params: {
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.20 },
         { code: 'INCOME', score: incomeScore, defaultWeight: 0.05 },
         { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.05 },
-        { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
+        { code: 'FAMILY', score: finalFamilyScore, defaultWeight: 0.05 },
       ];
     } else if (age < 30) {
       // 20代後半: ルックス×プレ経済力 (CAREER 10%)
@@ -171,7 +179,7 @@ export function calculateLoveScore(params: {
         { code: 'INCOME', score: incomeScore, defaultWeight: 0.20 },
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.15 },
         { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.10 },
-        { code: 'FAMILY', score: familyScore, defaultWeight: 0.05 },
+        { code: 'FAMILY', score: finalFamilyScore, defaultWeight: 0.05 },
       ];
     } else if (age < 45) {
       // 30代〜40代前半: 大人の余裕×経済力・清潔感
@@ -181,7 +189,7 @@ export function calculateLoveScore(params: {
         { code: 'BODY', score: bodyScore, defaultWeight: 0.20 },
         { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.15 },
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.10 },
-        { code: 'FAMILY', score: familyScore, defaultWeight: 0.10 },
+        { code: 'FAMILY', score: finalFamilyScore, defaultWeight: 0.10 },
       ];
     } else {
       // 45歳以上: ステータス×ダンディさ
@@ -190,7 +198,7 @@ export function calculateLoveScore(params: {
         { code: 'CAREER', score: combinedCareerScore, defaultWeight: 0.20 },
         { code: 'FACE', score: faceScore, defaultWeight: 0.15 },
         { code: 'BODY', score: bodyScore, defaultWeight: 0.15 },
-        { code: 'FAMILY', score: familyScore, defaultWeight: 0.10 },
+        { code: 'FAMILY', score: finalFamilyScore, defaultWeight: 0.10 },
         { code: 'AGE', score: ageLoveScore, defaultWeight: 0.10 },
       ];
     }
@@ -198,7 +206,7 @@ export function calculateLoveScore(params: {
 
   const { categoryScore: baseLoveOverallScore } = renormalizeWeights(availableMetrics);
 
-  // 4. MBTI性格特性・恋愛モテ度ボーナス (+0〜3.0pt)
+  // 5. MBTI性格特性・恋愛モテ度ボーナス (+0〜3.0pt)
   const mbtiLove = getMbtiLoveBonus(mbti, gender);
   const loveOverallScore = Math.min(100, Math.round((baseLoveOverallScore + mbtiLove.bonus) * 10) / 10);
 
@@ -227,8 +235,13 @@ export function calculateLoveScore(params: {
       body: bodyScore,
       income: incomeScore,
       career: combinedCareerScore,
-      family: familyScore,
+      family: finalFamilyScore,
     },
-    loveMetrics: [ageMetric, familyMetric, ...(mbtiMetric ? [mbtiMetric] : [])],
+    loveMetrics: [
+      ageMetric,
+      familyMetric,
+      ...(partnerCount !== null && partnerCount !== undefined ? [experienceMetric] : []),
+      ...(mbtiMetric ? [mbtiMetric] : []),
+    ],
   };
 }

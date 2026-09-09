@@ -13,6 +13,7 @@ import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileTe
 import { runDiagnosisV3 } from '@/lib/score-engine';
 import { scoreToTopPercent } from '@/lib/score-engine/math-utils';
 import { getMbtiEconomicEvaluationText, getMbtiLoveEvaluationText } from '@/lib/score-engine/mbti';
+import { getExperienceEvaluationText } from '@/lib/score-engine/experience';
 
 function generateOverallEvaluationText(params: {
   isLoveMode: boolean;
@@ -24,8 +25,9 @@ function generateOverallEvaluationText(params: {
   categoryScores: { label: string; score: number }[];
   socialScore?: number;
   mbti?: string | null;
+  partnerCount?: number | null;
 }): string {
-  const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores, socialScore, mbti } = params;
+  const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores, socialScore, mbti, partnerCount } = params;
   const genderText = gender === 'MALE' ? '男性' : '女性';
 
   const sorted = [...categoryScores].sort((a, b) => b.score - a.score);
@@ -94,15 +96,20 @@ function generateOverallEvaluationText(params: {
     }
   }
 
-  // 4. MBTIパーソナリティ特性・資産/恋愛ポテンシャル分析
+  // 4. 経験人数・パートナーシップ分析 (恋愛モード時)
+  const expSection = isLoveMode
+    ? getExperienceEvaluationText(partnerCount, gender, age)
+    : '';
+
+  // 5. MBTIパーソナリティ特性・資産/恋愛ポテンシャル分析
   const mbtiSection = isLoveMode
     ? getMbtiLoveEvaluationText(mbti, gender)
     : getMbtiEconomicEvaluationText(mbti);
 
-  // 5. 居住地域および同世代層特有の傾向考察 (約200文字)
+  // 6. 居住地域および同世代層特有の傾向考察 (約200文字)
   const section4 = `【${prefectureName}・同世代（${age}歳）における市場環境】\n${prefectureName}における${age}歳${genderText}の母集団データと照らし合わせると、年齢に応じた経験値や社会的責任が増す中で、あなたのステータス構成は地域内でも優位なポジションを確立しています。${prefectureName}特有の生活環境や物価水準、同世代の平均的な傾向を意識した上で、ご自身の強みをローカライズして発揮することが、プライベートや仕事での満足度向上に直結します。`;
 
-  // 6. 中長期的な戦略ロードマップと総括 (約200文字)
+  // 7. 中長期的な戦略ロードマップと総括 (約200文字)
   let section5 = '';
   if (!isLoveMode) {
     section5 = `【今後の総括とアクションプラン】\n総合的に見て、あなたはすでに優れた基盤を有しており、自身の強みである【${bestCategory.label}】を軸に主導権を握れるポテンシャルを持っています。自己成長のロードマップとして、定期的な数値チェックを行いながらボトルネック領域の改善に取り組むことで、人生のあらゆる局面で望む成果を引き寄せる持続可能なハイスペック・ライフを実現できるでしょう。`;
@@ -111,6 +118,9 @@ function generateOverallEvaluationText(params: {
   }
 
   const sections = [section1, section2, section3];
+  if (expSection) {
+    sections.push(expSection);
+  }
   if (mbtiSection) {
     sections.push(mbtiSection);
   }
@@ -291,6 +301,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
     categoryScores: currentCategoryScores,
     socialScore: data.categoryScores.social,
     mbti: data.rawInput?.mbti,
+    partnerCount: data.rawInput?.partnerCount,
   });
 
   const currentEpithet = isLoveMode ? (data.loveEpithet || data.epithet) : data.epithet;
