@@ -29,9 +29,14 @@ export function getAdminFirestore(): Firestore | null {
       return null;
     }
 
-    // \n のエスケープ解除処理
-    if (privateKey && privateKey.includes('\\n')) {
-      privateKey = privateKey.replace(/\\n/g, '\n');
+    // \n のエスケープ解除および引用符トリム処理
+    if (privateKey) {
+      if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+        privateKey = privateKey.slice(1, -1);
+      }
+      if (privateKey.includes('\\n')) {
+        privateKey = privateKey.replace(/\\n/g, '\n');
+      }
     }
 
     if (!getApps().length) {

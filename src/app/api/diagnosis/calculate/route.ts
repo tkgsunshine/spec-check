@@ -34,11 +34,12 @@ export async function POST(request: Request) {
       result = runDiagnosisV3(body);
     }
 
-    // 2. DB保存処理 (完全非同期化・絶対エラー無視)
-    // 保存処理の失敗がユーザーへの結果返却を妨害しないよう独立保護
-    saveDiagnosis(result).catch(saveError => {
-      console.error('Background saveDiagnosis error (non-fatal):', saveError);
-    });
+    // 2. DB保存処理 (Firestore永続化)
+    try {
+      await saveDiagnosis(result);
+    } catch (saveError) {
+      console.error('saveDiagnosis error (non-fatal):', saveError);
+    }
 
     return NextResponse.json({ success: true, result });
   } catch (error: any) {
