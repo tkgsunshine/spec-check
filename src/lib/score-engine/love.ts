@@ -1,5 +1,6 @@
 import { Gender, MaritalStatus, MetricScoreResult } from '@/types/spec-check';
 import { renormalizeWeights } from './math-utils';
+import { getMbtiLoveBonus } from './mbti';
 
 /**
  * 恋愛・モテ度スペック (LOVE_SCORE V5.0 恋愛人気・年齢動的ウェイトモデル)
@@ -24,6 +25,7 @@ export function calculateLoveScore(params: {
   maritalStatus?: MaritalStatus | null;
   childrenCount?: number | null;
   prefectureId: number;
+  mbti?: string | null;
 }): {
   loveOverallScore: number;
   loveCategoryScores: {
@@ -36,7 +38,7 @@ export function calculateLoveScore(params: {
   };
   loveMetrics: MetricScoreResult[];
 } {
-  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, snsScore, maritalStatus, childrenCount, prefectureId } = params;
+  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, snsScore, maritalStatus, childrenCount, prefectureId, mbti } = params;
 
   // キャリア・影響力 (職歴・年収ステータス + SNS影響力/フォロワー数の合成スコア)
   const combinedCareerScore = (snsScore !== undefined && snsScore !== null && snsScore > 0)
@@ -194,7 +196,28 @@ export function calculateLoveScore(params: {
     }
   }
 
-  const { categoryScore: loveOverallScore } = renormalizeWeights(availableMetrics);
+  const { categoryScore: baseLoveOverallScore } = renormalizeWeights(availableMetrics);
+
+  // 4. MBTI性格特性・恋愛モテ度ボーナス (+0〜3.0pt)
+  const mbtiLove = getMbtiLoveBonus(mbti, gender);
+  const loveOverallScore = Math.min(100, Math.round((baseLoveOverallScore + mbtiLove.bonus) * 10) / 10);
+
+  const mbtiMetric: MetricScoreResult | null = mbti && mbti.trim() !== '' ? {
+    metricCode: 'MBTI_LOVE',
+    metricName: 'MBTI恋愛傾向・モテ度',
+    category: '恋愛市場',
+    rawValue: `${mbti.trim().toUpperCase()}（${mbtiLove.label || '標準'}）`,
+    score: Math.min(100, Math.round((50 + mbtiLove.bonus * 12) * 10) / 10),
+    percentile: mbtiLove.bonus > 0 ? Math.min(95, Math.round(50 + mbtiLove.bonus * 13)) : 50,
+    topPercent: mbtiLove.bonus > 0 ? Math.max(5, Math.round(50 - mbtiLove.bonus * 13)) : 50,
+    dataQuality: 'MODEL_ESTIMATE',
+    datasetName: '恋愛市場パーソナリティ動態統計・MBTIモテ傾向調査 (2024)',
+    sourceUrl: '',
+    surveyYear: 2024,
+    calculationMethod: 'STATISTICAL_MODEL_ESTIMATE',
+    hasOfficialTopPercent: false,
+    notes: mbtiLove.notes || `MBTI特性（${mbti.trim().toUpperCase()}）による恋愛モテ傾向`,
+  } : null;
 
   return {
     loveOverallScore,
@@ -206,6 +229,6 @@ export function calculateLoveScore(params: {
       career: combinedCareerScore,
       family: familyScore,
     },
-    loveMetrics: [ageMetric, familyMetric],
+    loveMetrics: [ageMetric, familyMetric, ...(mbtiMetric ? [mbtiMetric] : [])],
   };
 }

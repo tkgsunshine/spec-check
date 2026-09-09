@@ -9,6 +9,7 @@ import { calculateFaceScore, analyzeFaceWithGemini } from './face';
 import { calculateLanguageScore } from './language';
 import { calculateTravelScore } from './travel';
 import { calculateLoveScore } from './love';
+import { getMbtiEconomicBonus } from './mbti';
 import { generateEpithetTitle, generateLoveEpithetTitle } from './title-generator';
 import { renormalizeWeights } from './math-utils';
 
@@ -63,6 +64,12 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
       const synergy = Math.min(5, Math.round((incomeResult.incomeScore.score + netWorthResult.score - 150) * 0.1));
       totalEconomicScore = Math.min(100, Math.round((totalEconomicScore + synergy) * 10) / 10);
     }
+  }
+
+  // MBTI性格特性による生涯資産形成・キャピタル蓄積ポテンシャル加点 (+0〜2.5pt)
+  const mbtiEco = getMbtiEconomicBonus(input.mbti);
+  if (mbtiEco.bonus > 0) {
+    totalEconomicScore = Math.min(100, Math.round((totalEconomicScore + mbtiEco.bonus) * 10) / 10);
   }
 
   const academicResult = calculateAcademicScore(
@@ -126,6 +133,7 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
     maritalStatus: input.maritalStatus,
     childrenCount: input.childrenCount,
     prefectureId: input.prefectureId,
+    mbti: input.mbti,
   });
 
   // 4. メトリクス結果オブジェクトの集約
@@ -266,6 +274,12 @@ export async function runDiagnosisV3Async(input: DiagnosisInputV3): Promise<Over
     }
   }
 
+  // MBTI性格特性による生涯資産形成・キャピタル蓄積ポテンシャル加点 (+0〜2.5pt)
+  const mbtiEco = getMbtiEconomicBonus(input.mbti);
+  if (mbtiEco.bonus > 0) {
+    totalEconomicScore = Math.min(100, Math.round((totalEconomicScore + mbtiEco.bonus) * 10) / 10);
+  }
+
   const academicResult = calculateAcademicScore(
     input.academicDegree,
     input.universityName,
@@ -325,6 +339,7 @@ export async function runDiagnosisV3Async(input: DiagnosisInputV3): Promise<Over
     maritalStatus: input.maritalStatus,
     childrenCount: input.childrenCount,
     prefectureId: input.prefectureId,
+    mbti: input.mbti,
   });
 
   const allMetrics: MetricScoreResult[] = [

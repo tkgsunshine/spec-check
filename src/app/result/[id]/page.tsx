@@ -12,6 +12,7 @@ import InputDataModal from '@/components/InputDataModal';
 import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText } from 'lucide-react';
 import { runDiagnosisV3 } from '@/lib/score-engine';
 import { scoreToTopPercent } from '@/lib/score-engine/math-utils';
+import { getMbtiEconomicEvaluationText, getMbtiLoveEvaluationText } from '@/lib/score-engine/mbti';
 
 function generateOverallEvaluationText(params: {
   isLoveMode: boolean;
@@ -22,8 +23,9 @@ function generateOverallEvaluationText(params: {
   prefectureName: string;
   categoryScores: { label: string; score: number }[];
   socialScore?: number;
+  mbti?: string | null;
 }): string {
-  const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores, socialScore } = params;
+  const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores, socialScore, mbti } = params;
   const genderText = gender === 'MALE' ? '男性' : '女性';
 
   const sorted = [...categoryScores].sort((a, b) => b.score - a.score);
@@ -92,10 +94,15 @@ function generateOverallEvaluationText(params: {
     }
   }
 
-  // 4. 居住地域および同世代層特有の傾向考察 (約200文字)
+  // 4. MBTIパーソナリティ特性・資産/恋愛ポテンシャル分析
+  const mbtiSection = isLoveMode
+    ? getMbtiLoveEvaluationText(mbti, gender)
+    : getMbtiEconomicEvaluationText(mbti);
+
+  // 5. 居住地域および同世代層特有の傾向考察 (約200文字)
   const section4 = `【${prefectureName}・同世代（${age}歳）における市場環境】\n${prefectureName}における${age}歳${genderText}の母集団データと照らし合わせると、年齢に応じた経験値や社会的責任が増す中で、あなたのステータス構成は地域内でも優位なポジションを確立しています。${prefectureName}特有の生活環境や物価水準、同世代の平均的な傾向を意識した上で、ご自身の強みをローカライズして発揮することが、プライベートや仕事での満足度向上に直結します。`;
 
-  // 5. 中長期的な戦略ロードマップと総括 (約200文字)
+  // 6. 中長期的な戦略ロードマップと総括 (約200文字)
   let section5 = '';
   if (!isLoveMode) {
     section5 = `【今後の総括とアクションプラン】\n総合的に見て、あなたはすでに優れた基盤を有しており、自身の強みである【${bestCategory.label}】を軸に主導権を握れるポテンシャルを持っています。自己成長のロードマップとして、定期的な数値チェックを行いながらボトルネック領域の改善に取り組むことで、人生のあらゆる局面で望む成果を引き寄せる持続可能なハイスペック・ライフを実現できるでしょう。`;
@@ -103,7 +110,13 @@ function generateOverallEvaluationText(params: {
     section5 = `【今後の総括とパートナーシップ戦略】\n総じて、あなたの恋愛市場におけるポテンシャルは非常に高く、自信を持ってパートナーシップに臨める好条件が揃っています。ご自身の強みである【${bestCategory.label}】をアピール軸として確立し、お相手との価値観のすり合わせを丁寧に行っていくことで、相思相愛の理想的なパートナーとの出逢いと関係成就を確実に手に入れることができるでしょう。`;
   }
 
-  return `${section1}\n\n${section2}\n\n${section3}\n\n${section4}\n\n${section5}`;
+  const sections = [section1, section2, section3];
+  if (mbtiSection) {
+    sections.push(mbtiSection);
+  }
+  sections.push(section4, section5);
+
+  return sections.join('\n\n');
 }
 
 export default function ResultPage({ params }: { params: Promise<{ id: string }> }) {
@@ -277,6 +290,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
     prefectureName: data.inputSummary.prefectureName,
     categoryScores: currentCategoryScores,
     socialScore: data.categoryScores.social,
+    mbti: data.rawInput?.mbti,
   });
 
   const currentEpithet = isLoveMode ? (data.loveEpithet || data.epithet) : data.epithet;
