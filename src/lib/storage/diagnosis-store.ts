@@ -5,6 +5,21 @@ const diagnosisMap = new Map<string, OverallDiagnosisResultV3>();
 const shareTokenMap = new Map<string, string>();
 
 /**
+ * 実行環境に応じた Firestore コレクション名の判定
+ * - 本番環境 (VERCEL_ENV === 'production' または APP_ENV === 'production'): 'diagnoses'
+ * - ローカル開発環境 / プレビュー: 'dev_diagnoses'
+ */
+export function getDiagnosisCollectionName(): string {
+  if (process.env.DIAGNOSIS_COLLECTION) {
+    return process.env.DIAGNOSIS_COLLECTION;
+  }
+  if (process.env.VERCEL_ENV === 'production' || process.env.APP_ENV === 'production') {
+    return 'diagnoses';
+  }
+  return 'dev_diagnoses';
+}
+
+/**
  * 診断結果（生入力データ・全スコア結果）の完全保存
  */
 export async function saveDiagnosis(result: OverallDiagnosisResultV3): Promise<void> {
@@ -21,7 +36,8 @@ export async function saveDiagnosis(result: OverallDiagnosisResultV3): Promise<v
         shareToken: result.shareToken,
         createdAt: result.createdAt || new Date().toISOString(),
       }));
-      await db.collection('diagnoses').doc(result.diagnosisId).set(sanitizedDoc);
+      const collectionName = getDiagnosisCollectionName();
+      await db.collection(collectionName).doc(result.diagnosisId).set(sanitizedDoc);
     }
   } catch (error) {
     console.error('Firestore saveDiagnosis error:', error);
@@ -38,7 +54,12 @@ export async function getDiagnosisById(id: string): Promise<OverallDiagnosisResu
   const db = getAdminFirestore();
   if (db) {
     try {
-      const doc = await db.collection('diagnoses').doc(id).get();
+      const collectionName = getDiagnosisCollectionName();
+      let doc = await db.collection(collectionName).doc(id).get();
+      if (!doc.exists && collectionName !== 'diagnoses') {
+        doc = await db.collection('diagnoses').doc(id).get();
+      }
+
       if (doc.exists) {
         const data = doc.data() as OverallDiagnosisResultV3;
         diagnosisMap.set(data.diagnosisId, data);
@@ -68,7 +89,12 @@ export async function getPublicShareResult(shareToken: string): Promise<PublicSh
     const db = getAdminFirestore();
     if (db) {
       try {
-        const snapshot = await db.collection('diagnoses').where('shareToken', '==', shareToken).limit(1).get();
+        const collectionName = getDiagnosisCollectionName();
+        let snapshot = await db.collection(collectionName).where('shareToken', '==', shareToken).limit(1).get();
+        if (snapshot.empty && collectionName !== 'diagnoses') {
+          snapshot = await db.collection('diagnoses').where('shareToken', '==', shareToken).limit(1).get();
+        }
+
         if (!snapshot.empty) {
           full = snapshot.docs[0].data() as OverallDiagnosisResultV3;
           diagnosisMap.set(full.diagnosisId, full);
@@ -121,7 +147,8 @@ export async function getAllDiagnosesForAdmin(limitCount = 100): Promise<Overall
   const db = getAdminFirestore();
   if (db) {
     try {
-      const snapshot = await db.collection('diagnoses')
+      const collectionName = getDiagnosisCollectionName();
+      const snapshot = await db.collection(collectionName)
         .orderBy('createdAt', 'desc')
         .limit(limitCount)
         .get();

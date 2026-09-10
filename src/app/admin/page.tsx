@@ -135,21 +135,31 @@ const getEpithetStr = (ep: any): string => {
 };
 
 export default function AdminPage() {
-  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<AdminStatsSummary | null>(null);
   const [records, setRecords] = useState<OverallDiagnosisResultV3[]>([]);
+  const [adminEnv, setAdminEnv] = useState<{ environment: string; collectionName: string }>({
+    environment: 'development',
+    collectionName: 'dev_diagnoses',
+  });
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecord, setSelectedRecord] = useState<OverallDiagnosisResultV3 | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
 
   const fetchAdminData = async () => {
-    setRefreshing(true);
     try {
+      setRefreshing(true);
       const res = await fetch('/api/admin/stats');
       const data = await res.json();
       if (data.success) {
         setStats(data.summary);
         setRecords(data.records || []);
+        if (data.environment) {
+          setAdminEnv({
+            environment: data.environment,
+            collectionName: data.collectionName || (data.environment === 'production' ? 'diagnoses' : 'dev_diagnoses'),
+          });
+        }
       }
     } catch (error) {
       console.error('Failed to fetch admin stats:', error);
@@ -230,10 +240,19 @@ export default function AdminPage() {
           <Link href="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 mb-2">
             <ArrowLeft className="w-4 h-4" /> サイトトップへ
           </Link>
-          <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
-            <ShieldCheck className="w-7 h-7 text-indigo-400" />
-            SPEC CHECK 本番データ管理ダッシュボード
-          </h1>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
+              <ShieldCheck className="w-7 h-7 text-indigo-400" />
+              SPEC CHECK データ管理ダッシュボード
+            </h1>
+            <span className={`text-xs font-black px-2.5 py-1 rounded-full border ${
+              adminEnv.environment === 'production'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                : 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
+            }`}>
+              {adminEnv.environment === 'production' ? '🟢 本番環境 (diagnoses)' : '🟡 ローカル開発環境 (dev_diagnoses)'}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
