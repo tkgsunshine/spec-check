@@ -8,6 +8,7 @@ import {
   User, Landmark, GraduationCap, Heart, Sparkles, X, Briefcase, Award, ArrowUpRight
 } from 'lucide-react';
 import { OverallDiagnosisResultV3, DiagnosisInputV3 } from '@/types/spec-check';
+import { scoreToTopPercent } from '@/lib/score-engine/math-utils';
 import {
   INDUSTRY_MASTER,
   COMMON_OCCUPATION_MASTER,
@@ -284,8 +285,14 @@ export default function AdminPage() {
             <span className="text-xs font-bold text-slate-400">平均日本人スペック</span>
             <BarChart3 className="w-4 h-4 text-violet-400" />
           </div>
-          <div className="text-3xl font-black text-slate-100 mb-1">
-            {loading ? '...' : (stats?.avgJapanScore ?? 0)} <span className="text-xs font-normal text-slate-400">Pt</span>
+          <div className="text-3xl font-black text-slate-100 mb-1 flex items-baseline gap-2">
+            <span>{loading ? '...' : (stats?.avgJapanScore ?? 0)}</span>
+            <span className="text-xs font-normal text-slate-400">Pt</span>
+            {!loading && stats && stats.avgJapanScore > 0 && (
+              <span className="text-[10px] font-bold text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full border border-indigo-500/30">
+                上位 {scoreToTopPercent(stats.avgJapanScore)}%
+              </span>
+            )}
           </div>
           <p className="text-[11px] text-slate-400">全診断の総合平均得点</p>
         </div>
@@ -295,8 +302,14 @@ export default function AdminPage() {
             <span className="text-xs font-bold text-slate-400">平均恋愛スペック</span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40">LOVE</span>
           </div>
-          <div className="text-3xl font-black text-slate-100 mb-1">
-            {loading ? '...' : (stats?.avgLoveScore ?? 0)} <span className="text-xs font-normal text-slate-400">Pt</span>
+          <div className="text-3xl font-black text-slate-100 mb-1 flex items-baseline gap-2">
+            <span>{loading ? '...' : (stats?.avgLoveScore ?? 0)}</span>
+            <span className="text-xs font-normal text-slate-400">Pt</span>
+            {!loading && stats && stats.avgLoveScore > 0 && (
+              <span className="text-[10px] font-bold text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30">
+                上位 {scoreToTopPercent(stats.avgLoveScore)}%
+              </span>
+            )}
           </div>
           <p className="text-[11px] text-slate-400">恋愛市場における平均評価</p>
         </div>
@@ -429,11 +442,21 @@ export default function AdminPage() {
                       <div className="text-slate-200">{r.rawInput?.companyName || getCompanyCategoryLabel(r.rawInput?.companyCategory) || '-'}</div>
                       <div className="text-[10px] text-emerald-400">年収 {r.rawInput?.annualIncome ?? '-'} 万円</div>
                     </td>
-                    <td className="py-3 px-3 text-right font-black text-indigo-300 text-sm">
-                      {r.japanOverallScore} <span className="text-[10px] text-slate-500 font-normal">Pt</span>
+                    <td className="py-3 px-3 text-right">
+                      <div className="font-black text-indigo-300 text-sm">
+                        {r.japanOverallScore} <span className="text-[10px] text-slate-500 font-normal">Pt</span>
+                      </div>
+                      <div className="text-[10px] text-indigo-400 font-medium">
+                        上位 {scoreToTopPercent(r.japanOverallScore)}%
+                      </div>
                     </td>
-                    <td className="py-3 px-3 text-right font-black text-rose-300 text-sm">
-                      {r.loveOverallScore} <span className="text-[10px] text-slate-500 font-normal">Pt</span>
+                    <td className="py-3 px-3 text-right">
+                      <div className="font-black text-rose-300 text-sm">
+                        {r.loveOverallScore} <span className="text-[10px] text-slate-500 font-normal">Pt</span>
+                      </div>
+                      <div className="text-[10px] text-rose-400 font-medium">
+                        上位 {scoreToTopPercent(r.loveOverallScore)}%
+                      </div>
                     </td>
                     <td className="py-3 px-3 text-center">
                       <button
@@ -747,8 +770,13 @@ export default function AdminPage() {
                     <div className="flex items-center justify-between border-b border-indigo-900/50 pb-2.5">
                       <div>
                         <span className="text-[10px] font-bold text-indigo-300 block">日本人総合スペック</span>
-                        <span className="text-3xl font-black text-white">{selectedRecord.japanOverallScore}</span>
-                        <span className="text-xs text-indigo-400 ml-1 font-normal">Pt</span>
+                        <div className="flex items-baseline gap-2 mt-0.5">
+                          <span className="text-3xl font-black text-white">{selectedRecord.japanOverallScore}</span>
+                          <span className="text-xs text-indigo-400 font-normal">Pt</span>
+                          <span className="text-xs font-bold text-indigo-300 bg-indigo-500/20 px-2.5 py-0.5 rounded-full border border-indigo-500/40">
+                            上位 {scoreToTopPercent(selectedRecord.japanOverallScore)}%
+                          </span>
+                        </div>
                       </div>
                       <span className="text-xs font-bold text-indigo-300 bg-indigo-500/20 px-3 py-1 rounded-full border border-indigo-500/40">
                         JAPAN
@@ -780,26 +808,44 @@ export default function AdminPage() {
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">身体 (BODY)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.body ?? '-'} Pt</div>
+                          {selectedRecord.categoryScores?.body !== undefined && selectedRecord.categoryScores?.body !== null && (
+                            <span className="text-[9px] text-indigo-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.categoryScores.body)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">経済 (ECON)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.economic ?? '-'} Pt</div>
+                          {selectedRecord.categoryScores?.economic !== undefined && selectedRecord.categoryScores?.economic !== null && (
+                            <span className="text-[9px] text-indigo-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.categoryScores.economic)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">キャリア (CAR)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.career ?? '-'} Pt</div>
+                          {selectedRecord.categoryScores?.career !== undefined && selectedRecord.categoryScores?.career !== null && (
+                            <span className="text-[9px] text-indigo-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.categoryScores.career)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">学歴 (ACAD)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.academic ?? '-'} Pt</div>
+                          {selectedRecord.categoryScores?.academic !== undefined && selectedRecord.categoryScores?.academic !== null && (
+                            <span className="text-[9px] text-indigo-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.categoryScores.academic)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">SNS (SOC)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.social ?? '-'} Pt</div>
+                          {selectedRecord.categoryScores?.social !== undefined && selectedRecord.categoryScores?.social !== null && (
+                            <span className="text-[9px] text-indigo-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.categoryScores.social)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">能力 (GLOB)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.categoryScores?.ability ?? '-'} Pt</div>
+                          {selectedRecord.categoryScores?.ability !== undefined && selectedRecord.categoryScores?.ability !== null && (
+                            <span className="text-[9px] text-indigo-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.categoryScores.ability)}%</span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -810,8 +856,13 @@ export default function AdminPage() {
                     <div className="flex items-center justify-between border-b border-rose-900/50 pb-2.5">
                       <div>
                         <span className="text-[10px] font-bold text-rose-300 block">恋愛総合スペック</span>
-                        <span className="text-3xl font-black text-white">{selectedRecord.loveOverallScore}</span>
-                        <span className="text-xs text-rose-400 ml-1 font-normal">Pt</span>
+                        <div className="flex items-baseline gap-2 mt-0.5">
+                          <span className="text-3xl font-black text-white">{selectedRecord.loveOverallScore}</span>
+                          <span className="text-xs text-rose-400 font-normal">Pt</span>
+                          <span className="text-xs font-bold text-rose-300 bg-rose-500/20 px-2.5 py-0.5 rounded-full border border-rose-500/40">
+                            上位 {scoreToTopPercent(selectedRecord.loveOverallScore)}%
+                          </span>
+                        </div>
                       </div>
                       <span className="text-xs font-bold text-rose-300 bg-rose-500/20 px-3 py-1 rounded-full border border-rose-500/40">
                         LOVE
@@ -843,26 +894,44 @@ export default function AdminPage() {
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">年齢 (AGE)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.age ?? '-'} Pt</div>
+                          {selectedRecord.loveCategoryScores?.age !== undefined && selectedRecord.loveCategoryScores?.age !== null && (
+                            <span className="text-[9px] text-rose-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.loveCategoryScores.age)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">容姿・印象</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.face ?? '-'} Pt</div>
+                          {selectedRecord.loveCategoryScores?.face !== undefined && selectedRecord.loveCategoryScores?.face !== null && (
+                            <span className="text-[9px] text-rose-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.loveCategoryScores.face)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">身体 (BODY)</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.body ?? '-'} Pt</div>
+                          {selectedRecord.loveCategoryScores?.body !== undefined && selectedRecord.loveCategoryScores?.body !== null && (
+                            <span className="text-[9px] text-rose-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.loveCategoryScores.body)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">年収・経済</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.income ?? '-'} Pt</div>
+                          {selectedRecord.loveCategoryScores?.income !== undefined && selectedRecord.loveCategoryScores?.income !== null && (
+                            <span className="text-[9px] text-rose-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.loveCategoryScores.income)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">キャリア</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.career ?? '-'} Pt</div>
+                          {selectedRecord.loveCategoryScores?.career !== undefined && selectedRecord.loveCategoryScores?.career !== null && (
+                            <span className="text-[9px] text-rose-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.loveCategoryScores.career)}%</span>
+                          )}
                         </div>
                         <div className="bg-slate-900/90 p-2 rounded-lg border border-slate-800">
                           <span className="text-slate-400 text-[9px] block">家族・関係</span>
                           <div className="text-xs font-bold text-white">{selectedRecord.loveCategoryScores?.family ?? '-'} Pt</div>
+                          {selectedRecord.loveCategoryScores?.family !== undefined && selectedRecord.loveCategoryScores?.family !== null && (
+                            <span className="text-[9px] text-rose-400 block font-medium mt-0.5">上位 {scoreToTopPercent(selectedRecord.loveCategoryScores.family)}%</span>
+                          )}
                         </div>
                       </div>
                     </div>
