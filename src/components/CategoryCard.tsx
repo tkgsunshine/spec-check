@@ -59,30 +59,48 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
   const circumference = 2 * Math.PI * radius;
   const progressOffset = circumference - (displayScore / 100) * circumference;
 
-  // 3-Tier Dynamic Color System (High >= 70 / Normal 40-69 / Low < 40)
-  const isHigh = score >= 70;
+  // 4-Tier Dynamic Color System (Elite >= 90 / High 70-89 / Normal 40-69 / Low < 40)
+  const isElite = score >= 90;
+  const isHigh = score >= 70 && score < 90;
   const isLow = score < 40;
 
   // Stroke color for ring
-  const strokeColor = isHigh
-    ? '#10b981' // Emerald Green for High Score (70+)
+  const strokeColor = isElite
+    ? '#f59e0b' // Gold / Amber for Elite Score (90+)
+    : isHigh
+    ? '#10b981' // Emerald Green for High Score (70-89)
     : isLow
     ? '#f43f5e' // Rose Red for Low Score (<40)
     : colorTheme === 'rose'
     ? '#fb7185' // Rose Pink for Love Normal
     : '#8b5cf6'; // Violet for Japan Normal
 
-  // Text color for score value
-  const scoreTextColor = isHigh
-    ? 'text-emerald-400'
+  // Dynamic glow drop shadow filter
+  const ringGlowClass = isElite
+    ? 'drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]'
+    : isHigh
+    ? 'drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]'
     : isLow
-    ? 'text-rose-400'
+    ? 'drop-shadow-[0_0_6px_rgba(244,63,94,0.3)]'
     : colorTheme === 'rose'
-    ? 'text-rose-300'
-    : 'text-indigo-300';
+    ? 'drop-shadow-[0_0_6px_rgba(251,113,133,0.3)]'
+    : 'drop-shadow-[0_0_6px_rgba(139,92,246,0.3)]';
+
+  // Text color for score value
+  const scoreTextColor = isElite
+    ? 'text-amber-300 font-black'
+    : isHigh
+    ? 'text-emerald-400 font-black'
+    : isLow
+    ? 'text-rose-400 font-black'
+    : colorTheme === 'rose'
+    ? 'text-rose-300 font-black'
+    : 'text-indigo-300 font-black';
 
   // Badge style for TOP %
-  const badgeStyle = isHigh
+  const badgeStyle = isElite
+    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
+    : isHigh
     ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
     : isLow
     ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
@@ -91,7 +109,9 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
     : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40';
 
   // Hover border glow & Card shadow
-  const borderHoverStyle = isHigh
+  const borderHoverStyle = isElite
+    ? 'hover:border-amber-500/60 hover:shadow-[0_0_24px_rgba(245,158,11,0.3)] border-amber-500/30'
+    : isHigh
     ? 'hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]'
     : isLow
     ? 'hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.25)]'
@@ -127,10 +147,10 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
             strokeDashoffset={progressOffset}
             strokeLinecap="round"
             fill="none"
-            className="filter drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]"
+            className={`filter ${ringGlowClass}`}
           />
         </svg>
-        <span className={`absolute text-base font-black ${scoreTextColor} tracking-tight`}>
+        <span className={`absolute text-base ${scoreTextColor} tracking-tight`}>
           {Math.round(displayScore * 10) / 10}
         </span>
       </div>

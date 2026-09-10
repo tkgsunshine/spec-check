@@ -487,12 +487,12 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             </>
           ) : (
             <>
-              <CategoryCard labelJa="年齢" labelEn="AGE" score={data.loveCategoryScores.age} colorTheme="rose" />
-              <CategoryCard labelJa="容姿" labelEn="FACE" score={data.loveCategoryScores.face} colorTheme="rose" />
-              <CategoryCard labelJa="体型" labelEn="BODY" score={data.loveCategoryScores.body} colorTheme="rose" />
-              <CategoryCard labelJa="年収・純資産" labelEn="INCOME" score={data.loveCategoryScores.income} colorTheme="rose" />
-              <CategoryCard labelJa="キャリア・影響力" labelEn="CAREER" score={data.loveCategoryScores.career} colorTheme="rose" />
-              <CategoryCard labelJa="家庭" labelEn="FAMILY" score={data.loveCategoryScores.family} colorTheme="rose" />
+              <CategoryCard labelJa="年齢" labelEn="AGE" score={data.loveCategoryScores.age} topPercent={scoreToTopPercent(data.loveCategoryScores.age)} colorTheme="rose" />
+              <CategoryCard labelJa="容姿" labelEn="FACE" score={data.loveCategoryScores.face} topPercent={scoreToTopPercent(data.loveCategoryScores.face)} colorTheme="rose" />
+              <CategoryCard labelJa="体型" labelEn="BODY" score={data.loveCategoryScores.body} topPercent={scoreToTopPercent(data.loveCategoryScores.body)} colorTheme="rose" />
+              <CategoryCard labelJa="年収・純資産" labelEn="INCOME" score={data.loveCategoryScores.income} topPercent={scoreToTopPercent(data.loveCategoryScores.income)} colorTheme="rose" />
+              <CategoryCard labelJa="キャリア・影響力" labelEn="CAREER" score={data.loveCategoryScores.career} topPercent={scoreToTopPercent(data.loveCategoryScores.career)} colorTheme="rose" />
+              <CategoryCard labelJa="家庭" labelEn="FAMILY" score={data.loveCategoryScores.family} topPercent={scoreToTopPercent(data.loveCategoryScores.family)} colorTheme="rose" />
             </>
           )}
         </div>
