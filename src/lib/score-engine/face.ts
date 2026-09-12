@@ -57,39 +57,46 @@ export async function analyzeFaceWithGemini(params: {
       if (contentType) mimeType = contentType;
     }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.6-flash',
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            { text: prompt },
+    const modelsToTry = ['gemini-3.6-flash', 'gemini-3.5-flash-lite'];
+    for (const model of modelsToTry) {
+      try {
+        const response = await ai.models.generateContent({
+          model,
+          contents: [
             {
-              inlineData: {
-                mimeType: mimeType,
-                data: base64Data,
-              },
+              role: 'user',
+              parts: [
+                { text: prompt },
+                {
+                  inlineData: {
+                    mimeType: mimeType,
+                    data: base64Data,
+                  },
+                },
+              ],
             },
           ],
-        },
-      ],
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            isHuman: { type: Type.BOOLEAN },
-            scoreBonus: { type: Type.INTEGER },
-            comment: { type: Type.STRING },
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                isHuman: { type: Type.BOOLEAN },
+                scoreBonus: { type: Type.INTEGER },
+                comment: { type: Type.STRING },
+              },
+              required: ['isHuman', 'scoreBonus', 'comment'],
+            },
           },
-          required: ['isHuman', 'scoreBonus', 'comment'],
-        },
-      },
-    });
+        });
 
-    if (response.text) {
-      const parsed = JSON.parse(response.text) as GeminiFaceAnalysisResult;
-      return parsed;
+        if (response.text) {
+          const parsed = JSON.parse(response.text) as GeminiFaceAnalysisResult;
+          return parsed;
+        }
+      } catch (modelError) {
+        console.warn(`Gemini model ${model} failed, trying next model:`, modelError);
+      }
     }
   } catch (error) {
     console.error('Gemini Face Analysis Error:', error);
