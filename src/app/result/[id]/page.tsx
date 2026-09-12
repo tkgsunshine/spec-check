@@ -11,7 +11,7 @@ import SnsShareCard from '@/components/SnsShareCard';
 import InputDataModal from '@/components/InputDataModal';
 import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText } from 'lucide-react';
 import { runDiagnosisV3 } from '@/lib/score-engine';
-import { scoreToTopPercent } from '@/lib/score-engine/math-utils';
+import { scoreToTopPercent, formatRarityRatio } from '@/lib/score-engine/math-utils';
 import { getMbtiEconomicEvaluationText, getMbtiLoveEvaluationText } from '@/lib/score-engine/mbti';
 import { getExperienceEvaluationText } from '@/lib/score-engine/experience';
 
@@ -44,19 +44,21 @@ function generateOverallEvaluationText(params: {
     '恋愛市場年齢',
   ]);
 
-  const improvableCategories = sorted.filter(c => !UNCHANGEABLE_LABELS.has(c.label));
-  const worstImprovable = improvableCategories.length > 0
-    ? improvableCategories[improvableCategories.length - 1]
+  const worstImprovable = UNCHANGEABLE_LABELS.has(worstCategory.label)
+    ? (sorted.slice().reverse().find(c => !UNCHANGEABLE_LABELS.has(c.label)) || worstCategory)
     : worstCategory;
 
   // 1. 統計的母集団におけるポジション解析 (約200文字)
   let section1 = '';
-  if (topPercent <= 3.0) {
-    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」という極めて突出したハイスペック・エリート領域に位置しています。全国および地域統計と比較しても全人口のわずか数パーセント未満しか到達できない卓越した水準であり、客観的なステータス評価において周囲から頭一つ抜けた存在感を放っています。`;
+  const ratioText = formatRarityRatio(topPercent);
+  if (topPercent <= 0.1) {
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%（約${ratioText}）」という極限の頂点領域・最高峰クラスに位置しています。公的統計および統計モデルにおいても滅多に観測されない圧倒的なハイスペック水準であり、全方位で卓越した存在感を放っています。`;
+  } else if (topPercent <= 3.0) {
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%（${ratioText}）」という極めて突出したハイスペック・エリート領域に位置しています。全国および地域統計と比較しても全人口のわずか数パーセント未満しか到達できない卓越した水準であり、客観的なステータス評価において周囲から頭一つ抜けた存在感を放っています。`;
   } else if (topPercent <= 15.0) {
-    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」というハイレベルな上位層に位置しています。公的統計における同世代平均値を大幅に上回っており、日頃の努力や自己研鑽の成果が各評価軸に明確な数値となって表れている優れたステータス状態です。`;
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%（${ratioText}）」というハイレベルな上位層に位置しています。公的統計における同世代平均値を大幅に上回っており、日頃の努力や自己研鑽の成果が各評価軸に明確な数値となって表れている優れたステータス状態です。`;
   } else if (topPercent <= 50.0) {
-    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」という平均以上の安定した中央〜上位ゾーンに位置しています。極端な欠点がなくバランスの取れた能力バランスを保持しており、今後のアプローチ次第でさらなるハイスペック層へのステップアップが十分に狙える強固なベースを備えています。`;
+    section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%（${ratioText}）」という平均以上の安定した中央〜上位ゾーンに位置しています。極端な欠点がなくバランスの取れた能力バランスを保持しており、今後のアプローチ次第でさらなるハイスペック層へのステップアップが十分に狙える強固なベースを備えています。`;
   } else {
     section1 = `【統計的ポジションと全体像】\n同世代（${age}歳・${prefectureName}）の${genderText}母集団データにおいて、あなたの総合スコア（${overallScore}pt）は「上位 ${topPercent}%」に位置しています。現在の数値は伸びしろを多く残した状態ですが、重点的な改善ポイントを意識してピンポイントでアプローチすることで、今後のスコア引き上げと急速なランクアップが最も期待できる発展途上の状態と言えます。`;
   }
@@ -399,7 +401,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
               </h2>
             </div>
 
-            {/* 恋愛市場価値： 上位 XX% (中央寄せ - 常時上位%表示) */}
+            {/* 恋愛市場価値： 上位 XX% (中央寄せ - 常時上位%表示 & 希少度比率) */}
             <div className="text-center my-6 py-2">
               <div className="text-slate-200 text-base sm:text-xl font-extrabold mb-1">
                 {isLoveMode ? '恋愛市場価値' : '総合評価'} :
@@ -410,12 +412,33 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                 </span>
               </h1>
 
+              {/* 希少度比率バッジ (10万人に1人 / 100万人に1人等) */}
+              <div className="mt-3 flex items-center justify-center gap-2 flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide border shadow-md transition-all ${
+                  topOverallPercent <= 0.001
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-amber-500/20 animate-pulse'
+                    : topOverallPercent <= 0.01
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-amber-500/10'
+                    : topOverallPercent <= 0.1
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                    : topOverallPercent <= 1.0
+                    ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
+                    : 'bg-slate-800/80 text-slate-300 border-slate-700/60'
+                }`}>
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>同世代の <strong className="text-white font-black text-sm sm:text-base underline decoration-amber-400/60 decoration-2 underline-offset-2">{formatRarityRatio(topOverallPercent)}</strong> の逸材</span>
+                </span>
+              </div>
+
               {/* 全国比較併記バッジ (常時上位%表示) */}
               {nationwideTopPercent !== null && (
                 <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-bold text-slate-300 shadow-inner">
                   <span className="text-slate-400">🇯🇵 全国の同世代ベース:</span>
                   <span className="text-emerald-400 font-black">
                     上位 {nationwideTopPercent}%
+                  </span>
+                  <span className="text-emerald-300/90 font-bold text-[10px]">
+                    ({formatRarityRatio(nationwideTopPercent)})
                   </span>
                   <span className="text-slate-500 text-[10px]">({nationwideScore} POINT)</span>
                 </div>

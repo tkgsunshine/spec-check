@@ -111,6 +111,7 @@ export async function getPublicShareResult(shareToken: string): Promise<PublicSh
   return {
     shareToken: full.shareToken,
     createdAt: full.createdAt,
+    nickname: full.inputSummary.nickname || 'あなた',
     gender: full.inputSummary.gender === 'OTHER' ? 'MALE' : full.inputSummary.gender,
     age: full.inputSummary.age,
     prefectureName: full.inputSummary.prefectureName,

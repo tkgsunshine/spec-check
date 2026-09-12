@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Share2, Check, Copy, ExternalLink, X, Download } from 'lucide-react';
 import { MetricScoreResult, EpithetResult } from '@/types/spec-check';
+import { formatRarityRatio } from '@/lib/score-engine/math-utils';
 
 interface RadarAxis {
   labelJa: string;
@@ -66,8 +67,8 @@ export default function SnsShareCard({
   const modeTitle = isLoveMode ? '恋愛スペック診断' : '人間スペック診断';
   const profileHeaderStr = `${displayNickname} / ${age}歳 / ${genderTextJa}${prefStr} の${modeTitle}結果`;
 
-  const rankShareStr = (topPercent !== undefined && topPercent !== null && topPercent <= 30)
-    ? `【上位 ${topPercent}%】`
+  const rankShareStr = (topPercent !== undefined && topPercent !== null && topPercent <= 50)
+    ? `【上位 ${topPercent}% (${formatRarityRatio(topPercent)})】`
     : '';
 
   const displayEpithetTitle = epithet?.title || epithetTitle;
@@ -220,22 +221,25 @@ ${rankShareStr} 総合評価 ${score.toFixed(1)} / 100 pt
       ctx.fillText('/ 100 POINT', width / 2, scoreY + 28);
 
       // TOP % Pill
-      if (topPercent !== undefined && topPercent !== null && topPercent <= 30) {
+      if (topPercent !== undefined && topPercent !== null && topPercent <= 50) {
         ctx.fillStyle = 'rgba(99, 102, 241, 0.25)';
         ctx.strokeStyle = '#818cf8';
         ctx.lineWidth = 1.5;
-        const pillW = 180;
-        const pillH = 38;
+        const pillText = `上位 ${topPercent}% (${formatRarityRatio(topPercent)})`;
+        ctx.font = '900 15px sans-serif';
+        const textMetrics = ctx.measureText(pillText);
+        const pillW = Math.max(220, textMetrics.width + 36);
+        const pillH = 36;
         const pillX = width / 2 - pillW / 2;
         const pillY = scoreY + 45;
         ctx.beginPath();
-        ctx.roundRect(pillX, pillY, pillW, pillH, 19);
+        ctx.roundRect(pillX, pillY, pillW, pillH, 18);
         ctx.fill();
         ctx.stroke();
 
         ctx.fillStyle = '#a5b4fc';
-        ctx.font = '900 19px sans-serif';
-        ctx.fillText(`上位 ${topPercent}%`, width / 2, pillY + 25);
+        ctx.font = '900 15px sans-serif';
+        ctx.fillText(pillText, width / 2, pillY + 23);
       }
 
       // Draw Hexagon Radar Chart in Canvas

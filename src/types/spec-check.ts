@@ -187,6 +187,7 @@ export type OverallDiagnosisResult = OverallDiagnosisResultV3;
 export interface PublicShareResult {
   shareToken: string;
   createdAt: string;
+  nickname?: string;
   gender: Gender;
   age: number;
   prefectureName: string;

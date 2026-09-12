@@ -4,6 +4,7 @@ import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { PublicShareResult } from '@/types/spec-check';
 import { Sparkles, Heart, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
+import { scoreToTopPercent, formatRarityRatio } from '@/lib/score-engine/math-utils';
 
 export default function SharePage({ params }: { params: Promise<{ shareToken: string }> }) {
   const { shareToken } = use(params);
@@ -37,45 +38,46 @@ export default function SharePage({ params }: { params: Promise<{ shareToken: st
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-400 text-sm font-semibold">共有カード読み込み中...</p>
-        </div>
-      </div>
+      <main className="min-h-screen py-12 px-4 max-w-2xl mx-auto flex items-center justify-center">
+        <div className="text-slate-400 text-sm animate-pulse">読み込み中...</div>
+      </main>
     );
   }
 
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="glass-card rounded-2xl p-8 text-center max-w-md">
+      <main className="min-h-screen py-12 px-4 max-w-2xl mx-auto text-center">
+        <div className="glass-surface rounded-3xl p-8 max-w-md mx-auto">
           <AlertCircle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
-          <h2 className="text-lg font-bold text-slate-200 mb-2">共有カードが見つかりません</h2>
+          <h2 className="text-lg font-bold text-slate-200 mb-2">診断結果が見つかりません</h2>
+          <p className="text-slate-400 text-xs mb-6">リンクが無効か、有効期限が切れています。</p>
           <Link href="/" className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm inline-block">
-            自分で診断してみる
+            トップに戻る
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8 md:py-12">
+    <main className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto">
       {/* Header Badge */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-extrabold mb-4">
+      <div className="text-center mb-6">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-surface text-xs font-bold text-indigo-400 border border-indigo-500/30 mb-3">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          人間スペック診断 公式共有カード
+          SPEC CHECK 診断結果カード
         </div>
-        <h1 className="text-2xl md:text-3xl font-black tracking-tight mb-2 leading-tight">
-          {data.age}歳 {data.gender === 'MALE' ? '男性' : '女性'} ({data.prefectureName}) の同世代人間スペック＆恋愛偏差値結果
+        <h1 className="text-xl sm:text-2xl font-black text-white">
+          {data.nickname || 'あなた'} さんのスペック評価
         </h1>
+        <p className="text-xs text-slate-400 mt-1">
+          {data.age}歳 / {data.gender === 'FEMALE' ? '女性' : '男性'} / {data.prefectureName}
+        </p>
       </div>
 
-      {/* 獲得二つ名 (Epithet Card - カセットの上に配置) */}
+      {/* Epithet Card */}
       {(data.epithet || data.loveEpithet) && (
-        <div className="mb-6 p-5 rounded-3xl bg-slate-950/90 border border-amber-500/50 backdrop-blur-xl shadow-2xl relative overflow-hidden text-center space-y-3">
+        <div className="glass-surface rounded-3xl p-6 text-center mb-6 border-indigo-500/30 space-y-3">
           {data.epithet && (
             <div>
               <div className={`text-2xl md:text-3xl font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r ${data.epithet.rarityColor} drop-shadow-sm pt-1`}>
@@ -110,6 +112,12 @@ export default function SharePage({ params }: { params: Promise<{ shareToken: st
           <div className="text-5xl md:text-6xl font-black gradient-text-indigo mb-2">
             {data.japanOverallScore} <span className="text-lg text-slate-400 font-normal">/100</span>
           </div>
+          <div className="mb-2">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-xs font-black">
+              <span>上位 {scoreToTopPercent(data.japanOverallScore)}%</span>
+              <span className="text-indigo-200/80 text-[10px]">({formatRarityRatio(scoreToTopPercent(data.japanOverallScore))})</span>
+            </span>
+          </div>
           <p className="text-xs text-slate-400">同世代公的統計データ比較</p>
         </div>
 
@@ -120,6 +128,12 @@ export default function SharePage({ params }: { params: Promise<{ shareToken: st
           </div>
           <div className="text-5xl md:text-6xl font-black gradient-text-pink mb-2">
             {data.loveOverallScore} <span className="text-lg text-slate-400 font-normal">/100</span>
+          </div>
+          <div className="mb-2">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-black">
+              <span>上位 {scoreToTopPercent(data.loveOverallScore)}%</span>
+              <span className="text-rose-200/80 text-[10px]">({formatRarityRatio(scoreToTopPercent(data.loveOverallScore))})</span>
+            </span>
           </div>
           <p className="text-xs text-slate-400">統計モデルによる推定</p>
         </div>

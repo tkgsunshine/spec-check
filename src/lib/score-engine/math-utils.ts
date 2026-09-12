@@ -38,15 +38,17 @@ export function zToPercentile(z: number): number {
 }
 
 export function calcHighPrecisionTopPercent(rawTopPct: number): number {
-  if (rawTopPct <= 0.001) return 0.001;
+  if (rawTopPct <= 0.0001) return 0.0001;
   if (rawTopPct >= 99.9) return 99.9;
 
   if (rawTopPct >= 0.1) {
     return Math.round(rawTopPct * 10) / 10;
   } else if (rawTopPct >= 0.01) {
     return Math.round(rawTopPct * 100) / 100;
-  } else {
+  } else if (rawTopPct >= 0.001) {
     return Math.round(rawTopPct * 1000) / 1000;
+  } else {
+    return Math.round(rawTopPct * 10000) / 10000;
   }
 }
 
@@ -59,13 +61,53 @@ export function calcHighPrecisionTopPercent(rawTopPct: number): number {
  */
 export function scoreToTopPercent(score: number): number {
   if (score <= 0) return 99.9;
-  if (score >= 100) return 0.001;
+  if (score >= 100) return 0.0001;
 
   // 理論・実証合成標準偏差 σ = 9.88
   const z = (score - 50.0) / 9.88;
   const cdf = normalCDF(z);
   const rawTopPct = (1.0 - cdf) * 100;
   return calcHighPrecisionTopPercent(rawTopPct);
+}
+
+/**
+ * 上位パーセント (topPercent) から「○人に1人」「○万人に1人」「100万人に1人」の希少度比率を算出
+ */
+export function formatRarityRatio(topPercent: number | null | undefined): string {
+  if (topPercent === null || topPercent === undefined || isNaN(topPercent)) return '比較中';
+  if (topPercent <= 0.0001) return '100万人に1人';
+  if (topPercent >= 100) return '全対象者';
+
+  const oneInN = 100 / topPercent;
+
+  if (oneInN >= 1_000_000) {
+    const millions = Math.round(oneInN / 1_000_000);
+    return `${millions >= 1 ? millions * 100 : 100}万人に1人`;
+  }
+
+  if (oneInN >= 100_000) {
+    const tenThousands = Math.round(oneInN / 10_000);
+    return `${tenThousands}万人に1人`;
+  }
+
+  if (oneInN >= 10_000) {
+    const tenThousands = Math.round(oneInN / 1_000) / 10;
+    const formatted = tenThousands % 1 === 0 ? String(tenThousands) : tenThousands.toFixed(1);
+    return `${formatted}万人に1人`;
+  }
+
+  if (oneInN >= 1_000) {
+    const thousands = Math.round(oneInN / 100) * 100;
+    return `${thousands.toLocaleString()}人に1人`;
+  }
+
+  if (oneInN >= 100) {
+    const hundreds = Math.round(oneInN / 10) * 10;
+    return `${hundreds.toLocaleString()}人に1人`;
+  }
+
+  const rounded = Math.round(oneInN);
+  return `${Math.max(1, rounded)}人に1人`;
 }
 
 /**

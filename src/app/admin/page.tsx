@@ -8,7 +8,7 @@ import {
   User, Landmark, GraduationCap, Heart, Sparkles, X, Briefcase, Award, ArrowUpRight
 } from 'lucide-react';
 import { OverallDiagnosisResultV3, DiagnosisInputV3 } from '@/types/spec-check';
-import { scoreToTopPercent } from '@/lib/score-engine/math-utils';
+import { scoreToTopPercent, formatRarityRatio } from '@/lib/score-engine/math-utils';
 import {
   INDUSTRY_MASTER,
   COMMON_OCCUPATION_MASTER,
@@ -475,6 +475,9 @@ export default function AdminPage() {
                       <div className="text-[10px] text-indigo-400 font-medium">
                         上位 {scoreToTopPercent(r.japanOverallScore)}%
                       </div>
+                      <div className="text-[9px] text-indigo-300/70 font-semibold">
+                        {formatRarityRatio(scoreToTopPercent(r.japanOverallScore))}
+                      </div>
                     </td>
                     <td className="py-3 px-3 text-right">
                       <div className="font-black text-rose-300 text-sm">
@@ -482,6 +485,9 @@ export default function AdminPage() {
                       </div>
                       <div className="text-[10px] text-rose-400 font-medium">
                         上位 {scoreToTopPercent(r.loveOverallScore)}%
+                      </div>
+                      <div className="text-[9px] text-rose-300/70 font-semibold">
+                        {formatRarityRatio(scoreToTopPercent(r.loveOverallScore))}
                       </div>
                     </td>
                     <td className="py-3 px-3 text-center">
@@ -813,7 +819,7 @@ export default function AdminPage() {
                           <span className="text-3xl font-black text-white">{selectedRecord.japanOverallScore}</span>
                           <span className="text-xs text-indigo-400 font-normal">Pt</span>
                           <span className="text-xs font-bold text-indigo-300 bg-indigo-500/20 px-2.5 py-0.5 rounded-full border border-indigo-500/40">
-                            上位 {scoreToTopPercent(selectedRecord.japanOverallScore)}%
+                            上位 {scoreToTopPercent(selectedRecord.japanOverallScore)}% ({formatRarityRatio(scoreToTopPercent(selectedRecord.japanOverallScore))})
                           </span>
                         </div>
                       </div>
@@ -899,7 +905,7 @@ export default function AdminPage() {
                           <span className="text-3xl font-black text-white">{selectedRecord.loveOverallScore}</span>
                           <span className="text-xs text-rose-400 font-normal">Pt</span>
                           <span className="text-xs font-bold text-rose-300 bg-rose-500/20 px-2.5 py-0.5 rounded-full border border-rose-500/40">
-                            上位 {scoreToTopPercent(selectedRecord.loveOverallScore)}%
+                            上位 {scoreToTopPercent(selectedRecord.loveOverallScore)}% ({formatRarityRatio(scoreToTopPercent(selectedRecord.loveOverallScore))})
                           </span>
                         </div>
                       </div>

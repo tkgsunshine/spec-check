@@ -115,7 +115,7 @@ export function calculateSnsScore(followers?: {
     rawValue: rawSummary,
     score: finalSnsScore,
     percentile: null,
-    topPercent: calcHighPrecisionTopPercent(Math.max(0.001, 100 - finalSnsScore)),
+    topPercent: calcHighPrecisionTopPercent(Math.max(0.0001, 100 - finalSnsScore)),
     dataQuality: 'PROPRIETARY',
     datasetName: 'SPEC CHECK インフルエンサー影響力推計モデル V3.2 (世代別スケーリング)',
     sourceUrl: '',
