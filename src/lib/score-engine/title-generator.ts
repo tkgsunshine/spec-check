@@ -319,7 +319,7 @@ export function generateLoveEpithetTitle(
 
   // 🌿 3. A UPPER TIER (恋愛スコア 65 〜 74点)
   if (loveScore >= 65) {
-    if (input.maritalStatus === 'SINGLE') {
+    if (input.maritalStatus === 'SINGLE' || input.maritalStatus === 'SINGLE_FREE' || input.maritalStatus === 'SINGLE_DATING' || input.maritalStatus === 'ENGAGED_COHABITING') {
       return {
         title: 'ギャップで落とす沼らせマスター',
         subtitle: '知れば知るほど味わい深い個性と魅力を秘め、相手を夢中にさせる恋愛の玄人',
@@ -327,7 +327,7 @@ export function generateLoveEpithetTitle(
         rarityColor: 'from-fuchsia-400 via-pink-400 to-purple-500',
       };
     }
-    if (input.maritalStatus === 'MARRIED' || input.maritalStatus === 'DIVORCED') {
+    if (input.maritalStatus === 'MARRIED' || input.maritalStatus === 'SEPARATED' || input.maritalStatus === 'DIVORCED' || input.maritalStatus === 'BEREAVED') {
       return {
         title: '落ち着きと癒やしのプレミアム・パートナー',
         subtitle: '相手を包み込む優しさと安定した日常生活を提供できる、心強い良きパートナー',

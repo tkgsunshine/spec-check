@@ -75,10 +75,14 @@ const getCompanyCategoryLabel = (val?: string | null): string => {
 
 const getMaritalStatusLabel = (val?: string | null): string => {
   switch (val) {
-    case 'SINGLE': return '未婚';
+    case 'SINGLE_FREE': return '未婚（恋人なし・フリー）';
+    case 'SINGLE_DATING': return '未婚（恋人あり・交際中）';
+    case 'ENGAGED_COHABITING': return '婚約中 / 同棲中';
     case 'MARRIED': return '既婚';
+    case 'SEPARATED': return '別居中';
     case 'DIVORCED': return '離婚歴あり';
     case 'BEREAVED': return '死別';
+    case 'SINGLE': return '未婚';
     default: return val ? String(val) : '未入力';
   }
 };
@@ -757,16 +761,24 @@ export default function AdminPage() {
               <div className="bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/90 space-y-3">
                 <h4 className="text-xs font-black text-rose-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
                   <Heart className="w-4 h-4 text-rose-400" />
-                  5. パートナーシップ・経験人数・MBTI
+                  5. パートナーシップ・交際/経験人数・MBTI
                 </h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
-                    <span className="text-slate-400 text-[10px] block">配偶関係</span>
+                    <span className="text-slate-400 text-[10px] block">配偶・恋愛ステータス</span>
                     <span className="font-bold text-white text-sm">{getMaritalStatusLabel(inp.maritalStatus)}</span>
                   </div>
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
                     <span className="text-slate-400 text-[10px] block">子どもの有無</span>
                     <span className="font-bold text-white text-sm">{inp.childrenCount || 0} 人</span>
+                  </div>
+                  <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">交際人数</span>
+                    <span className="font-bold text-pink-300 text-sm">
+                      {inp.datingPartnerCount !== null && inp.datingPartnerCount !== undefined && inp.datingPartnerCount !== ('' as any)
+                        ? `${inp.datingPartnerCount} 人`
+                        : '未回答'}
+                    </span>
                   </div>
                   <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
                     <span className="text-slate-400 text-[10px] block">これまでの経験人数</span>

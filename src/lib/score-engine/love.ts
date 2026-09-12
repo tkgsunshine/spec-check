@@ -25,6 +25,7 @@ export function calculateLoveScore(params: {
   snsScore?: number;
   maritalStatus?: MaritalStatus | null;
   childrenCount?: number | null;
+  datingPartnerCount?: number | null;
   partnerCount?: number | null;
   prefectureId: number;
   mbti?: string | null;
@@ -40,7 +41,7 @@ export function calculateLoveScore(params: {
   };
   loveMetrics: MetricScoreResult[];
 } {
-  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, snsScore, maritalStatus, childrenCount, partnerCount, prefectureId, mbti } = params;
+  const { gender, age, faceScore, bodyScore, incomeScore, careerScore, snsScore, maritalStatus, childrenCount, datingPartnerCount, partnerCount, prefectureId, mbti } = params;
 
   // キャリア・影響力 (職歴・年収ステータス + SNS影響力/フォロワー数の合成スコア)
   const combinedCareerScore = (snsScore !== undefined && snsScore !== null && snsScore > 0)
@@ -94,9 +95,14 @@ export function calculateLoveScore(params: {
 
   // 2. Family Score (未婚・婚姻歴・子ども) V5.0
   let familyScore = 90;
-  if (maritalStatus === 'MARRIED') familyScore = 45;
-  if (maritalStatus === 'DIVORCED') familyScore = 80;
-  if (maritalStatus === 'BEREAVED') familyScore = 85;
+  if (maritalStatus === 'SINGLE_FREE') familyScore = 95;
+  else if (maritalStatus === 'SINGLE_DATING') familyScore = 90;
+  else if (maritalStatus === 'ENGAGED_COHABITING') familyScore = 80;
+  else if (maritalStatus === 'MARRIED') familyScore = 45;
+  else if (maritalStatus === 'SEPARATED') familyScore = 60;
+  else if (maritalStatus === 'DIVORCED') familyScore = 80;
+  else if (maritalStatus === 'BEREAVED') familyScore = 85;
+  else if (maritalStatus === 'SINGLE') familyScore = 90;
   if (childrenCount && childrenCount > 0) familyScore -= childrenCount * 8;
   familyScore = Math.max(15, Math.min(100, familyScore));
 
@@ -120,15 +126,30 @@ export function calculateLoveScore(params: {
     else unmarriedRate = 28.3;
   }
 
-  const familyTopPercent = (maritalStatus === 'SINGLE' || !maritalStatus) && (!childrenCount || childrenCount === 0)
+  const isSingleEquivalent = !maritalStatus || maritalStatus === 'SINGLE' || maritalStatus === 'SINGLE_FREE' || maritalStatus === 'SINGLE_DATING' || maritalStatus === 'ENGAGED_COHABITING';
+  const familyTopPercent = isSingleEquivalent && (!childrenCount || childrenCount === 0)
     ? unmarriedRate
     : null;
+
+  const getMaritalStatusLabel = (status?: MaritalStatus | null): string => {
+    switch (status) {
+      case 'SINGLE_FREE': return '未婚（恋人なし・フリー）';
+      case 'SINGLE_DATING': return '未婚（恋人あり・交際中）';
+      case 'ENGAGED_COHABITING': return '婚約中 / 同棲中';
+      case 'MARRIED': return '既婚';
+      case 'SEPARATED': return '別居中';
+      case 'DIVORCED': return '離婚歴あり';
+      case 'BEREAVED': return '死別';
+      case 'SINGLE': return '未婚';
+      default: return '未入力';
+    }
+  };
 
   const familyMetric: MetricScoreResult = {
     metricCode: 'FAMILY',
     metricName: '家庭・婚姻状況',
     category: '恋愛',
-    rawValue: maritalStatus ? `${maritalStatus === 'SINGLE' ? '未婚' : maritalStatus === 'MARRIED' ? '既婚' : maritalStatus === 'DIVORCED' ? '離婚歴あり' : '死別'}${childrenCount ? ` / 子${childrenCount}人` : ''}` : '未入力',
+    rawValue: maritalStatus ? `${getMaritalStatusLabel(maritalStatus)}${childrenCount ? ` / 子${childrenCount}人` : ''}` : '未入力',
     score: familyScore,
     percentile: familyTopPercent !== null ? 100 - familyTopPercent : null,
     topPercent: familyTopPercent,
@@ -227,6 +248,24 @@ export function calculateLoveScore(params: {
     notes: mbtiLove.notes || `MBTI特性（${mbti.trim().toUpperCase()}）による恋愛モテ傾向`,
   } : null;
 
+  // 交際人数（付き合った人数）メトリクス
+  const datingMetric: MetricScoreResult | null = (datingPartnerCount !== null && datingPartnerCount !== undefined) ? {
+    metricCode: 'DATING_COUNT',
+    metricName: '交際人数',
+    category: '恋愛市場',
+    rawValue: `${datingPartnerCount}人（交際歴）`,
+    score: Math.min(100, Math.max(40, 60 + Math.min(datingPartnerCount, 10) * 4)),
+    percentile: null,
+    topPercent: null,
+    dataQuality: 'USER_INPUT',
+    datasetName: '恋愛・交際歴調査データ',
+    sourceUrl: '',
+    surveyYear: 2024,
+    calculationMethod: 'STATISTICAL_MODEL_ESTIMATE',
+    hasOfficialTopPercent: false,
+    notes: `交際人数（付き合った人数）: ${datingPartnerCount}人`,
+  } : null;
+
   return {
     loveOverallScore,
     loveCategoryScores: {
@@ -240,6 +279,7 @@ export function calculateLoveScore(params: {
     loveMetrics: [
       ageMetric,
       familyMetric,
+      ...(datingMetric ? [datingMetric] : []),
       ...(partnerCount !== null && partnerCount !== undefined ? [experienceMetric] : []),
       ...(mbtiMetric ? [mbtiMetric] : []),
     ],

@@ -134,6 +134,7 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
     snsScore: snsResult.snsScore.score,
     maritalStatus: input.maritalStatus,
     childrenCount: input.childrenCount,
+    datingPartnerCount: input.datingPartnerCount,
     partnerCount: input.partnerCount,
     prefectureId: input.prefectureId,
     mbti: input.mbti,

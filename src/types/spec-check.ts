@@ -16,7 +16,15 @@ export type CalculationMethod =
   | 'MAX_PLATFORM_ANCHOR_WITH_SYNERGY';
 
 export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
-export type MaritalStatus = 'SINGLE' | 'MARRIED' | 'DIVORCED' | 'BEREAVED';
+export type MaritalStatus =
+  | 'SINGLE_FREE'        // 未婚（恋人なし・フリー）
+  | 'SINGLE_DATING'      // 未婚（恋人あり・交際中）
+  | 'ENGAGED_COHABITING' // 婚約中 / 同棲中
+  | 'MARRIED'            // 既婚
+  | 'SEPARATED'          // 別居中
+  | 'DIVORCED'           // 離婚歴あり
+  | 'BEREAVED'           // 死別
+  | 'SINGLE';            // 旧データ互換用（未婚）
 export type LanguageLevel = 'BASIC' | 'DAILY' | 'BUSINESS' | 'NATIVE';
 
 export interface MetricScoreResult {
@@ -115,7 +123,8 @@ export interface DiagnosisInputV3 {
   travelCount?: number | null;
   maritalStatus?: MaritalStatus | null;
   childrenCount?: number | null;
-  partnerCount?: number | null;
+  datingPartnerCount?: number | null; // 交際人数（付き合った人数）
+  partnerCount?: number | null; // 経験人数
   mbti?: string | null;
   instagramFollowers?: number | null;
   xFollowers?: number | null;

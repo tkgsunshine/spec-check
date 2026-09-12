@@ -118,6 +118,7 @@ export default function HomePage() {
   // Step 6: 恋愛 & 経験人数 & MBTI
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | ''>('');
   const [childrenCount, setChildrenCount] = useState<string>('0');
+  const [datingPartnerCount, setDatingPartnerCount] = useState<string>('');
   const [partnerCount, setPartnerCount] = useState<string>('');
   const [mbti, setMbti] = useState<string>('');
   const [travelCount, setTravelCount] = useState<string>('');
@@ -128,55 +129,52 @@ export default function HomePage() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(DRAFT_KEY);
-      let data = saved ? JSON.parse(saved) : null;
-
-      if (!data || !data.age) {
-        const latestResultStr = localStorage.getItem('spec_check_latest_result');
-        if (latestResultStr) {
-          const latestResult = JSON.parse(latestResultStr);
-          if (latestResult && latestResult.rawInput) {
-            data = latestResult.rawInput;
-          }
-        }
+      const latestResult = localStorage.getItem('spec_check_latest_result');
+      let data: any = null;
+      if (saved) {
+        data = JSON.parse(saved);
+      } else if (latestResult) {
+        const parsed = JSON.parse(latestResult);
+        if (parsed.rawInput) data = parsed.rawInput;
       }
-
       if (!data) return;
-      if (data.nickname !== undefined && data.nickname !== null) setNickname(data.nickname);
-      if (data.gender !== undefined && data.gender !== null) setGender(data.gender);
-      if (data.age !== undefined && data.age !== null && data.age !== '') setAge(String(data.age));
-      if (data.prefectureId !== undefined && data.prefectureId !== null) setPrefectureId(Number(data.prefectureId));
-      if (data.height !== undefined && data.height !== null && data.height !== '') setHeight(String(data.height));
-      if (data.weight !== undefined && data.weight !== null && data.weight !== '') setWeight(String(data.weight));
-      if (data.bodyFat !== undefined && data.bodyFat !== null && data.bodyFat !== '') setBodyFat(String(data.bodyFat));
-      if (data.faceRating !== undefined && data.faceRating !== null) setFaceRating(data.faceRating);
-      if (data.faceImageUrl !== undefined && data.faceImageUrl !== null) {
+
+      if (data.nickname) setNickname(data.nickname);
+      if (data.gender) setGender(data.gender);
+      if (data.age) setAge(String(data.age));
+      if (data.prefectureId) setPrefectureId(data.prefectureId);
+      if (data.height) setHeight(String(data.height));
+      if (data.weight) setWeight(String(data.weight));
+      if (data.bodyFat !== undefined && data.bodyFat !== null) setBodyFat(String(data.bodyFat));
+      if (data.faceRating) setFaceRating(data.faceRating);
+      if (data.faceImageUrl) {
         setFaceImageUrl(data.faceImageUrl);
         setPhotoPreview(data.faceImageUrl);
       }
-      if (data.annualIncome !== undefined && data.annualIncome !== null && data.annualIncome !== '') setAnnualIncome(String(data.annualIncome));
-      if (data.savingsAssets !== undefined && data.savingsAssets !== null && data.savingsAssets !== '') setSavingsAssets(String(data.savingsAssets));
-      if (data.financialAssets !== undefined && data.financialAssets !== null && data.financialAssets !== '') setFinancialAssets(String(data.financialAssets));
-      if (data.realEstateAssets !== undefined && data.realEstateAssets !== null && data.realEstateAssets !== '') setRealEstateAssets(String(data.realEstateAssets));
-      if (data.luxuryAssets !== undefined && data.luxuryAssets !== null && data.luxuryAssets !== '') {
+      if (data.annualIncome) setAnnualIncome(String(data.annualIncome));
+      if (data.savingsAssets !== undefined && data.savingsAssets !== null) setSavingsAssets(String(data.savingsAssets));
+      if (data.financialAssets !== undefined && data.financialAssets !== null) setFinancialAssets(String(data.financialAssets));
+      if (data.realEstateAssets !== undefined && data.realEstateAssets !== null) setRealEstateAssets(String(data.realEstateAssets));
+      if (data.luxuryAssets !== undefined && data.luxuryAssets !== null) {
         setLuxuryAssets(String(data.luxuryAssets));
-      } else if (data.carAssets || data.watchAssets) {
-        const legacyLuxury = (Number(data.carAssets) || 0) + (Number(data.watchAssets) || 0);
-        if (legacyLuxury > 0) setLuxuryAssets(String(legacyLuxury));
+      } else if (data.carAssets !== undefined || data.watchAssets !== undefined) {
+        const legacy = (Number(data.carAssets) || 0) + (Number(data.watchAssets) || 0);
+        setLuxuryAssets(String(legacy));
       }
-      if (data.carAssets !== undefined && data.carAssets !== null && data.carAssets !== '') setCarAssets(String(data.carAssets));
-      if (data.watchAssets !== undefined && data.watchAssets !== null && data.watchAssets !== '') setWatchAssets(String(data.watchAssets));
-      if (data.mortgageDebt !== undefined && data.mortgageDebt !== null && data.mortgageDebt !== '') setMortgageDebt(String(data.mortgageDebt));
-      if (data.carDebt !== undefined && data.carDebt !== null && data.carDebt !== '') setCarDebt(String(data.carDebt));
-      if (data.scholarshipDebt !== undefined && data.scholarshipDebt !== null && data.scholarshipDebt !== '') setScholarshipDebt(String(data.scholarshipDebt));
-      if (data.otherDebt !== undefined && data.otherDebt !== null && data.otherDebt !== '') setOtherDebt(String(data.otherDebt));
-      if (data.academicDegree !== undefined && data.academicDegree !== null) setAcademicDegree(data.academicDegree);
-      if (data.universityName !== undefined && data.universityName !== null) setUniversityName(data.universityName);
-      if (data.customUniversityHensachi !== undefined) setCustomUniversityHensachi(data.customUniversityHensachi);
-      if (data.iqScore !== undefined && data.iqScore !== null && data.iqScore !== '') setIqScore(String(data.iqScore));
-      if (data.industryCode !== undefined && data.industryCode !== null) setIndustryCode(data.industryCode);
-      if (data.occupationCode !== undefined && data.occupationCode !== null) setOccupationCode(data.occupationCode);
-      if (data.employmentType !== undefined && data.employmentType !== null) setEmploymentType(data.employmentType);
-      if (data.positionCode !== undefined && data.positionCode !== null) setPositionCode(data.positionCode);
+      if (data.carAssets !== undefined && data.carAssets !== null) setCarAssets(String(data.carAssets));
+      if (data.watchAssets !== undefined && data.watchAssets !== null) setWatchAssets(String(data.watchAssets));
+      if (data.mortgageDebt !== undefined && data.mortgageDebt !== null) setMortgageDebt(String(data.mortgageDebt));
+      if (data.carDebt !== undefined && data.carDebt !== null) setCarDebt(String(data.carDebt));
+      if (data.scholarshipDebt !== undefined && data.scholarshipDebt !== null) setScholarshipDebt(String(data.scholarshipDebt));
+      if (data.otherDebt !== undefined && data.otherDebt !== null) setOtherDebt(String(data.otherDebt));
+      if (data.academicDegree) setAcademicDegree(data.academicDegree);
+      if (data.universityName) setUniversityName(data.universityName);
+      if (data.customUniversityHensachi !== undefined && data.customUniversityHensachi !== null) setCustomUniversityHensachi(data.customUniversityHensachi);
+      if (data.iqScore !== undefined && data.iqScore !== null) setIqScore(String(data.iqScore));
+      if (data.industryCode) setIndustryCode(data.industryCode);
+      if (data.occupationCode) setOccupationCode(data.occupationCode);
+      if (data.employmentType) setEmploymentType(data.employmentType);
+      if (data.positionCode) setPositionCode(data.positionCode);
       if (data.companyName !== undefined && data.companyName !== null) setCompanyName(data.companyName);
       if (data.companyCategory !== undefined && data.companyCategory !== null) setCompanyCategory(data.companyCategory);
       if (data.userLanguages !== undefined && Array.isArray(data.userLanguages)) setUserLanguages(data.userLanguages);
@@ -186,6 +184,7 @@ export default function HomePage() {
       if (data.youTubeFollowers !== undefined && data.youTubeFollowers !== null) setYouTubeFollowers(Number(data.youTubeFollowers));
       if (data.maritalStatus !== undefined && data.maritalStatus !== null) setMaritalStatus(data.maritalStatus);
       if (data.childrenCount !== undefined && data.childrenCount !== null) setChildrenCount(String(data.childrenCount));
+      if (data.datingPartnerCount !== undefined && data.datingPartnerCount !== null) setDatingPartnerCount(String(data.datingPartnerCount));
       if (data.partnerCount !== undefined && data.partnerCount !== null) setPartnerCount(String(data.partnerCount));
       if (data.mbti !== undefined && data.mbti !== null) setMbti(data.mbti);
       if (data.travelCount !== undefined && data.travelCount !== null) setTravelCount(String(data.travelCount));
@@ -207,7 +206,7 @@ export default function HomePage() {
         academicDegree, universityName, customUniversityHensachi, iqScore,
         industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
         userLanguages, instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
-        maritalStatus, childrenCount, partnerCount, mbti, travelCount,
+        maritalStatus, childrenCount, datingPartnerCount, partnerCount, mbti, travelCount,
       };
       localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     } catch (e) {
@@ -220,7 +219,7 @@ export default function HomePage() {
     academicDegree, universityName, customUniversityHensachi, iqScore,
     industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
     userLanguages, instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
-    maritalStatus, childrenCount, partnerCount, mbti, travelCount,
+    maritalStatus, childrenCount, datingPartnerCount, partnerCount, mbti, travelCount,
   ]);
 
   const handleResetForm = () => {
@@ -267,6 +266,7 @@ export default function HomePage() {
     setYouTubeFollowers(0);
     setMaritalStatus('');
     setChildrenCount('0');
+    setDatingPartnerCount('');
     setPartnerCount('');
     setMbti('');
     setTravelCount('');
@@ -536,6 +536,7 @@ export default function HomePage() {
         travelCount: travelCount !== '' ? Number(toHalfWidthDigits(travelCount)) : null,
         maritalStatus: maritalStatus !== '' ? maritalStatus : null,
         childrenCount: childrenCount !== '' ? Number(toHalfWidthDigits(childrenCount)) : 0,
+        datingPartnerCount: datingPartnerCount !== '' ? Number(toHalfWidthDigits(datingPartnerCount)) : null,
         partnerCount: partnerCount !== '' ? Number(toHalfWidthDigits(partnerCount)) : null,
         mbti: mbti !== '' ? mbti : null,
         instagramFollowers: Number(instagramFollowers) || 0,
@@ -1480,20 +1481,23 @@ export default function HomePage() {
         {currentStep === 6 && (
           <div className="space-y-6">
             <h2 className="text-base font-bold text-slate-100 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-400" /> 6. 恋愛ステータス・経験人数・MBTI
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-400" /> 6. 恋愛ステータス・交際/経験人数・MBTI
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">配偶関係</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-2">配偶・恋愛ステータス</label>
                 <select
                   value={maritalStatus}
                   onChange={e => setMaritalStatus(e.target.value as MaritalStatus)}
                   className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white"
                 >
                   <option value="">選択してください</option>
-                  <option value="SINGLE">未婚</option>
+                  <option value="SINGLE_FREE">未婚（恋人なし・フリー）</option>
+                  <option value="SINGLE_DATING">未婚（恋人あり・交際中）</option>
+                  <option value="ENGAGED_COHABITING">婚約中 / 同棲中</option>
                   <option value="MARRIED">既婚</option>
+                  <option value="SEPARATED">別居中</option>
                   <option value="DIVORCED">離婚歴あり</option>
                   <option value="BEREAVED">死別</option>
                 </select>
@@ -1531,19 +1535,35 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="border-t border-slate-800 pt-4">
-              <label className="block text-xs font-semibold text-slate-300 mb-2">
-                これまでの経験人数 (人)
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                placeholder="例: 3 (未入力可能)"
-                value={partnerCount}
-                onChange={e => setPartnerCount(toHalfWidthDigits(e.target.value))}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono"
-              />
+            <div className="border-t border-slate-800 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-2">
+                  交際人数 (付き合った人数)
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="例: 2 (未入力可能)"
+                  value={datingPartnerCount}
+                  onChange={e => setDatingPartnerCount(toHalfWidthDigits(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-2">
+                  これまでの経験人数 (人)
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="例: 3 (未入力可能)"
+                  value={partnerCount}
+                  onChange={e => setPartnerCount(toHalfWidthDigits(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono"
+                />
+              </div>
             </div>
           </div>
         )}
