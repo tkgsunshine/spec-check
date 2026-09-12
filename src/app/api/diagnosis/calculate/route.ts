@@ -14,6 +14,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (Number(body.age) < 16) {
+      return NextResponse.json(
+        { error: '当サービスは16歳以上の方を対象としています。16歳以上の年齢をご入力ください。' },
+        { status: 400 }
+      );
+    }
+
     if (body.employmentType !== 'UNEMPLOYED') {
       const hasCompanyName = Boolean(body.companyName && body.companyName.trim() !== '');
       const hasCompanyCategory = Boolean(body.companyCategory && String(body.companyCategory).trim() !== '');

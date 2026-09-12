@@ -347,6 +347,10 @@ export default function HomePage() {
         setErrorMsg('年齢を入力してください。');
         return;
       }
+      if (Number(cleanAge) < 16) {
+        setErrorMsg('当サービスは16歳以上の方を対象としています。16歳以上の年齢を入力してください。');
+        return;
+      }
     }
     if (currentStep === 2) {
       const cleanHeight = toHalfWidthDigits(height);
@@ -427,6 +431,12 @@ export default function HomePage() {
 
     if (!cleanAge || Number(cleanAge) <= 0) {
       setErrorMsg('年齢を入力してください。');
+      setLoading(false);
+      setCurrentStep(1);
+      return;
+    }
+    if (Number(cleanAge) < 16) {
+      setErrorMsg('当サービスは16歳以上の方を対象としています。16歳以上の年齢を入力してください。');
       setLoading(false);
       setCurrentStep(1);
       return;
@@ -765,12 +775,13 @@ export default function HomePage() {
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-2">
                   年齢 (歳) <span className="px-1.5 py-0.5 ml-1.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px] border border-rose-500/30">※必須</span>
+                  <span className="text-[10px] text-slate-400 font-normal ml-1.5">（16歳以上対象）</span>
                 </label>
                 <input
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  placeholder="例: 28"
+                  placeholder="例: 25 (16歳以上)"
                   value={age}
                   onChange={e => setAge(toHalfWidthDigits(e.target.value))}
                   className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono"

@@ -132,6 +132,17 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
     try {
       const selectedPref = PREFECTURES[prefectureId - 1] || '東京都';
 
+      if (!age || Number(age) <= 0) {
+        setErrorMsg('年齢を入力してください。');
+        setLoading(false);
+        return;
+      }
+      if (Number(age) < 16) {
+        setErrorMsg('当サービスは16歳以上の方を対象としています。16歳以上の年齢を入力してください。');
+        setLoading(false);
+        return;
+      }
+
       if (!employmentType) {
         setErrorMsg('雇用形態を選択してください。');
         setLoading(false);
@@ -330,11 +341,14 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-400 text-[10px] font-bold block mb-1">年齢 (歳)</label>
+                    <label className="text-slate-400 text-[10px] font-bold block mb-1">
+                      年齢 (歳) <span className="text-[9px] text-slate-500 font-normal">※16歳以上</span>
+                    </label>
                     <input
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
+                      placeholder="例: 25"
                       value={age}
                       onChange={(e) => setAge(sanitizeNumericInput(e.target.value))}
                       className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-indigo-500 focus:outline-none"

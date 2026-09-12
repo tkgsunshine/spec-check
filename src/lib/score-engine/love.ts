@@ -51,11 +51,13 @@ export function calculateLoveScore(params: {
   // 1. 恋愛Age Score (モテ度・人気度年齢曲線モデル V6.0 - 20代1歳刻み精密モデル)
   let ageLoveScore = 80;
   if (gender === 'FEMALE') {
-    // 女性: 18-20歳(97-99pt), 21-25歳(100pt Peak), 26-29歳(99-96pt 1歳刻み), 30-34歳(94-86pt), 35-39歳(83-71pt), 40-44歳(68-56pt), 45歳以上(35pt最低保証)
+    // 女性: 16-17歳(93-95pt), 18-20歳(97-99pt), 21-25歳(100pt Peak), 26-29歳(99-96pt 1歳刻み), 30-34歳(94-86pt), 35-39歳(83-71pt), 40-44歳(68-56pt), 45歳以上(35pt最低保証)
     if (age >= 21 && age <= 25) {
       ageLoveScore = 100;
     } else if (age >= 18 && age <= 20) {
       ageLoveScore = 97 + (age - 18);
+    } else if (age >= 16 && age <= 17) {
+      ageLoveScore = 93 + (age - 16) * 2;
     } else if (age >= 26 && age <= 29) {
       ageLoveScore = 99 - (age - 26);
     } else if (age >= 30 && age <= 34) {
@@ -67,16 +69,18 @@ export function calculateLoveScore(params: {
     } else if (age >= 45) {
       ageLoveScore = Math.max(35, 53 - (age - 45) * 1.5);
     } else {
-      ageLoveScore = 90; // 18歳未満
+      ageLoveScore = 90; // 16歳未満
     }
   } else {
-    // 男性: 18-19歳(75-80pt), 20-24歳(85-97pt 1歳刻み成長期), 25-31歳(100pt Peak モテ黄金期), 32-36歳(98-90pt), 37-42歳(87-72pt), 43歳以上(30pt最低保証)
+    // 男性: 16-17歳(65-70pt), 18-19歳(75-80pt), 20-24歳(85-97pt 1歳刻み成長期), 25-31歳(100pt Peak モテ黄金期), 32-36歳(98-90pt), 37-42歳(87-72pt), 43歳以上(30pt最低保証)
     if (age >= 25 && age <= 31) {
       ageLoveScore = 100;
     } else if (age >= 20 && age <= 24) {
       ageLoveScore = 85 + (age - 20) * 3;
     } else if (age >= 18 && age <= 19) {
       ageLoveScore = 75 + (age - 18) * 5;
+    } else if (age >= 16 && age <= 17) {
+      ageLoveScore = 65 + (age - 16) * 5;
     } else if (age >= 32 && age <= 36) {
       ageLoveScore = 98 - (age - 32) * 2;
     } else if (age >= 37 && age <= 42) {
@@ -84,7 +88,7 @@ export function calculateLoveScore(params: {
     } else if (age >= 43) {
       ageLoveScore = Math.max(30, 68 - (age - 43) * 2.5);
     } else {
-      ageLoveScore = 70; // 18歳未満
+      ageLoveScore = 60; // 16歳未満
     }
   }
   ageLoveScore = Math.max(15, Math.min(100, Math.round(ageLoveScore * 10) / 10));
