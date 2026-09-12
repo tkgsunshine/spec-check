@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { DiagnosisInputV3, Gender, MaritalStatus, FaceRating } from '@/types/spec-check';
+import { DiagnosisInputV3, Gender, MaritalStatus, FaceRating, UserLanguageInput } from '@/types/spec-check';
 import {
   PREFECTURES,
   COMMON_OCCUPATION_MASTER,
@@ -11,10 +11,11 @@ import {
   POSITION_MASTER_BY_EMPLOYMENT,
   MBTI_MASTER,
   SNS_FOLLOWER_BRACKETS,
+  LANGUAGE_MASTER,
   getOccupationsByIndustryId,
 } from '@/lib/datasets/japan-stats';
 import { sanitizeNumericInput } from '@/lib/score-engine/math-utils';
-import { X, FileText, User, Landmark, GraduationCap, Globe, Sparkles, ChevronRight } from 'lucide-react';
+import { X, FileText, User, Landmark, GraduationCap, Globe, Sparkles, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import UniversityAutocomplete from '@/components/UniversityAutocomplete';
 import CompanyAutocomplete from '@/components/CompanyAutocomplete';
 
@@ -88,6 +89,27 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
   const [datingPartnerCount, setDatingPartnerCount] = useState<string>(input.datingPartnerCount !== null && input.datingPartnerCount !== undefined ? String(input.datingPartnerCount) : '');
   const [partnerCount, setPartnerCount] = useState<string>(input.partnerCount !== null && input.partnerCount !== undefined ? String(input.partnerCount) : '');
   const [mbti, setMbti] = useState<string>(input.mbti || '');
+
+  // 語学力 (複数言語)
+  const [userLanguages, setUserLanguages] = useState<UserLanguageInput[]>(() => {
+    if (input.languages && Array.isArray(input.languages) && input.languages.length > 0) {
+      return input.languages;
+    }
+    return [{ languageCode: 'JA', level: 'NATIVE' }];
+  });
+
+  const addLanguage = () => {
+    const existingCodes = new Set(userLanguages.map(l => l.languageCode));
+    const nextLang = LANGUAGE_MASTER.find(l => !existingCodes.has(l.code)) || LANGUAGE_MASTER[0];
+    setUserLanguages([
+      ...userLanguages,
+      { languageCode: nextLang.code, level: nextLang.code === 'EN' ? 'BUSINESS' : 'DAILY' },
+    ]);
+  };
+
+  const removeLanguage = (idx: number) => {
+    setUserLanguages(userLanguages.filter((_, i) => i !== idx));
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -175,6 +197,7 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
         datingPartnerCount: datingPartnerCount !== '' ? Number(datingPartnerCount) : null,
         partnerCount: partnerCount !== '' ? Number(partnerCount) : null,
         mbti: mbti !== '' ? mbti : null,
+        languages: userLanguages,
       };
 
       const res = await fetch('/api/diagnosis/calculate', {
@@ -201,6 +224,7 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
           industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
           instagramFollowers, xFollowers, tikTokFollowers, youTubeFollowers,
           travelCount, maritalStatus, childrenCount, datingPartnerCount, partnerCount, mbti,
+          userLanguages,
         };
         localStorage.setItem('spec_check_draft_v3', JSON.stringify(draft));
       } catch {}
@@ -661,11 +685,72 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
               </div>
 
               {/* SNS・語学・恋愛観・MBTI */}
-              <div className="space-y-3 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
+              <div className="space-y-4 bg-slate-950/40 p-4 sm:p-5 rounded-2xl border border-slate-800/80">
                 <h4 className="text-xs font-black text-purple-400 tracking-wider uppercase flex items-center gap-1.5 border-b border-slate-800 pb-2.5">
                   <Globe className="w-4 h-4 text-purple-400" /> SNS・グローバル・パートナーシップ・MBTI
                 </h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+
+                {/* 習得言語 (複数選択) */}
+                <div className="space-y-2">
+                  <label className="text-slate-300 text-xs font-bold block">
+                    習得言語 (複数選択)
+                  </label>
+                  <div className="space-y-2">
+                    {userLanguages.map((lang, idx) => (
+                      <div key={idx} className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                        <div className="flex-1 min-w-0">
+                          <select
+                            value={lang.languageCode}
+                            onChange={(e) => {
+                              const updated = [...userLanguages];
+                              updated[idx].languageCode = e.target.value;
+                              setUserLanguages(updated);
+                            }}
+                            className="w-full bg-slate-900 text-xs text-slate-100 font-bold rounded-lg px-2.5 py-2 border border-slate-800 focus:border-purple-500 focus:outline-none truncate"
+                          >
+                            {LANGUAGE_MASTER.map((l) => (
+                              <option key={l.code} value={l.code}>{l.nameJa}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <select
+                            value={lang.level}
+                            onChange={(e) => {
+                              const updated = [...userLanguages];
+                              updated[idx].level = e.target.value as any;
+                              setUserLanguages(updated);
+                            }}
+                            className="w-full bg-slate-900 text-xs text-slate-100 font-bold rounded-lg px-2.5 py-2 border border-slate-800 focus:border-purple-500 focus:outline-none truncate"
+                          >
+                            <option value="BASIC">基礎レベル・挨拶程度</option>
+                            <option value="DAILY">日常会話</option>
+                            <option value="BUSINESS">ビジネスレベル</option>
+                            <option value="NATIVE">ネイティブ</option>
+                          </select>
+                        </div>
+                        {userLanguages.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeLanguage(idx)}
+                            className="p-1.5 text-rose-400 hover:bg-rose-500/10 rounded-lg shrink-0 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={addLanguage}
+                    className="w-full py-2.5 rounded-xl bg-slate-900/90 hover:bg-indigo-950/40 border border-dashed border-indigo-500/50 hover:border-indigo-400 text-indigo-300 hover:text-indigo-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-indigo-400" /> 言語を追加 ＋
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-2 border-t border-slate-800/60">
                   <div>
                     <label className="text-slate-400 text-[10px] font-bold block mb-1">Instagram フォロワー</label>
                     <select
