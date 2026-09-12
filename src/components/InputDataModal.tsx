@@ -46,8 +46,14 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
   
   // 年収・資産 (個別4項目)
   const [annualIncome, setAnnualIncome] = useState<string>(input.annualIncome ? String(input.annualIncome) : '400');
+  const [savingsAssets, setSavingsAssets] = useState<string>(input.savingsAssets !== null && input.savingsAssets !== undefined ? String(input.savingsAssets) : '0');
   const [financialAssets, setFinancialAssets] = useState<string>(input.financialAssets !== null && input.financialAssets !== undefined ? String(input.financialAssets) : '0');
   const [realEstateAssets, setRealEstateAssets] = useState<string>(input.realEstateAssets !== null && input.realEstateAssets !== undefined ? String(input.realEstateAssets) : '0');
+  const [luxuryAssets, setLuxuryAssets] = useState<string>(() => {
+    if (input.luxuryAssets !== null && input.luxuryAssets !== undefined) return String(input.luxuryAssets);
+    const legacy = (input.carAssets || 0) + (input.watchAssets || 0);
+    return String(legacy);
+  });
   const [carAssets, setCarAssets] = useState<string>(input.carAssets !== null && input.carAssets !== undefined ? String(input.carAssets) : '0');
   const [watchAssets, setWatchAssets] = useState<string>(input.watchAssets !== null && input.watchAssets !== undefined ? String(input.watchAssets) : '0');
 
@@ -138,8 +144,10 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
         bodyFat: bodyFat !== '' ? Number(bodyFat) : null,
         faceRating: faceRating ? (faceRating as FaceRating) : null,
         annualIncome: Number(annualIncome),
+        savingsAssets: savingsAssets !== '' ? Number(savingsAssets) : 0,
         financialAssets: financialAssets !== '' ? Number(financialAssets) : 0,
         realEstateAssets: realEstateAssets !== '' ? Number(realEstateAssets) : 0,
+        luxuryAssets: luxuryAssets !== '' ? Number(luxuryAssets) : 0,
         carAssets: carAssets !== '' ? Number(carAssets) : 0,
         watchAssets: watchAssets !== '' ? Number(watchAssets) : 0,
         mortgageDebt: mortgageDebt !== '' ? Number(mortgageDebt) : 0,
@@ -185,7 +193,7 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
 
         const draft = {
           nickname, gender, age, prefectureId, height, weight, bodyFat, faceRating,
-          annualIncome, financialAssets, realEstateAssets, carAssets, watchAssets,
+          annualIncome, savingsAssets, financialAssets, realEstateAssets, luxuryAssets, carAssets, watchAssets,
           mortgageDebt, carDebt, scholarshipDebt, otherDebt,
           academicDegree, universityName, customUniversityHensachi, iqScore,
           industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
@@ -393,7 +401,18 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
                     <span className="text-[11px] font-extrabold text-emerald-300 block mb-2">総資産 内訳 (万円)</span>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
-                        <label className="text-slate-400 text-[10px] font-bold block mb-1">金融資産 (預金・株)</label>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">1. 預金</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={savingsAssets}
+                          onChange={(e) => setSavingsAssets(sanitizeNumericInput(e.target.value))}
+                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">2. 金融資産(株・証券等)</label>
                         <input
                           type="text"
                           inputMode="numeric"
@@ -404,7 +423,7 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
                         />
                       </div>
                       <div>
-                        <label className="text-slate-400 text-[10px] font-bold block mb-1">不動産評価額</label>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">3. 不動産評価額</label>
                         <input
                           type="text"
                           inputMode="numeric"
@@ -415,24 +434,13 @@ export default function InputDataModal({ input, activeTab }: InputDataModalProps
                         />
                       </div>
                       <div>
-                        <label className="text-slate-400 text-[10px] font-bold block mb-1">車</label>
+                        <label className="text-slate-400 text-[10px] font-bold block mb-1">4. 車、時計・貴金属等</label>
                         <input
                           type="text"
                           inputMode="numeric"
                           pattern="[0-9]*"
-                          value={carAssets}
-                          onChange={(e) => setCarAssets(sanitizeNumericInput(e.target.value))}
-                          className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-slate-400 text-[10px] font-bold block mb-1">時計・その他</label>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          pattern="[0-9]*"
-                          value={watchAssets}
-                          onChange={(e) => setWatchAssets(sanitizeNumericInput(e.target.value))}
+                          value={luxuryAssets}
+                          onChange={(e) => setLuxuryAssets(sanitizeNumericInput(e.target.value))}
                           className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 font-bold focus:border-emerald-500 focus:outline-none"
                         />
                       </div>

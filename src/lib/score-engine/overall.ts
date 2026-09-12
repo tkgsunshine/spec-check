@@ -36,8 +36,10 @@ export function runDiagnosisV3(input: DiagnosisInputV3): OverallDiagnosisResultV
   const netWorthResult = calculateNetWorthScore({
     gender: input.gender,
     age: input.age,
+    savingsAssets: input.savingsAssets,
     financialAssets: input.financialAssets,
     realEstateAssets: input.realEstateAssets,
+    luxuryAssets: input.luxuryAssets,
     carAssets: input.carAssets,
     watchAssets: input.watchAssets,
     otherAssets: input.otherAssets,
@@ -250,8 +252,10 @@ export async function runDiagnosisV3Async(input: DiagnosisInputV3): Promise<Over
   const netWorthResult = calculateNetWorthScore({
     gender: input.gender,
     age: input.age,
+    savingsAssets: input.savingsAssets,
     financialAssets: input.financialAssets,
     realEstateAssets: input.realEstateAssets,
+    luxuryAssets: input.luxuryAssets,
     carAssets: input.carAssets,
     watchAssets: input.watchAssets,
     otherAssets: input.otherAssets,

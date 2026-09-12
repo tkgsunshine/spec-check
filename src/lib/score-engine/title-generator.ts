@@ -21,7 +21,10 @@ export function generateEpithetTitle(
   const companyScore = companyMetric ? companyMetric.score : 0;
   const iqScore = iqMetric ? iqMetric.score : 0;
 
-  const totalAssets = (input.financialAssets || 0) + (input.realEstateAssets || 0) + (input.carAssets || 0) + (input.watchAssets || 0);
+  const luxuryVal = input.luxuryAssets !== undefined && input.luxuryAssets !== null
+    ? (input.luxuryAssets || 0)
+    : ((input.carAssets || 0) + (input.watchAssets || 0));
+  const totalAssets = (input.savingsAssets || 0) + (input.financialAssets || 0) + (input.realEstateAssets || 0) + luxuryVal;
   const totalDebts = (input.mortgageDebt || 0) + (input.carDebt || 0) + (input.scholarshipDebt || 0) + (input.otherDebt || 0);
   const netWorth = totalAssets - totalDebts;
 
@@ -231,7 +234,10 @@ export function generateLoveEpithetTitle(
   const iqMetric = metrics.find(m => m.metricCode === 'IQ_ESTIMATE');
   const iqScore = iqMetric ? iqMetric.score : 50;
 
-  const totalAssets = (input.financialAssets || 0) + (input.realEstateAssets || 0) + (input.carAssets || 0) + (input.watchAssets || 0);
+  const luxuryVal = input.luxuryAssets !== undefined && input.luxuryAssets !== null
+    ? (input.luxuryAssets || 0)
+    : ((input.carAssets || 0) + (input.watchAssets || 0));
+  const totalAssets = (input.savingsAssets || 0) + (input.financialAssets || 0) + (input.realEstateAssets || 0) + luxuryVal;
   const totalDebts = (input.mortgageDebt || 0) + (input.carDebt || 0) + (input.scholarshipDebt || 0) + (input.otherDebt || 0);
   const heightVal = Number(input.height) || 0;
 

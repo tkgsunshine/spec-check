@@ -11,8 +11,10 @@ import { NET_WORTH_BRACKETS, getAgeGenderNetWorthDistribution } from '../dataset
 export function calculateNetWorthScore(params: {
   gender?: Gender;
   age?: number;
+  savingsAssets?: number | null;
   financialAssets?: number | null;
   realEstateAssets?: number | null;
+  luxuryAssets?: number | null;
   carAssets?: number | null;
   watchAssets?: number | null;
   otherAssets?: number | null;
@@ -24,8 +26,10 @@ export function calculateNetWorthScore(params: {
   const {
     gender,
     age,
+    savingsAssets = 0,
     financialAssets = 0,
     realEstateAssets = 0,
+    luxuryAssets,
     carAssets = 0,
     watchAssets = 0,
     otherAssets = 0,
@@ -35,9 +39,15 @@ export function calculateNetWorthScore(params: {
     otherDebt = 0,
   } = params;
 
+  const luxuryVal = luxuryAssets !== undefined && luxuryAssets !== null
+    ? (luxuryAssets || 0)
+    : ((carAssets || 0) + (watchAssets || 0));
+
   const hasInput =
+    savingsAssets ||
     financialAssets ||
     realEstateAssets ||
+    luxuryAssets ||
     carAssets ||
     watchAssets ||
     otherAssets ||
@@ -50,7 +60,7 @@ export function calculateNetWorthScore(params: {
     return null;
   }
 
-  const totalAssets = (financialAssets || 0) + (realEstateAssets || 0) + (carAssets || 0) + (watchAssets || 0) + (otherAssets || 0);
+  const totalAssets = (savingsAssets || 0) + (financialAssets || 0) + (realEstateAssets || 0) + luxuryVal + (otherAssets || 0);
   const totalDebt = (mortgageDebt || 0) + (carDebt || 0) + (scholarshipDebt || 0) + (otherDebt || 0);
   const netWorth = totalAssets - totalDebt;
 

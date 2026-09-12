@@ -76,8 +76,10 @@ export default function HomePage() {
 
   // Step 3: 経済・純資産
   const [annualIncome, setAnnualIncome] = useState<string>('');
+  const [savingsAssets, setSavingsAssets] = useState<string>('');
   const [financialAssets, setFinancialAssets] = useState<string>('');
   const [realEstateAssets, setRealEstateAssets] = useState<string>('');
+  const [luxuryAssets, setLuxuryAssets] = useState<string>('');
   const [carAssets, setCarAssets] = useState<string>('');
   const [watchAssets, setWatchAssets] = useState<string>('');
   
@@ -152,8 +154,15 @@ export default function HomePage() {
         setPhotoPreview(data.faceImageUrl);
       }
       if (data.annualIncome !== undefined && data.annualIncome !== null && data.annualIncome !== '') setAnnualIncome(String(data.annualIncome));
+      if (data.savingsAssets !== undefined && data.savingsAssets !== null && data.savingsAssets !== '') setSavingsAssets(String(data.savingsAssets));
       if (data.financialAssets !== undefined && data.financialAssets !== null && data.financialAssets !== '') setFinancialAssets(String(data.financialAssets));
       if (data.realEstateAssets !== undefined && data.realEstateAssets !== null && data.realEstateAssets !== '') setRealEstateAssets(String(data.realEstateAssets));
+      if (data.luxuryAssets !== undefined && data.luxuryAssets !== null && data.luxuryAssets !== '') {
+        setLuxuryAssets(String(data.luxuryAssets));
+      } else if (data.carAssets || data.watchAssets) {
+        const legacyLuxury = (Number(data.carAssets) || 0) + (Number(data.watchAssets) || 0);
+        if (legacyLuxury > 0) setLuxuryAssets(String(legacyLuxury));
+      }
       if (data.carAssets !== undefined && data.carAssets !== null && data.carAssets !== '') setCarAssets(String(data.carAssets));
       if (data.watchAssets !== undefined && data.watchAssets !== null && data.watchAssets !== '') setWatchAssets(String(data.watchAssets));
       if (data.mortgageDebt !== undefined && data.mortgageDebt !== null && data.mortgageDebt !== '') setMortgageDebt(String(data.mortgageDebt));
@@ -193,7 +202,7 @@ export default function HomePage() {
     try {
       const draft = {
         nickname, gender, age, prefectureId, height, weight, bodyFat, faceRating, faceImageUrl,
-        annualIncome, financialAssets, realEstateAssets, carAssets, watchAssets,
+        annualIncome, savingsAssets, financialAssets, realEstateAssets, luxuryAssets, carAssets, watchAssets,
         mortgageDebt, carDebt, scholarshipDebt, otherDebt,
         academicDegree, universityName, customUniversityHensachi, iqScore,
         industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
@@ -206,7 +215,7 @@ export default function HomePage() {
     }
   }, [
     nickname, gender, age, prefectureId, height, weight, bodyFat, faceRating, faceImageUrl,
-    annualIncome, financialAssets, realEstateAssets, carAssets, watchAssets,
+    annualIncome, savingsAssets, financialAssets, realEstateAssets, luxuryAssets, carAssets, watchAssets,
     mortgageDebt, carDebt, scholarshipDebt, otherDebt,
     academicDegree, universityName, customUniversityHensachi, iqScore,
     industryCode, occupationCode, employmentType, positionCode, companyName, companyCategory,
@@ -231,8 +240,10 @@ export default function HomePage() {
     setFaceImageUrl(null);
     setPhotoPreview(null);
     setAnnualIncome('');
+    setSavingsAssets('');
     setFinancialAssets('');
     setRealEstateAssets('');
+    setLuxuryAssets('');
     setCarAssets('');
     setWatchAssets('');
     setMortgageDebt('');
@@ -360,8 +371,10 @@ export default function HomePage() {
         return;
       }
       // 未入力の資産・負債項目を「0」に自動補完
+      if (savingsAssets === '') setSavingsAssets('0');
       if (financialAssets === '') setFinancialAssets('0');
       if (realEstateAssets === '') setRealEstateAssets('0');
+      if (luxuryAssets === '') setLuxuryAssets('0');
       if (carAssets === '') setCarAssets('0');
       if (watchAssets === '') setWatchAssets('0');
       if (mortgageDebt === '') setMortgageDebt('0');
@@ -499,8 +512,10 @@ export default function HomePage() {
         faceRating: faceRating ? faceRating : null,
         faceImageUrl: faceImageUrl || null,
         annualIncome: Number(cleanIncome),
+        savingsAssets: savingsAssets !== '' ? Number(toHalfWidthDigits(savingsAssets)) : 0,
         financialAssets: financialAssets !== '' ? Number(toHalfWidthDigits(financialAssets)) : 0,
         realEstateAssets: realEstateAssets !== '' ? Number(toHalfWidthDigits(realEstateAssets)) : 0,
+        luxuryAssets: luxuryAssets !== '' ? Number(toHalfWidthDigits(luxuryAssets)) : 0,
         carAssets: carAssets !== '' ? Number(toHalfWidthDigits(carAssets)) : 0,
         watchAssets: watchAssets !== '' ? Number(toHalfWidthDigits(watchAssets)) : 0,
         mortgageDebt: mortgageDebt !== '' ? Number(toHalfWidthDigits(mortgageDebt)) : 0,
@@ -917,7 +932,7 @@ export default function HomePage() {
 
             <div className="border-t border-slate-800 pt-4">
               {(() => {
-                const isNoAssets = financialAssets === '0' && realEstateAssets === '0' && carAssets === '0' && watchAssets === '0';
+                const isNoAssets = savingsAssets === '0' && financialAssets === '0' && realEstateAssets === '0' && luxuryAssets === '0';
                 return (
                   <>
                     <h3 className="text-xs font-extrabold text-slate-200 uppercase tracking-wider flex items-center gap-2 mb-2">
@@ -928,15 +943,15 @@ export default function HomePage() {
                         type="button"
                         onClick={() => {
                           if (isNoAssets) {
+                            setSavingsAssets('');
                             setFinancialAssets('');
                             setRealEstateAssets('');
-                            setCarAssets('');
-                            setWatchAssets('');
+                            setLuxuryAssets('');
                           } else {
+                            setSavingsAssets('0');
                             setFinancialAssets('0');
                             setRealEstateAssets('0');
-                            setCarAssets('0');
-                            setWatchAssets('0');
+                            setLuxuryAssets('0');
                           }
                         }}
                         className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center cursor-pointer shadow-sm border ${
@@ -960,7 +975,19 @@ export default function HomePage() {
               })()}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">金融資産 (預金・株式)</label>
+                  <label className="block text-[11px] text-slate-400 mb-1">預金</label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    placeholder="0 (未入力可)"
+                    value={savingsAssets}
+                    onChange={e => setSavingsAssets(toHalfWidthDigits(e.target.value))}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] text-slate-400 mb-1">金融資産(株・証券等)</label>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -984,26 +1011,14 @@ export default function HomePage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">車</label>
+                  <label className="block text-[11px] text-slate-400 mb-1">車、時計・貴金属等</label>
                   <input
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
                     placeholder="0 (未入力可)"
-                    value={carAssets}
-                    onChange={e => setCarAssets(toHalfWidthDigits(e.target.value))}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">時計・その他</label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    placeholder="0 (未入力可)"
-                    value={watchAssets}
-                    onChange={e => setWatchAssets(toHalfWidthDigits(e.target.value))}
+                    value={luxuryAssets}
+                    onChange={e => setLuxuryAssets(toHalfWidthDigits(e.target.value))}
                     className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-base sm:text-xs text-white font-mono"
                   />
                 </div>

@@ -90,10 +90,12 @@ export interface DiagnosisInputV3 {
   bodyFat?: number | null;
   faceRating?: FaceRating | null;
   annualIncome: number;
-  financialAssets?: number | null;
-  realEstateAssets?: number | null;
-  carAssets?: number | null;
-  watchAssets?: number | null;
+  savingsAssets?: number | null; // 1. 預金 (万円)
+  financialAssets?: number | null; // 2. 金融資産(株・証券等) (万円)
+  realEstateAssets?: number | null; // 3. 不動産評価額 (万円)
+  luxuryAssets?: number | null; // 4. 車、時計・貴金属等 (万円)
+  carAssets?: number | null; // 互換用: 車 (万円)
+  watchAssets?: number | null; // 互換用: 時計・その他 (万円)
   otherAssets?: number | null;
   mortgageDebt?: number | null;
   carDebt?: number | null;

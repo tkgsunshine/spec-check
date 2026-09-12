@@ -228,7 +228,10 @@ export default function AdminPage() {
 
   // 選択レコードの入力情報（安全な参照用）
   const inp: Partial<DiagnosisInputV3> = selectedRecord?.rawInput || {};
-  const totalAssets = (inp.financialAssets || 0) + (inp.realEstateAssets || 0) + (inp.carAssets || 0) + (inp.watchAssets || 0);
+  const luxuryVal = inp.luxuryAssets !== undefined && inp.luxuryAssets !== null
+    ? inp.luxuryAssets
+    : ((inp.carAssets || 0) + (inp.watchAssets || 0));
+  const totalAssets = (inp.savingsAssets || 0) + (inp.financialAssets || 0) + (inp.realEstateAssets || 0) + luxuryVal;
   const totalDebts = (inp.mortgageDebt || 0) + (inp.carDebt || 0) + (inp.scholarshipDebt || 0) + (inp.otherDebt || 0);
   const netWorth = totalAssets - totalDebts;
 
@@ -609,20 +612,25 @@ export default function AdminPage() {
                       💎 保有資産 内訳
                     </span>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">金融資産 (預金・株):</span>
-                      <span className="font-bold text-white">{inp.financialAssets?.toLocaleString() || 0} 万円</span>
+                      <span className="text-slate-400">1. 預金:</span>
+                      <span className="font-bold text-white">{inp.savingsAssets?.toLocaleString() ?? 0} 万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">不動産評価額:</span>
-                      <span className="font-bold text-white">{inp.realEstateAssets?.toLocaleString() || 0} 万円</span>
+                      <span className="text-slate-400">2. 金融資産(株・証券等):</span>
+                      <span className="font-bold text-white">{inp.financialAssets?.toLocaleString() ?? 0} 万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">自動車資産:</span>
-                      <span className="font-bold text-white">{inp.carAssets?.toLocaleString() || 0} 万円</span>
+                      <span className="text-slate-400">3. 不動産評価額:</span>
+                      <span className="font-bold text-white">{inp.realEstateAssets?.toLocaleString() ?? 0} 万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">時計・美術品等:</span>
-                      <span className="font-bold text-white">{inp.watchAssets?.toLocaleString() || 0} 万円</span>
+                      <span className="text-slate-400">4. 車、時計・貴金属等:</span>
+                      <span className="font-bold text-white">
+                        {(inp.luxuryAssets !== undefined && inp.luxuryAssets !== null
+                          ? inp.luxuryAssets
+                          : ((inp.carAssets || 0) + (inp.watchAssets || 0))
+                        ).toLocaleString()} 万円
+                      </span>
                     </div>
                   </div>
 
