@@ -48,26 +48,44 @@ export function calculateLoveScore(params: {
     ? Math.max(careerScore, Math.round((careerScore * 0.7 + snsScore * 0.3) * 10) / 10)
     : careerScore;
 
-  // 1. 恋愛Age Score (モテ度・人気度年齢曲線モデル V5.0)
+  // 1. 恋愛Age Score (モテ度・人気度年齢曲線モデル V6.0 - 20代1歳刻み精密モデル)
   let ageLoveScore = 80;
   if (gender === 'FEMALE') {
-    // 女性: 18-25歳(100pt Peak), 26-29歳(96-90pt), 30-34歳(88-80pt), 35-39歳(78-70pt), 40-44歳(68-60pt), 45歳以上(35pt最低保証)
-    if (age >= 18 && age <= 25) ageLoveScore = 100;
-    else if (age > 25 && age <= 29) ageLoveScore = 96 - (age - 26) * 2;
-    else if (age > 29 && age <= 34) ageLoveScore = 88 - (age - 30) * 2;
-    else if (age > 34 && age <= 39) ageLoveScore = 78 - (age - 35) * 2;
-    else if (age > 39 && age <= 44) ageLoveScore = 68 - (age - 40) * 2;
-    else if (age > 44) ageLoveScore = Math.max(35, 58 - (age - 45) * 1.5);
-    else ageLoveScore = 90; // 18歳未満
+    // 女性: 18-20歳(97-99pt), 21-25歳(100pt Peak), 26-29歳(99-96pt 1歳刻み), 30-34歳(94-86pt), 35-39歳(83-71pt), 40-44歳(68-56pt), 45歳以上(35pt最低保証)
+    if (age >= 21 && age <= 25) {
+      ageLoveScore = 100;
+    } else if (age >= 18 && age <= 20) {
+      ageLoveScore = 97 + (age - 18);
+    } else if (age >= 26 && age <= 29) {
+      ageLoveScore = 99 - (age - 26);
+    } else if (age >= 30 && age <= 34) {
+      ageLoveScore = 94 - (age - 30) * 2;
+    } else if (age >= 35 && age <= 39) {
+      ageLoveScore = 83 - (age - 35) * 3;
+    } else if (age >= 40 && age <= 44) {
+      ageLoveScore = 68 - (age - 40) * 3;
+    } else if (age >= 45) {
+      ageLoveScore = Math.max(35, 53 - (age - 45) * 1.5);
+    } else {
+      ageLoveScore = 90; // 18歳未満
+    }
   } else {
-    // 男性: 24-32歳(100pt Peak モテ黄金期), 20-23歳(85-95.5pt フレッシュ期), 18-19歳(75-80pt 学生期), 33-37歳(96-86pt 大人モテ期), 38-42歳(83-71pt), 43歳以上(30pt最低保証)
-    if (age >= 24 && age <= 32) ageLoveScore = 100;
-    else if (age >= 20 && age < 24) ageLoveScore = 85 + (age - 20) * 3.5;
-    else if (age >= 18 && age < 20) ageLoveScore = 75 + (age - 18) * 5;
-    else if (age > 32 && age <= 37) ageLoveScore = 96 - (age - 33) * 2.5;
-    else if (age > 37 && age <= 42) ageLoveScore = 83 - (age - 38) * 3;
-    else if (age > 42) ageLoveScore = Math.max(30, 68 - (age - 43) * 2.5);
-    else ageLoveScore = 70; // 18歳未満
+    // 男性: 18-19歳(75-80pt), 20-24歳(85-97pt 1歳刻み成長期), 25-31歳(100pt Peak モテ黄金期), 32-36歳(98-90pt), 37-42歳(87-72pt), 43歳以上(30pt最低保証)
+    if (age >= 25 && age <= 31) {
+      ageLoveScore = 100;
+    } else if (age >= 20 && age <= 24) {
+      ageLoveScore = 85 + (age - 20) * 3;
+    } else if (age >= 18 && age <= 19) {
+      ageLoveScore = 75 + (age - 18) * 5;
+    } else if (age >= 32 && age <= 36) {
+      ageLoveScore = 98 - (age - 32) * 2;
+    } else if (age >= 37 && age <= 42) {
+      ageLoveScore = 87 - (age - 37) * 3;
+    } else if (age >= 43) {
+      ageLoveScore = Math.max(30, 68 - (age - 43) * 2.5);
+    } else {
+      ageLoveScore = 70; // 18歳未満
+    }
   }
   ageLoveScore = Math.max(15, Math.min(100, Math.round(ageLoveScore * 10) / 10));
 
@@ -83,14 +101,14 @@ export function calculateLoveScore(params: {
     percentile: ageTopPercent !== null ? 100 - ageTopPercent : null,
     topPercent: ageTopPercent,
     dataQuality: 'MODEL_ESTIMATE',
-    datasetName: '全国恋愛・モテ度トレンド統計モデル V5.0 (ルックス・年齢需要動的モデル)',
+    datasetName: '全国恋愛・モテ度トレンド統計モデル V6.0 (20代1歳刻み精密モデル)',
     sourceUrl: '',
     surveyYear: 2024,
     calculationMethod: 'STATISTICAL_MODEL_ESTIMATE',
     hasOfficialTopPercent: false,
     notes: gender === 'FEMALE'
-      ? '女性モテ度需要曲線適用（20代前半ピーク〜30代大人美高得点維持モデル）。'
-      : '男性年代別動的モテ度モデル適用（20代前半ルックス・年齢重視 ➔ 30代以降大人の余裕・経済力融合型）。',
+      ? '女性20代1歳刻み精密需要曲線適用（21-25歳100ptピーク〜26-29歳1歳毎-1pt緩やか推移）。'
+      : '男性20代1歳刻み精密需要曲線適用（20-24歳1歳毎+3pt成長〜25-31歳100pt黄金期）。',
   };
 
   // 2. Family Score (未婚・婚姻歴・子ども) V5.0
