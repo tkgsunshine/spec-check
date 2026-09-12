@@ -558,4 +558,13 @@ export const LANGUAGE_MASTER = [
   { code: 'ES', nameJa: 'スペイン語', isNativeDefaultTarget: false },
   { code: 'FR', nameJa: 'フランス語', isNativeDefaultTarget: false },
   { code: 'DE', nameJa: 'ドイツ語', isNativeDefaultTarget: false },
+  { code: 'PT', nameJa: 'ポルトガル語', isNativeDefaultTarget: false },
+  { code: 'VI', nameJa: 'ベトナム語', isNativeDefaultTarget: false },
+  { code: 'TH', nameJa: 'タイ語', isNativeDefaultTarget: false },
+  { code: 'TL', nameJa: 'フィリピン語 (タガログ語)', isNativeDefaultTarget: false },
+  { code: 'ID', nameJa: 'インドネシア語', isNativeDefaultTarget: false },
+  { code: 'IT', nameJa: 'イタリア語', isNativeDefaultTarget: false },
+  { code: 'RU', nameJa: 'ロシア語', isNativeDefaultTarget: false },
+  { code: 'AR', nameJa: 'アラビア語', isNativeDefaultTarget: false },
+  { code: 'OTHER', nameJa: 'その他言語', isNativeDefaultTarget: false },
 ];
