@@ -180,6 +180,7 @@ export interface OverallDiagnosisResultV3 {
   appliedWeights: Record<string, number>;
   shareToken: string;
   rawInput?: DiagnosisInputV3;
+  isPremiumUnlocked?: boolean;
 }
 
 export type OverallDiagnosisResult = OverallDiagnosisResultV3;

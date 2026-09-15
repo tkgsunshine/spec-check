@@ -9,6 +9,8 @@ import CategoryCard from '@/components/CategoryCard';
 import SpecRankings from '@/components/SpecRankings';
 import SnsShareCard from '@/components/SnsShareCard';
 import InputDataModal from '@/components/InputDataModal';
+import PremiumReportSection from '@/components/PremiumReportSection';
+import AffiliateRecommendations from '@/components/AffiliateRecommendations';
 import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText } from 'lucide-react';
 import { runDiagnosisV3 } from '@/lib/score-engine';
 import { scoreToTopPercent, formatRarityRatio } from '@/lib/score-engine/math-utils';
@@ -536,6 +538,9 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             {overallEvaluationText}
           </div>
         </div>
+
+        {/* 🔒 プレミアム深層レポート（500円ワンショット課金 / アンロック） */}
+        <PremiumReportSection result={data} diagnosisId={id} />
       </section>
 
       {/* ④ Detailed Spec Ranking Table */}
@@ -593,6 +598,17 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
           categoryScores={data.categoryScores}
           radarAxes={isLoveMode ? loveRadarAxes : japanRadarAxes}
           epithet={currentEpithet}
+        />
+
+        {/* 💼/❤️ スペック連動おすすめサービス（パーソナライズドアフィリエイト動線） */}
+        <AffiliateRecommendations
+          activeTab={activeTab}
+          gender={data.inputSummary.gender}
+          age={data.inputSummary.age}
+          loveOverallScore={data.loveOverallScore}
+          annualIncome={data.rawInput?.annualIncome}
+          economicScore={data.categoryScores.economic}
+          maritalStatus={data.rawInput?.maritalStatus}
         />
       </div>
 
