@@ -740,6 +740,30 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
 
         {/* 5. プレミアム専用④: スペック引き上げ具体的ロードマップ（全6カテゴリ改善インパクト視覚化） */}
         {(() => {
+          // 各カテゴリの改善ポテンシャルを現在のスコアから動的算出
+          const bodyScoreVal = result.categoryScores?.body || 60;
+          const ecoScoreVal = result.categoryScores?.economic || 60;
+          const carScoreVal = result.categoryScores?.career || 60;
+          const acaScoreVal = result.categoryScores?.academic || 60;
+          const socScoreVal = result.categoryScores?.social || 50;
+          const gloScoreVal = result.categoryScores?.ability || 50;
+
+          const bodyPotential = Math.max(1.5, Math.min(8.0, Math.round(((100 - bodyScoreVal) * 0.12) * 10) / 10));
+          const ecoPotential = Math.max(2.0, Math.min(9.0, Math.round(((100 - ecoScoreVal) * 0.14) * 10) / 10));
+          const carPotential = Math.max(1.5, Math.min(6.5, Math.round(((100 - carScoreVal) * 0.10) * 10) / 10));
+          const acaPotential = Math.max(1.0, Math.min(5.0, Math.round(((100 - acaScoreVal) * 0.08) * 10) / 10));
+          const socPotential = Math.max(1.5, Math.min(7.0, Math.round(((100 - socScoreVal) * 0.12) * 10) / 10));
+          const gloPotential = Math.max(1.5, Math.min(6.0, Math.round(((100 - gloScoreVal) * 0.10) * 10) / 10));
+
+          const totalPotentialPt = (
+            bodyPotential +
+            ecoPotential +
+            carPotential +
+            acaPotential +
+            socPotential +
+            gloPotential
+          ).toFixed(1);
+
           const actionContent = (
             <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-5 transition-all ${
               !isUnlocked ? 'cursor-pointer hover:border-purple-500/60 hover:bg-slate-900' : ''
@@ -748,7 +772,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-emerald-400" />
                   <h4 className="text-sm sm:text-base font-extrabold text-white flex flex-wrap items-center gap-2">
-                    <span>スペック総合値をあと +10pt 以上引き上げる具体的ロードマップ</span>
+                    <span>スペック総合値をあと 最大 +{totalPotentialPt}pt 引き上げる具体的ロードマップ</span>
                     {!isUnlocked && (
                       <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                         🔒 プレミアム
@@ -763,67 +787,67 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
               <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-300">
                   <span>多角比較 6カテゴリ別 改善余地インパクト</span>
-                  <span className="text-[10px] text-emerald-400">最大 +25pt の総合上昇ポテンシャル</span>
+                  <span className="text-[10px] text-emerald-400 font-bold font-mono">最大 +{totalPotentialPt}pt の総合上昇ポテンシャル</span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-[11px]">
                   <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
                     <div className="flex justify-between">
                       <span className="font-bold text-slate-300">身体 (BODY)</span>
-                      <span className="text-emerald-400 font-black">+5.0pt 伸びしろ</span>
+                      <span className="text-emerald-400 font-black font-mono">+{bodyPotential.toFixed(1)}pt 伸びしろ</span>
                     </div>
                     <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-emerald-400 h-full rounded-full" style={{ width: '75%' }} />
+                      <div className="bg-emerald-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((bodyPotential / 8.0) * 100)))}%` }} />
                     </div>
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
                     <div className="flex justify-between">
                       <span className="font-bold text-slate-300">年収・資産 (INCOME)</span>
-                      <span className="text-amber-400 font-black">+6.5pt 伸びしろ</span>
+                      <span className="text-amber-400 font-black font-mono">+{ecoPotential.toFixed(1)}pt 伸びしろ</span>
                     </div>
                     <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-amber-400 h-full rounded-full" style={{ width: '85%' }} />
+                      <div className="bg-amber-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((ecoPotential / 9.0) * 100)))}%` }} />
                     </div>
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
                     <div className="flex justify-between">
                       <span className="font-bold text-slate-300">キャリア (CAREER)</span>
-                      <span className="text-indigo-400 font-black">+4.0pt 伸びしろ</span>
+                      <span className="text-indigo-400 font-black font-mono">+{carPotential.toFixed(1)}pt 伸びしろ</span>
                     </div>
                     <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-indigo-400 h-full rounded-full" style={{ width: '65%' }} />
+                      <div className="bg-indigo-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((carPotential / 6.5) * 100)))}%` }} />
                     </div>
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
                     <div className="flex justify-between">
                       <span className="font-bold text-slate-300">学歴・知性 (ACADEMIC)</span>
-                      <span className="text-purple-400 font-black">+3.0pt 活用余地</span>
+                      <span className="text-purple-400 font-black font-mono">+{acaPotential.toFixed(1)}pt 活用余地</span>
                     </div>
                     <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-purple-400 h-full rounded-full" style={{ width: '90%' }} />
+                      <div className="bg-purple-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((acaPotential / 5.0) * 100)))}%` }} />
                     </div>
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
                     <div className="flex justify-between">
                       <span className="font-bold text-slate-300">SNS・影響力 (SOCIAL)</span>
-                      <span className="text-pink-400 font-black">+5.0pt 伸びしろ</span>
+                      <span className="text-pink-400 font-black font-mono">+{socPotential.toFixed(1)}pt 伸びしろ</span>
                     </div>
                     <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-pink-400 h-full rounded-full" style={{ width: '55%' }} />
+                      <div className="bg-pink-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((socPotential / 7.0) * 100)))}%` }} />
                     </div>
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
                     <div className="flex justify-between">
                       <span className="font-bold text-slate-300">グローバル (GLOBAL)</span>
-                      <span className="text-cyan-400 font-black">+4.5pt 伸びしろ</span>
+                      <span className="text-cyan-400 font-black font-mono">+{gloPotential.toFixed(1)}pt 伸びしろ</span>
                     </div>
                     <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-cyan-400 h-full rounded-full" style={{ width: '60%' }} />
+                      <div className="bg-cyan-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((gloPotential / 6.0) * 100)))}%` }} />
                     </div>
                   </div>
                 </div>
