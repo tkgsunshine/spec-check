@@ -653,10 +653,10 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                         {/* Title & Subtitle */}
                         <div className="space-y-1 max-w-sm mx-auto">
                           <h4 className="text-base sm:text-lg font-black text-white">
-                            {isLoveMode ? '恋愛深層総評 ＆ 全7章の完全開示' : '総合深層総評 ＆ 全7章の完全開示'}
+                            {isLoveMode ? '恋愛深層総評 ＆ 全7章の完全アンロック' : '総合深層総評 ＆ 全7章の完全アンロック'}
                           </h4>
                           <p className="text-[11px] sm:text-xs text-slate-300 leading-snug">
-                            1回買い切り ¥500（月額課金・追加費用なし）で、あなたの強み相乗効果・弱点克服・MBTI深層解析を完全開示
+                            1回買い切り ¥500（月額課金・追加費用なし）で、あなたの強み相乗効果・弱点克服・MBTI深層解析を完全アンロック
                           </p>
                         </div>
 

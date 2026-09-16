@@ -91,11 +91,11 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                 <span>強みのあるスペック TOP 5</span>
                 {isLocked && diagnosisId ? (
                   <Link href={`/purchase/${diagnosisId}`} className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
-                    🔒 プレミアム開示
+                    🔒 アンロック
                   </Link>
                 ) : isLocked ? (
                   <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                    🔒 プレミアム開示
+                    🔒 アンロック
                   </span>
                 ) : null}
               </h3>
@@ -174,7 +174,7 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
 
             if (itemLocked && diagnosisId) {
               return (
-                <Link key={item.metricCode} href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして詳細を開示">
+                <Link key={item.metricCode} href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして詳細をアンロック">
                   {rowContent}
                 </Link>
               );
@@ -201,11 +201,11 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                 <span>伸びしろ・改善エリア</span>
                 {isLocked && diagnosisId ? (
                   <Link href={`/purchase/${diagnosisId}`} className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
-                    🔒 プレミアム開示
+                    🔒 アンロック
                   </Link>
                 ) : isLocked ? (
                   <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                    🔒 プレミアム開示
+                    🔒 アンロック
                   </span>
                 ) : null}
               </h3>
@@ -259,7 +259,7 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
 
             if (itemLocked && diagnosisId) {
               return (
-                <Link key={item.metricCode} href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして改善策を開示">
+                <Link key={item.metricCode} href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして改善策をアンロック">
                   {rowContent}
                 </Link>
               );

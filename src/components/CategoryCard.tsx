@@ -176,7 +176,7 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
             <span className="text-xs text-amber-300 animate-pulse ml-0.5">🔒</span>
           </div>
           <span className="text-[9px] font-extrabold text-purple-300 group-hover:text-amber-300 transition-colors tracking-tight mt-0.5">
-            タップで順位開示
+            タップでアンロック
           </span>
         </div>
       ) : (

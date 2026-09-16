@@ -708,7 +708,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
           if (!isUnlocked) {
             return (
-              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして主戦場ランキングを開示">
+              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして主戦場ランキングをアンロック">
                 {simContent}
               </Link>
             );
@@ -889,7 +889,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   ) : (
                     <div className="flex items-center gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
                       <p className="text-xs sm:text-sm text-slate-300 filter blur-[8px] select-none">第一印象の清潔感と知性のギャップによる安心感が最大の決定打となります。</p>
-                      <span className="text-xs text-amber-400 font-bold shrink-0">🔒 開示</span>
+                      <span className="text-xs text-amber-400 font-bold shrink-0">🔒 アンロック</span>
                     </div>
                   )}
                 </div>
@@ -899,7 +899,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
           if (!isUnlocked) {
             return (
-              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして惹かれやすい異性の特徴を開示">
+              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして惹かれやすい異性の特徴をアンロック">
                 {matchContent}
               </Link>
             );
@@ -956,7 +956,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                     ) : (
                       <div className="flex items-center gap-2">
                         <p className="text-slate-400 text-[11px] filter blur-[8px] select-none">{item.blurPreview}</p>
-                        <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
+                        <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 アンロック</span>
                       </div>
                     )}
                   </div>
@@ -967,7 +967,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
           if (!isUnlocked) {
             return (
-              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして地雷異性タイプを開示">
+              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして地雷異性タイプをアンロック">
                 {landmineContent}
               </Link>
             );
@@ -1165,7 +1165,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                               <p className="text-slate-400 text-[11px] filter blur-[8px] select-none">
                                 {cat.actionDetail}
                               </p>
-                              <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
+                              <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 アンロック</span>
                             </div>
                           )}
                         </div>
@@ -1198,7 +1198,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
           if (!isUnlocked) {
             return (
-              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして改善ロードマップを開示">
+              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして改善ロードマップをアンロック">
                 {actionContent}
               </Link>
             );
@@ -1291,7 +1291,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
           if (!isUnlocked) {
             return (
-              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックしてプロフィール文章を開示">
+              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックしてプロフィール文章をアンロック">
                 {prContent}
               </Link>
             );
@@ -1308,10 +1308,10 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
             <div className="space-y-1.5 max-w-md mx-auto">
               <h4 className="text-lg sm:text-xl font-black text-white">
-                プレミアム深層レポート ＆ 完全データ開示
+                プレミアム深層レポート ＆ 完全データアンロック
               </h4>
               <p className="text-xs text-slate-300">
-                1回買い切り ¥500（月額課金・追加費用なし）で、あなたの強み・主戦場・相性・ロードマップを完全開示
+                1回買い切り ¥500（月額課金・追加費用なし）で、あなたの強み・主戦場・相性・ロードマップを完全アンロック
               </p>
             </div>
 

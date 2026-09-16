@@ -22,6 +22,9 @@ import {
   ShieldAlert,
   Copy,
   Compass,
+  Heart,
+  AlertTriangle,
+  FileText,
 } from "lucide-react";
 
 export default function PurchaseLandingPage({ params }: { params: Promise<{ id: string }> }) {
@@ -154,7 +157,7 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300">
               隠された深層スペック ＆ 恋愛市場価値
             </span>
-            <span>を完全開示</span>
+            <span>を完全アンロック</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
@@ -197,7 +200,7 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
             ) : (
               <>
                 <Unlock className="w-5 h-5" />
-                <span>¥500 でプレミアム深層レポートを開示</span>
+                <span>¥500 でプレミアム深層レポートをアンロック</span>
                 <ChevronRight className="w-5 h-5" />
               </>
             )}
@@ -213,11 +216,11 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
         </div>
       </section>
 
-      {/* ② 開示される6大コンテンツ */}
+      {/* ② アンロックされる6大コンテンツ */}
       <section className="space-y-6">
         <div className="text-center space-y-1.5">
           <h2 className="text-xl sm:text-2xl font-black text-white">
-            開示される 6つのプレミアム深層データ
+            アンロックされる 6つのプレミアム深層データ
           </h2>
           <p className="text-xs text-slate-400">
             無料版では隠されている詳細数値・改善ロードマップ・マッチングシミュレーションをすべてアンロック
@@ -233,15 +236,15 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-purple-400">BENEFIT 01</span>
-                <h3 className="text-base font-black text-white">1,000人シミュレーション ＆ 主戦場ランキング</h3>
+                <h3 className="text-base font-black text-white">主戦場・マッチング戦力シミュレーション</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              同世代1,000人中における受容人数・確率に加え、あなたのスペックが最も無双できる「主戦場（ハイスペマッチング/真剣婚活/日常出会い）」の市場別適合度（S/A/Bランク）を特定。
+              ペアーズ・with・東カレ・タップル・結婚相談所など、主要プラットフォームごとの適合度と有利度を算出。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>主戦場・適合度Sランク</span>
-              <span className="text-purple-400 font-mono font-black">ハイスペ特化市場 🔓</span>
+              <span>主戦場ランキングTOP3 ＆ 受容率</span>
+              <span className="text-purple-400 font-mono font-black">完全アンロック 🔓</span>
             </div>
           </div>
 
@@ -249,19 +252,19 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-2xl bg-pink-500/10 border border-pink-500/30 text-pink-400">
-                <Target className="w-5 h-5" />
+                <Heart className="w-5 h-5" />
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-pink-400">BENEFIT 02</span>
-                <h3 className="text-base font-black text-white">好かれやすい異性の特徴（7大ディメンション）</h3>
+                <h3 className="text-base font-black text-white">惹かれやすい異性の特徴 (全7項目)</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              あなたに対して好意を抱きやすい相手の「年齢層・年収帯・MBTI性格・相性の良い職業・知性水準・恋愛観タイプ・最も刺さる武器」の全7項目を詳細プロファイル。
+              あなたのスペックに強く惹かれる異性の「年齢層」「職業傾向」「外見タイプ」「相性最良の性格」を徹底分析。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>相性7大データ</span>
-              <span className="text-pink-400 font-mono font-black">職業・知性・MBTIほか 🔓</span>
+              <span>相性最良の異性プロファイル</span>
+              <span className="text-pink-400 font-mono font-black">完全アンロック 🔓</span>
             </div>
           </div>
 
@@ -269,7 +272,7 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
-                <ShieldAlert className="w-5 h-5" />
+                <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-rose-400">BENEFIT 03</span>
@@ -277,11 +280,11 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              あなたの価値観や性格と絶対に合わず消耗する「地雷タイプ（テイカー気質・見栄消費・過度な束縛等）」を特定し、初期に見抜くサインと自衛策を提示。
+              時間を無駄にしないための防衛策。あなたの性格・ステータスと衝突しやすい異性の特徴を事前に把握。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>避けるべき地雷相手</span>
-              <span className="text-rose-400 font-mono font-black">ワースト3 ＆ 見極めサイン 🔓</span>
+              <span>地雷異性ワースト3 ＆ 回避策</span>
+              <span className="text-rose-400 font-mono font-black">完全アンロック 🔓</span>
             </div>
           </div>
 
@@ -293,15 +296,15 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">BENEFIT 04</span>
-                <h3 className="text-base font-black text-white">全6カテゴリ改善インパクト ＆ ロードマップ</h3>
+                <h3 className="text-base font-black text-white">6項目別 改善ロードマップ (+xx pt具体策)</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              身体・年収・キャリア等、全6カテゴリのどれを何Pt伸ばせるかを視覚化（最大+25pt）。即日・3ヶ月・1年スパンの具体的3ステップで成長を最短化。
+              何を改善すれば何ポイント向上するか、費用対効果の高い具体的アクションを6カテゴリすべてで明示。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>スペック向上ポテンシャル</span>
-              <span className="text-emerald-400 font-black">最大 +25 pt 🔓</span>
+              <span>改善具体策 ＆ 加点シミュレーション</span>
+              <span className="text-emerald-400 font-mono font-black">完全アンロック 🔓</span>
             </div>
           </div>
 
@@ -309,19 +312,19 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
-                <Copy className="w-5 h-5" />
+                <FileText className="w-5 h-5" />
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">BENEFIT 05</span>
-                <h3 className="text-base font-black text-white">即コピペで使える最強プロフィール文章</h3>
+                <h3 className="text-base font-black text-white">即コピペで使える 最強プロフィール文章</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              あなたの診断データ・強みを黄金構成で文章化。「マッチングアプリ用（自然体＆好感度）」と「婚活相談所用（信頼感＆誠実さ）」をワンタップコピー可能。
+              あなたの強みと誠実さを最大化する「マッチングアプリ用」＆「真剣婚活・相談所用」の2パターンを生成。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>自己PRプロフィール文</span>
-              <span className="text-amber-400 font-mono font-black">2パターン ワンタップコピー 🔓</span>
+              <span>アプリ用＆婚活用 2パターン自己PR</span>
+              <span className="text-amber-400 font-mono font-black">ワンクリックコピー 📋</span>
             </div>
           </div>
 
@@ -333,15 +336,15 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-indigo-400">BENEFIT 06</span>
-                <h3 className="text-base font-black text-white">全6カテゴリ精密比較 ＆ AI詳細総評 全文</h3>
+                <h3 className="text-base font-black text-white">全6カテゴリ精密比較 ＆ 詳細総評 全文</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              全6軸の数値・上位%の完全開示に加え、統計的ポジション・強み相乗効果・MBTI特性・地域市場環境・中長期戦略のAI総評（約2,000文字）をフルアンロック。
+              全6軸の数値・上位%の完全アンロックに加え、統計的ポジション・強み相乗効果・MBTI特性・地域市場環境・中長期戦略の詳細総評（約2,000文字）をフルアンロック。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>全6軸数値 ＆ AI総評</span>
-              <span className="text-indigo-400 font-mono font-black">完全開示 🔓</span>
+              <span>全6軸数値 ＆ 詳細総評</span>
+              <span className="text-indigo-400 font-mono font-black">完全アンロック 🔓</span>
             </div>
           </div>
         </div>
@@ -452,7 +455,7 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
             ) : (
               <>
                 <Unlock className="w-5 h-5" />
-                <span>¥500 でプレミアム深層レポートを開示</span>
+                <span>¥500 でプレミアム深層レポートをアンロック</span>
                 <ChevronRight className="w-5 h-5" />
               </>
             )}
