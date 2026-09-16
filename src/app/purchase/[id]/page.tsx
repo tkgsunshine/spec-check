@@ -248,11 +248,11 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-pink-400">BENEFIT 02</span>
-                <h3 className="text-base font-black text-white">あなたを最も求める異性のスペック逆引き分布</h3>
+                <h3 className="text-base font-black text-white">あなたに最も惹かれやすい異性の特徴・相性データ</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              あなたに対して最も好意・需要を抱きやすい異性の「最適な年齢層」「年収帯」「惹かれやすいMBTI性格特性」を逆引き解析します。
+              あなたに対して最も好意・需要を抱きやすい異性の「最適な年齢層」「年収帯」「惹かれやすいMBTI性格特性」をデータ解析します。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
               <span>相性の良い相手のMBTI</span>

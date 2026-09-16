@@ -288,7 +288,7 @@ export default function PremiumReportSection({
                 <div className="flex items-center gap-2">
                   <Target className="w-5 h-5 text-pink-400" />
                   <h4 className="text-sm font-extrabold text-white flex flex-wrap items-center gap-2">
-                    <span>あなたを最も強く求める異性のスペック逆引き分布</span>
+                    <span>あなたに最も惹かれやすい異性の特徴・相性データ</span>
                     {!isUnlocked && (
                       <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30">
                         🔒 プレミアム
