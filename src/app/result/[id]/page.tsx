@@ -618,20 +618,30 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                     {overallEvaluationText.fullText}
                   </div>
                 ) : (
-                    <div className="relative">
-                      <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-4">
-                        {/* 第1章: 冒頭プレビュー */}
-                        <div>{overallEvaluationText.preview}</div>
+                  <div className="space-y-5">
+                    {/* 第1章: 冒頭プレビュー（独立表示・完全可読・被りゼロ） */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
+                      <div className="flex items-center gap-1.5 text-xs font-black text-indigo-300">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span>【第1章】統計的ポジションと全体像（無料プレビュー）</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line">
+                        {overallEvaluationText.preview.replace(/^【.*?】\n?/, '')}
+                      </p>
+                    </div>
 
-                        {/* 第2章〜第7章: SP時は長大化を防ぐため約半分（max-h-[260px]）に制限して自然なモザイクを適用 */}
-                        <div className="filter blur-[4px] select-none pointer-events-none opacity-60 max-h-[260px] sm:max-h-[480px] overflow-hidden">
-                          {overallEvaluationText.remaining}
-                        </div>
+                    {/* 第2章〜第7章: モザイク領域 ＆ オーバーレイCTAカード */}
+                    <div className="relative rounded-2xl overflow-hidden min-h-[460px] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 border border-slate-800">
+                      {/* 背景のモザイク文章 */}
+                      <div className="absolute inset-0 p-4 text-xs text-slate-400 filter blur-[4px] select-none pointer-events-none opacity-40 overflow-hidden leading-relaxed whitespace-pre-line">
+                        {overallEvaluationText.remaining}
                       </div>
 
-                      {/* クリックで購入LPへ遷移する魅力的なオーバーレイCTAカード */}
-                      <div className="absolute inset-x-0 bottom-0 top-10 sm:top-16 flex items-center justify-center p-2 sm:p-6 bg-gradient-to-t from-slate-950/95 via-slate-950/80 to-transparent">
-                        <div className="w-full max-w-md p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-slate-950/90 border border-purple-500/40 backdrop-blur-xl shadow-2xl shadow-purple-950/60 text-center space-y-3 sm:space-y-3.5 relative overflow-hidden">
+                      {/* オーバーレイグラデーション */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/90 to-slate-950 pointer-events-none" />
+
+                      {/* CTAカード（絶対に被らず、中央に綺麗に配置） */}
+                      <div className="w-full max-w-md p-5 sm:p-6 rounded-3xl bg-slate-950/90 border border-purple-500/40 backdrop-blur-xl shadow-2xl shadow-purple-950/60 text-center space-y-3.5 relative z-10 overflow-hidden">
                         {/* Decorative Glow */}
                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-44 h-44 bg-purple-600/25 rounded-full blur-3xl pointer-events-none" />
 
