@@ -73,8 +73,8 @@ export default function ScoreRing({
   const glowClass = isRose ? 'glow-text-rose' : 'glow-text-violet';
 
   return (
-    <div ref={containerRef} className="relative flex flex-col items-center justify-center py-6">
-      <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+    <div ref={containerRef} className="relative flex flex-col items-center justify-center py-1 sm:py-2">
+      <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 flex items-center justify-center">
         {/* SVG Conic Progress Circle */}
         <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 240 240">
           <defs>

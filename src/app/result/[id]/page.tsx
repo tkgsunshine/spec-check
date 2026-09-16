@@ -396,11 +396,11 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
       )}
 
       {/* ① メインスコアリング表示 */}
-      <section className="glass-surface glass-surface-glow rounded-3xl p-6 md:p-10 mb-8 border border-slate-800">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+      <section className="glass-surface glass-surface-glow rounded-3xl p-5 sm:p-6 md:p-8 mb-6 md:mb-8 border border-slate-800">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 md:gap-8">
           <div className="flex-1">
             {/* メイン見出し */}
-            <div className="mb-4">
+            <div className="mb-2 sm:mb-3">
               <h2 className="text-white text-base sm:text-lg md:text-xl font-black tracking-wide leading-snug">
                 <span className="inline-block mr-1.5">{data.inputSummary.nickname || 'あなた'} / {data.inputSummary.age}歳 / {genderTextJa} / {data.inputSummary.prefectureName} の</span>
                 <span className="inline-block">{isLoveMode ? '恋愛スペック診断結果' : '人間スペック診断結果'}</span>
@@ -408,8 +408,8 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             </div>
 
             {/* 恋愛市場価値： 上位 XX% (中央寄せ - 常時上位%表示 & 希少度比率) */}
-            <div className="text-center my-6 py-2">
-              <div className="text-slate-200 text-base sm:text-xl font-extrabold mb-1">
+            <div className="text-center my-2 sm:my-3">
+              <div className="text-slate-200 text-sm sm:text-base md:text-lg font-extrabold mb-0.5">
                 {isLoveMode ? '恋愛市場価値' : '総合評価'} :
               </div>
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight">
@@ -419,8 +419,8 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
               </h1>
 
               {/* 希少度比率バッジ (10万人に1人 / 100万人に1人等) */}
-              <div className="mt-3 flex items-center justify-center gap-2 flex-wrap">
-                <span className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide border shadow-md transition-all ${
+              <div className="mt-2.5 flex items-center justify-center gap-2 flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black tracking-wide border shadow-md transition-all ${
                   topOverallPercent <= 0.001
                     ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-amber-500/20 animate-pulse'
                     : topOverallPercent <= 0.01
@@ -438,7 +438,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
               {/* 全国比較併記バッジ (常時上位%表示) */}
               {nationwideTopPercent !== null && (
-                <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-bold text-slate-300 shadow-inner">
+                <div className="mt-2 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-bold text-slate-300 shadow-inner">
                   <span className="text-slate-400">🇯🇵 全国の同世代ベース:</span>
                   <span className="text-emerald-400 font-black">
                     上位 {nationwideTopPercent}%
@@ -452,7 +452,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             </div>
           </div>
 
-          <div className="w-full md:w-auto flex justify-center">
+          <div className="w-full md:w-auto flex justify-center py-1">
             <ScoreRing
               score={overallScore}
               label={isLoveMode ? '恋愛スペック' : '総合スペック'}
