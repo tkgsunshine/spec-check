@@ -131,9 +131,17 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
         isLocked ? 'cursor-pointer hover:border-purple-500/80 hover:shadow-[0_0_24px_rgba(168,85,247,0.35)]' : ''
       }`}
     >
-      <div className="flex flex-col items-center mb-2">
-        <span className="text-xs font-black text-slate-100 group-hover:text-white transition-colors">{labelJa}</span>
-        <span className="text-[9px] font-extrabold tracking-widest text-slate-500 uppercase">{labelEn}</span>
+      <div className="flex flex-col items-center mb-1.5 w-full px-0.5">
+        <span
+          className={`font-black text-slate-100 group-hover:text-white transition-colors whitespace-nowrap tracking-tight ${
+            labelJa.length >= 7 ? 'text-[10px] sm:text-[11px]' : 'text-xs'
+          }`}
+        >
+          {labelJa}
+        </span>
+        <span className="text-[8px] sm:text-[9px] font-extrabold tracking-widest text-slate-500 uppercase mt-0.5 whitespace-nowrap">
+          {labelEn}
+        </span>
       </div>
 
       {/* Mini Donut Circle with Dynamic Glow: Shows actual score */}
