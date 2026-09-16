@@ -394,7 +394,7 @@ ${rankShareStr} ${scoreLabel} ${score.toFixed(1)} / 100 pt
 
       {isOpen && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="glass-surface glass-surface-glow rounded-3xl p-5 sm:p-7 max-w-sm sm:max-w-md w-full relative text-center my-6 max-h-[92vh] flex flex-col justify-between overflow-y-auto">
+          <div className="bg-slate-950/95 border border-slate-800 rounded-3xl p-5 sm:p-7 max-w-sm sm:max-w-md w-full relative text-center my-6 max-h-[92vh] flex flex-col justify-between overflow-y-auto shadow-2xl">
             <button
               onClick={() => setIsOpen(false)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white z-10 cursor-pointer"
