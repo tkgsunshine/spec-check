@@ -189,7 +189,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
         linkText: 'おすすめ：バチェラーデート公式を見る',
         baseFit: isHighSpec ? 95 : isUnder26 ? 81 : 86,
         description: isHighSpec
-          ? '知性・ステータスが直接評価される完全審査制。AIが週1回のデートを自動セッティングするため、忙しい高スペック層に最適です。'
+          ? '知性・ステータスが直接評価される完全審査制。週1回のデートが自動セッティングされるため、忙しい高スペック層に最適です。'
           : 'いいねやメッセージのやり取り不要で即カフェデート。スペックと第一印象の魅力を初回から発揮できる効率特化市場です。',
         color: 'border-amber-500/40 text-amber-300 bg-amber-500/20',
       },
@@ -253,7 +253,6 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
     // 適合度スコア順に降順ソートし、上位4件を抽出
     const sorted = [...allServices].sort((a, b) => b.baseFit - a.baseFit).slice(0, 4);
 
-    const ranks = ['Sランク', 'Aランク', 'A-ランク', 'B+ランク'];
     const medals = ['🥇 1位', '🥈 2位', '🥉 3位', '🎖️ 4位'];
     const borderColors = [
       'border-amber-500/50 bg-amber-500/5',
@@ -265,7 +264,6 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
     return sorted.map((item, index) => ({
       ...item,
       medal: medals[index],
-      rank: ranks[index],
       fitScore: Math.min(97, Math.max(75, item.baseFit - index * 2 + Math.round((loveOverallScore % 5) - 2))),
       cardClass: borderColors[index],
     }));
@@ -680,7 +678,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                           {service.medal}：{service.name}
                         </span>
                         <span className="text-xs font-black text-amber-300 font-mono">
-                          適合度 {service.fitScore}% ({service.rank})
+                          適合度 {service.fitScore}%
                         </span>
                       </div>
                       <div className="text-[10px] font-bold text-slate-400">
