@@ -282,26 +282,6 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     )}
                   </div>
                 </div>
-
-                <div className="space-y-1.5 pt-1">
-                  <div className="flex justify-between text-xs font-bold text-slate-300">
-                    <span>受容度ゲージ</span>
-                    <span>上位 {isUnlocked ? `${scoreToTopPercent(loveOverallScore)}%` : '??% 🔒'}</span>
-                  </div>
-                  <div className="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
-                    {isUnlocked ? (
-                      <div
-                        className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full transition-all duration-1000"
-                        style={{ width: `${matchRate}%` }}
-                      />
-                    ) : (
-                      <div
-                        className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full filter blur-[2px] opacity-70 animate-pulse"
-                        style={{ width: '60%' }}
-                      />
-                    )}
-                  </div>
-                </div>
               </div>
 
               {/* スペック無双 主戦場ランキング（市場別適合度 S/A/B & アフィリエイト直結） */}
