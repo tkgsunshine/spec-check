@@ -470,104 +470,157 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
                 {/* 1. 年齢層 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">① 支持率の高い年齢層</span>
-                  {isUnlocked ? (
-                    <p className="text-sm font-black text-white">{targetPartnerAgeRange}</p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">{targetPartnerAgeRange}</p>
-                      <span className="text-xs text-amber-400">🔒</span>
-                    </div>
-                  )}
-                  <span className="text-[10px] text-slate-400 block">同世代・近似層からの需要が最多</span>
+                <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-2 hover:border-pink-500/30 transition-colors">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-pink-400">
+                    <span className="w-4 h-4 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-[10px] font-black shrink-0">
+                      1
+                    </span>
+                    <span>支持率の高い年齢層</span>
+                  </div>
+                  <div className="py-0.5">
+                    {isUnlocked ? (
+                      <p className="text-base sm:text-lg font-black text-white tracking-tight font-mono">{targetPartnerAgeRange}</p>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-base sm:text-lg font-black text-slate-300 filter blur-[3px] select-none font-mono">{targetPartnerAgeRange}</p>
+                        <span className="text-xs text-amber-400">🔒</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">同世代・近似層からの需要が最多</p>
                 </div>
 
                 {/* 2. 年収層 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">② 相性の良い相手の年収層</span>
-                  {isUnlocked ? (
-                    <p className="text-sm font-black text-white">
-                      {gender === 'FEMALE' ? '年収 700万〜1,500万円' : '年収 400万〜700万円'}
-                    </p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">年収 700万〜1,500万円</p>
-                      <span className="text-xs text-amber-400">🔒</span>
-                    </div>
-                  )}
-                  <span className="text-[10px] text-slate-400 block">価値観・生活水準の均衡ゾーン</span>
+                <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-2 hover:border-pink-500/30 transition-colors">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-pink-400">
+                    <span className="w-4 h-4 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-[10px] font-black shrink-0">
+                      2
+                    </span>
+                    <span>相性の良い相手の年収層</span>
+                  </div>
+                  <div className="py-0.5">
+                    {isUnlocked ? (
+                      <p className="text-base sm:text-lg font-black text-emerald-400 tracking-tight font-mono">
+                        {gender === 'FEMALE' ? '年収 700万〜1,500万円' : '年収 400万〜700万円'}
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-base sm:text-lg font-black text-emerald-400/80 filter blur-[3px] select-none font-mono">年収 700万〜1,500万円</p>
+                        <span className="text-xs text-amber-400">🔒</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">価値観・生活水準の均衡ゾーン</p>
                 </div>
 
                 {/* 3. MBTI */}
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">③ 惹かれやすいMBTI特性</span>
-                  {isUnlocked ? (
-                    <p className="text-sm font-black text-white">INFP / ENFP / INFJ / ISFJ</p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">INFP / ENFP / INFJ</p>
-                      <span className="text-xs text-amber-400">🔒</span>
-                    </div>
-                  )}
-                  <span className="text-[10px] text-slate-400 block">心理的補完関係・共感度最大化</span>
+                <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-2 hover:border-pink-500/30 transition-colors">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-pink-400">
+                    <span className="w-4 h-4 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-[10px] font-black shrink-0">
+                      3
+                    </span>
+                    <span>惹かれやすいMBTI特性</span>
+                  </div>
+                  <div className="py-0.5">
+                    {isUnlocked ? (
+                      <p className="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight font-mono">
+                        INFP / ENFP / INFJ / ISFJ
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm sm:text-base font-black text-pink-300 filter blur-[3px] select-none font-mono">INFP / ENFP / INFJ</p>
+                        <span className="text-xs text-amber-400">🔒</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">心理的補完関係・共感度最大化</p>
                 </div>
 
                 {/* 4. 職業・業界 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">④ 相性の良い職業・業界</span>
-                  {isUnlocked ? (
-                    <p className="text-sm font-black text-white">
-                      {gender === 'FEMALE' ? '総合商社・外資系・医師/士業・IT大手' : '大手総合職・専門職・教育/士業・クリエイター'}
-                    </p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">大手総合職・士業・IT専門職</p>
-                      <span className="text-xs text-amber-400">🔒</span>
-                    </div>
-                  )}
-                  <span className="text-[10px] text-slate-400 block">知的好奇心と生活リズムが合致</span>
+                <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-2 hover:border-pink-500/30 transition-colors">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-pink-400">
+                    <span className="w-4 h-4 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-[10px] font-black shrink-0">
+                      4
+                    </span>
+                    <span>相性の良い職業・業界</span>
+                  </div>
+                  <div className="py-0.5">
+                    {isUnlocked ? (
+                      <p className="text-xs sm:text-sm font-black text-white leading-snug">
+                        {gender === 'FEMALE' ? '総合商社・外資系・医師/士業・IT大手' : '大手総合職・専門職・教育/士業・クリエイター'}
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">大手総合職・士業・IT専門職</p>
+                        <span className="text-xs text-amber-400">🔒</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">知的好奇心と生活リズムが合致</p>
                 </div>
 
                 {/* 5. 学歴・知性水準 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">⑤ 相手の学歴・知性水準</span>
-                  {isUnlocked ? (
-                    <p className="text-sm font-black text-white">大学卒以上（難関大・国公立・MARCH等）</p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">大卒以上（知的対話を好む層）</p>
-                      <span className="text-xs text-amber-400">🔒</span>
-                    </div>
-                  )}
-                  <span className="text-[10px] text-slate-400 block">会話のテンポ・論理感が噛み合う層</span>
+                <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-2 hover:border-pink-500/30 transition-colors">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-pink-400">
+                    <span className="w-4 h-4 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-[10px] font-black shrink-0">
+                      5
+                    </span>
+                    <span>相手の学歴・知性水準</span>
+                  </div>
+                  <div className="py-0.5">
+                    {isUnlocked ? (
+                      <p className="text-xs sm:text-sm font-black text-white leading-snug">
+                        大学卒以上（難関大・国公立・MARCH等）
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">大卒以上（知的対話を好む層）</p>
+                        <span className="text-xs text-amber-400">🔒</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">会話のテンポ・論理感が噛み合う層</p>
                 </div>
 
                 {/* 6. 恋愛観・タイプ */}
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">⑥ 惹かれやすい恋愛観タイプ</span>
-                  {isUnlocked ? (
-                    <p className="text-sm font-black text-white">相互自立型 ＆ 心を開くと甘え上手</p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">相互自立型 ＆ 誠実タイプ</p>
-                      <span className="text-xs text-amber-400">🔒</span>
-                    </div>
-                  )}
-                  <span className="text-[10px] text-slate-400 block">過度な束縛を嫌い、尊敬で結ばれる</span>
+                <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-2 hover:border-pink-500/30 transition-colors">
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-pink-400">
+                    <span className="w-4 h-4 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-[10px] font-black shrink-0">
+                      6
+                    </span>
+                    <span>惹かれやすい恋愛観タイプ</span>
+                  </div>
+                  <div className="py-0.5">
+                    {isUnlocked ? (
+                      <p className="text-xs sm:text-sm font-black text-white leading-snug">
+                        相互自立型 ＆ 心を開くと甘え上手
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">相互自立型 ＆ 誠実タイプ</p>
+                        <span className="text-xs text-amber-400">🔒</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">過度な束縛を嫌い、尊敬で結ばれる</p>
                 </div>
 
                 {/* 7. 一番刺さる武器 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/60 border border-pink-500/30 sm:col-span-2 md:col-span-3 space-y-1">
-                  <span className="text-xs sm:text-sm font-extrabold text-pink-300 block">⑦ あなたの一番刺さる武器・魅力</span>
+                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-pink-950/40 via-purple-950/30 to-slate-950/80 border border-pink-500/40 sm:col-span-2 md:col-span-3 space-y-2">
+                  <div className="flex items-center gap-1.5 text-[11px] font-black text-pink-300">
+                    <span className="w-4 h-4 rounded-full bg-pink-500/30 text-pink-200 flex items-center justify-center text-[10px] font-black shrink-0">
+                      7
+                    </span>
+                    <span>あなたの一番刺さる武器・魅力（決定打）</span>
+                  </div>
                   {isUnlocked ? (
-                    <p className="text-xs sm:text-sm text-white font-bold leading-relaxed">
+                    <p className="text-xs sm:text-sm text-white font-bold leading-relaxed bg-slate-950/60 p-3 rounded-xl border border-pink-500/20">
                       「第一印象の清潔感・知性」と「2人きりになった時の安心感・包容力」のギャップ。相手が自然体でいられる居心地の良さが最大の決定打となります。
                     </p>
                   ) : (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
                       <p className="text-xs sm:text-sm text-slate-300 filter blur-[3px] select-none">第一印象の清潔感と知性のギャップによる安心感が最大の決定打となります。</p>
                       <span className="text-xs text-amber-400 font-bold shrink-0">🔒 開示</span>
                     </div>
