@@ -320,7 +320,7 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               あなたの診断データ・強みを黄金構成で文章化。「マッチングアプリ用（自然体＆好感度）」と「婚活相談所用（信頼感＆誠実さ）」をワンタップコピー可能。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>AI自己PR文</span>
+              <span>自己PRプロフィール文</span>
               <span className="text-amber-400 font-mono font-black">2パターン ワンタップコピー 🔓</span>
             </div>
           </div>

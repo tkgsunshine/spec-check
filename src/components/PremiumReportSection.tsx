@@ -111,18 +111,44 @@ export default function PremiumReportSection({
       ? `${Math.max(20, age - 5)}歳 〜 ${age + 1}歳`
       : `${age - 1}歳 〜 ${age + 6}歳`;
 
-  // 自己紹介文の生成
-  const profileAppText = `はじめまして！${nickname}と申します。${prefectureName}在住の${age}歳です。
-周りからは「落ち着いていて聞き上手」「頼りがいがある」と言われることが多いです（MBTI: ${mbti}）。
-休日は美味しいお店の開拓やカフェ巡り、旅行やジムでリフレッシュしています。
-お互いに自立しつつ、なんでも気兼ねなく話せて高め合えるような素敵な関係を築けたら嬉しいです。
-まずは気軽にメッセージでお話ししましょう！よろしくお願いします✨`;
+  // 自己紹介文の生成（2倍の分量・構成化）
+  const profileAppText = `はじめまして！プロフィールをご覧いただきありがとうございます✨
+${prefectureName}で働いている${age}歳の${nickname}です。
 
-  const profileMarriageText = `プロフィールをご覧いただきありがとうございます。${nickname}と申します。
-${prefectureName}で勤務しており、今年で${age}歳になります。将来を見据えて真剣にお付き合いできる方と出会いたく登録しました。
-仕事には誠実に取り組みつつ、プライベートでは穏やかで笑顔の絶えない温かい家庭を築くことが理想です。
-休日は映画鑑賞や料理、ドライブなどを楽しんでいます。
-お互いの価値観やペースを尊重し合いながら、支え合えるパートナーに出会えたら幸いです。どうぞよろしくお願いいたします。`;
+【仕事について】
+現在は専門職として日々の仕事にやりがいを持って誠実に取り組んでいます。オンとオフのメリハリを大切にしており、休日はしっかりとプライベートの時間でリフレッシュしています。
+
+【性格・周りからの印象】
+周りの友人や同僚からは「落ち着いていて聞き上手」「穏やかで一緒にいて安心する」と言われることが多いです（MBTI: ${mbti}）。人の話をじっくり聞くのが好きなので、どんな話題でも気軽に話してもらえると嬉しいです。
+
+【休日の過ごし方・好きなこと】
+・美味しいご飯屋さんや隠れ家カフェの開拓（お肉やお寿司、珈琲が好きです）
+・旅行やドライブ、温泉巡りで非日常を楽しむこと
+・映画鑑賞、読書、たまにジムで軽く身体を動かすこと
+
+【理想の関係】
+お互いの仕事や一人の時間も尊重しつつ、美味しいものを一緒に食べたり、他愛もないことで笑い合える自然体な関係が理想です。
+
+まずはメッセージで気軽に色々お話しできたら嬉しいです！どうぞよろしくお願いします✨`;
+
+  const profileMarriageText = `はじめまして。プロフィールをご覧いただき誠にありがとうございます。
+${nickname}と申します。${prefectureName}在住の${age}歳です。
+
+将来を見据えて、お互いを深く信頼し支え合える誠実なパートナーと出会いたいと思い登録いたしました。
+
+【仕事と生活基盤】
+仕事には誇りと責任感を持って誠実に取り組んでおり、日々の生活リズムや健康管理も大切にしています。お互いに自立しつつ、何かあったときには何でも相談し合って助け合える関係を築いていきたいと考えております。
+
+【性格と価値観】
+性格は穏やかで思いやりを大切にするタイプです。相手の意見やペースを尊重し、感情的にならず落ち着いて対話することを常に心がけています。
+
+【休日の過ごし方】
+休日は料理や家事をこなしたり、映画鑑賞、散歩、ドライブなどを楽しんでいます。季節のイベントや美味しいものを一緒に共有できると嬉しいです。
+
+【結婚観・理想の家庭像】
+些細なことでも「ありがとう」と「ごめんね」を素直に伝え合える、温かく笑顔の絶えない家庭が理想です。お互いの価値観や個性を尊重しながら、一緒に人生を歩んでいけたら幸いです。
+
+最後までお読みいただきありがとうございました。素敵なご縁があれば嬉しく思います。どうぞよろしくお願いいたします。`;
 
   const copyAppBio = () => {
     navigator.clipboard.writeText(profileAppText);
@@ -928,7 +954,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
           return actionContent;
         })()}
 
-        {/* 6. プレミアム専用⑤: AIパーソナライズ「即コピペで使える最強自己PR文章」（新設） */}
+        {/* 6. プレミアム専用⑤: パーソナライズ「即コピペで使える最強自己PR文章」（新設） */}
         {(() => {
           const prContent = (
             <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-indigo-500/40 space-y-4 transition-all ${
@@ -938,7 +964,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-indigo-400" />
                   <h4 className="text-sm sm:text-base font-extrabold text-white flex flex-wrap items-center gap-2">
-                    <span>AIパーソナライズ「即コピペで使える最強プロフィール文章」</span>
+                    <span>パーソナライズ「即コピペで使える最強プロフィール文章」</span>
                     {!isUnlocked && (
                       <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                         🔒 プレミアム
@@ -946,7 +972,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     )}
                   </h4>
                 </div>
-                <span className="text-[10px] font-bold text-indigo-300">マッチングアプリ・婚活特化AI生成</span>
+                <span className="text-[10px] font-bold text-indigo-300">マッチングアプリ・婚活特化フォーマット</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -968,11 +994,11 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     )}
                   </div>
                   {isUnlocked ? (
-                    <div className="p-3 rounded-lg bg-slate-900/90 text-xs text-slate-200 leading-relaxed whitespace-pre-line border border-slate-800 font-mono">
+                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-200 leading-relaxed whitespace-pre-line border border-slate-800 font-mono select-all">
                       {profileAppText}
                     </div>
                   ) : (
-                    <div className="p-3 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[3px] select-none">
+                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[3px] select-none">
                       {profileAppText}
                     </div>
                   )}
@@ -997,11 +1023,11 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     )}
                   </div>
                   {isUnlocked ? (
-                    <div className="p-3 rounded-lg bg-slate-900/90 text-xs text-slate-200 leading-relaxed whitespace-pre-line border border-slate-800 font-mono">
+                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-200 leading-relaxed whitespace-pre-line border border-slate-800 font-mono select-all">
                       {profileMarriageText}
                     </div>
                   ) : (
-                    <div className="p-3 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[3px] select-none">
+                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[3px] select-none">
                       {profileMarriageText}
                     </div>
                   )}
@@ -1013,7 +1039,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
 
           if (!isUnlocked) {
             return (
-              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックしてAIプロフィール文章を開示">
+              <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックしてプロフィール文章を開示">
                 {prContent}
               </Link>
             );
@@ -1052,7 +1078,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
               </div>
               <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900/80 border border-slate-800">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>6カテゴリ改善ロードマップ ＆ AI自己PR</span>
+                <span>6カテゴリ改善ロードマップ ＆ 自己PR文章</span>
               </div>
             </div>
 
