@@ -11,7 +11,7 @@ import SnsShareCard from '@/components/SnsShareCard';
 import InputDataModal from '@/components/InputDataModal';
 import PremiumReportSection from '@/components/PremiumReportSection';
 import AffiliateRecommendations from '@/components/AffiliateRecommendations';
-import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText, ChevronRight } from 'lucide-react';
+import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText, ChevronRight, CheckCircle2, Unlock } from 'lucide-react';
 import { runDiagnosisV3 } from '@/lib/score-engine';
 import { scoreToTopPercent, formatRarityRatio } from '@/lib/score-engine/math-utils';
 import { getMbtiEconomicEvaluationText, getMbtiLoveEvaluationText } from '@/lib/score-engine/mbti';
@@ -629,18 +629,68 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                       </div>
                     </div>
 
-                    {/* クリックで購入LPへ遷移するオーバーレイ */}
-                    <Link
-                      href={`/purchase/${id}`}
-                      className="absolute inset-x-0 bottom-0 top-20 flex items-center justify-center p-4 bg-gradient-to-t from-slate-950/80 via-slate-900/40 to-transparent hover:bg-slate-950/70 transition-all cursor-pointer group"
-                      title="クリックして総評全文を開示"
-                    >
-                      <div className="px-4 sm:px-6 py-3 rounded-2xl bg-slate-950/95 border border-purple-500/60 shadow-2xl text-xs sm:text-sm font-bold text-purple-200 group-hover:text-white flex items-center gap-2 group-hover:scale-105 transition-all text-center max-w-md">
-                        <span>🔒</span>
-                        <span>この先：強み相乗効果・弱点克服・MBTI深層解析など全7章（¥500 で全文開示）</span>
-                        <ChevronRight className="w-4 h-4 text-purple-400 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                    {/* クリックで購入LPへ遷移する魅力的なオーバーレイCTAカード */}
+                    <div className="absolute inset-x-0 bottom-0 top-16 flex items-center justify-center p-3 sm:p-6 bg-gradient-to-t from-slate-950/95 via-slate-950/75 to-transparent">
+                      <div className="w-full max-w-md p-5 sm:p-6 rounded-3xl bg-slate-950/90 border border-purple-500/40 backdrop-blur-xl shadow-2xl shadow-purple-950/60 text-center space-y-3.5 relative overflow-hidden">
+                        {/* Decorative Glow */}
+                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-44 h-44 bg-purple-600/25 rounded-full blur-3xl pointer-events-none" />
+
+                        {/* Icon Badge */}
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-500 mx-auto flex items-center justify-center shadow-lg shadow-purple-600/40">
+                          <Sparkles className="w-6 h-6 text-amber-300 animate-pulse" />
+                        </div>
+
+                        {/* Title & Subtitle */}
+                        <div className="space-y-1 max-w-sm mx-auto">
+                          <h4 className="text-base sm:text-lg font-black text-white">
+                            {isLoveMode ? '恋愛深層総評 ＆ 全7章の完全開示' : '総合深層総評 ＆ 全7章の完全開示'}
+                          </h4>
+                          <p className="text-[11px] sm:text-xs text-slate-300 leading-snug">
+                            1回買い切り ¥500（月額課金・追加費用なし）で、あなたの強み相乗効果・弱点克服・MBTI深層解析を完全開示
+                          </p>
+                        </div>
+
+                        {/* 4 Benefits Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left text-[11px] sm:text-xs text-slate-300 py-0.5">
+                          <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>強み相乗効果・詳細分析</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>弱点・改善アドバイス</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>MBTI深層特性 ＆ 適性診断</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span>今後の具体的アクション</span>
+                          </div>
+                        </div>
+
+                        {/* CTA Button */}
+                        <div className="space-y-2 pt-0.5">
+                          <Link
+                            href={`/purchase/${id}`}
+                            className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl shadow-purple-600/40 transition-all cursor-pointer group"
+                          >
+                            <Unlock className="w-4 h-4" />
+                            <span>¥500 で総評全文・詳細データをアンロック</span>
+                            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                          </Link>
+
+                          <div className="flex items-center justify-center gap-3 text-[10px] text-slate-400">
+                            <span className="flex items-center gap-1">
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Apple Pay / Google Pay / カード対応
+                            </span>
+                            <span>•</span>
+                            <span>買い切り・即時反映</span>
+                          </div>
+                        </div>
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 )}
               </div>

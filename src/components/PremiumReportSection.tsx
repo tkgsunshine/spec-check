@@ -485,7 +485,7 @@ export default function PremiumReportSection({
                 className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-2xl shadow-purple-600/40 transition-all cursor-pointer"
               >
                 <Unlock className="w-5 h-5" />
-                <span>¥500 で詳細データをアンロック（特設LPへ）</span>
+                <span>¥500 で詳細データを完全アンロック</span>
                 <ChevronRight className="w-5 h-5" />
               </Link>
 
