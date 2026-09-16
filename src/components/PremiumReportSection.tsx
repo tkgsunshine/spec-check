@@ -756,7 +756,11 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerAgeSubtext}</p>
+                  {isUnlocked ? (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerAgeSubtext}</p>
+                  ) : (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug filter blur-[8px] select-none">同世代〜2歳下からの共感需要が最多</p>
+                  )}
                 </div>
 
                 {/* 2. 年収層 */}
@@ -779,7 +783,11 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerIncomeSubtext}</p>
+                  {isUnlocked ? (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerIncomeSubtext}</p>
+                  ) : (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug filter blur-[8px] select-none">自立したキャリア・専門性を持ち対等に語れる層</p>
+                  )}
                 </div>
 
                 {/* 3. MBTI */}
@@ -802,7 +810,11 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.matchedMbti.sub}</p>
+                  {isUnlocked ? (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.matchedMbti.sub}</p>
+                  ) : (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug filter blur-[8px] select-none">深い価値観の共鳴と成長を促す関係</p>
+                  )}
                 </div>
 
                 {/* 4. 職業・業界 */}
@@ -825,7 +837,11 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerOccupationSub}</p>
+                  {isUnlocked ? (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerOccupationSub}</p>
+                  ) : (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug filter blur-[8px] select-none">自立心と知的好奇心を備えた自走型パートナー</p>
+                  )}
                 </div>
 
                 {/* 5. 学歴・知性水準 */}
@@ -848,7 +864,11 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerEducationSub}</p>
+                  {isUnlocked ? (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerEducationSub}</p>
+                  ) : (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug filter blur-[8px] select-none">知的な議論や深い洞察を自然に楽しめる層</p>
+                  )}
                 </div>
 
                 {/* 6. 恋愛観・タイプ */}
@@ -871,7 +891,11 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.loveStyleSub}</p>
+                  {isUnlocked ? (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.loveStyleSub}</p>
+                  ) : (
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug filter blur-[8px] select-none">嘘や駆け引きのない安心感と穏やかな時間を共有</p>
+                  )}
                 </div>
 
                 {/* 7. 一番刺さる武器 */}
