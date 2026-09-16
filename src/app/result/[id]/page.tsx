@@ -11,7 +11,7 @@ import SnsShareCard from '@/components/SnsShareCard';
 import InputDataModal from '@/components/InputDataModal';
 import PremiumReportSection from '@/components/PremiumReportSection';
 import AffiliateRecommendations from '@/components/AffiliateRecommendations';
-import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText } from 'lucide-react';
+import { Sparkles, Heart, ShieldCheck, ArrowLeft, AlertCircle, RotateCcw, FileText, ChevronRight } from 'lucide-react';
 import { runDiagnosisV3 } from '@/lib/score-engine';
 import { scoreToTopPercent, formatRarityRatio } from '@/lib/score-engine/math-utils';
 import { getMbtiEconomicEvaluationText, getMbtiLoveEvaluationText } from '@/lib/score-engine/mbti';
@@ -614,10 +614,14 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
                   {!isUnlocked && (
                     <div className="absolute inset-x-0 bottom-0 pt-16 pb-2 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent flex flex-col items-center justify-end text-center">
-                      <div className="px-3 py-1.5 rounded-full bg-slate-950/90 border border-purple-500/40 shadow-lg text-[11px] font-bold text-purple-300 flex items-center gap-1.5 animate-pulse">
+                      <Link
+                        href={`/purchase/${id}`}
+                        className="px-3.5 py-1.5 rounded-full bg-slate-950/95 hover:bg-slate-900 border border-purple-500/50 shadow-lg text-[11px] font-bold text-purple-300 hover:text-white flex items-center gap-1.5 animate-pulse transition-all cursor-pointer"
+                      >
                         <span>🔒</span>
                         <span>この先：強み相乗効果・弱点克服・MBTI深層解析など全7章（¥500 で全文開示）</span>
-                      </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-purple-400" />
+                      </Link>
                     </div>
                   )}
                 </div>

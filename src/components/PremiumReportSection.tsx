@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { OverallDiagnosisResultV3 } from '@/types/spec-check';
 import { scoreToTopPercent } from '@/lib/score-engine/math-utils';
 import {
@@ -438,31 +439,21 @@ export default function PremiumReportSection({
             </div>
 
             <div className="max-w-md mx-auto space-y-3">
-              <button
-                onClick={handleUnlock}
-                disabled={loading}
-                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-2xl shadow-purple-600/40 transition-all cursor-pointer disabled:opacity-50"
+              <Link
+                href={`/purchase/${diagnosisId}`}
+                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-2xl shadow-purple-600/40 transition-all cursor-pointer"
               >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>決済手続きへ接続中...</span>
-                  </>
-                ) : (
-                  <>
-                    <Unlock className="w-5 h-5" />
-                    <span>¥500 で詳細データをすべて見る</span>
-                    <ChevronRight className="w-5 h-5" />
-                  </>
-                )}
-              </button>
+                <Unlock className="w-5 h-5" />
+                <span>¥500 で詳細データをアンロック（特設LPへ）</span>
+                <ChevronRight className="w-5 h-5" />
+              </Link>
 
               <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400">
                 <span className="flex items-center gap-1">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" /> Apple Pay / Google Pay / カード対応
                 </span>
                 <span>•</span>
-                <span>即時反映</span>
+                <span>買い切り・即時反映</span>
               </div>
             </div>
           </div>
