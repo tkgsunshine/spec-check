@@ -271,6 +271,242 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
     }));
   };
 
+  // 1. あなたに最も惹かれやすい異性の特徴（全7項目）の完全動的パーソナライズ生成
+  const getPersonalizedCompatibilityData = () => {
+    const cleanMbti = (mbti || '').toUpperCase().trim();
+    const ecoScore = result.categoryScores?.economic || 60;
+    const carScore = result.categoryScores?.career || 60;
+    const acadScore = result.categoryScores?.academic || 60;
+    const bodyScore = result.categoryScores?.body || 60;
+    const socialScore = result.categoryScores?.social || 60;
+    const abilityScore = result.categoryScores?.ability || 60;
+
+    // ① 年齢層
+    const partnerAge =
+      gender === 'MALE'
+        ? `${Math.max(20, age - 5)}歳 〜 ${age + 1}歳`
+        : `${Math.max(20, age - 1)}歳 〜 ${age + 6}歳`;
+    const partnerAgeSubtext =
+      gender === 'MALE'
+        ? (age <= 27 ? '同世代〜2歳下からの共感需要が最多' : '3〜5歳下を含む安定・安心志向層から支持')
+        : (age <= 27 ? '同世代〜3歳上の頼もしさ重視層と高適合' : '同世代〜5歳上の成熟したパートナー層と高適合');
+
+    // ② 年収層
+    let partnerIncome = '年収 500万〜900万円';
+    let partnerIncomeSubtext = '価値観・生活水準の均衡ゾーン';
+    if (gender === 'FEMALE') {
+      if (ecoScore >= 70 || carScore >= 70) {
+        partnerIncome = '年収 800万〜1,800万円';
+        partnerIncomeSubtext = '自立した高水準キャリア層と対等に共鳴';
+      } else if (ecoScore >= 55) {
+        partnerIncome = '年収 600万〜1,200万円';
+        partnerIncomeSubtext = '世帯収入の安定と自己投資を両立できる層';
+      } else {
+        partnerIncome = '年収 500万〜900万円';
+        partnerIncomeSubtext = '堅実な家計形成とワークライフバランス重視層';
+      }
+    } else {
+      if (ecoScore >= 70) {
+        partnerIncome = '年収 400万〜800万円';
+        partnerIncomeSubtext = '自立したキャリア・専門性を持ち対等に語れる層';
+      } else if (ecoScore >= 55) {
+        partnerIncome = '年収 350万〜600万円';
+        partnerIncomeSubtext = '共働き志向で互いを支え合える堅実層';
+      } else {
+        partnerIncome = '年収 300万〜500万円';
+        partnerIncomeSubtext = '身の丈に合った温かい暮らしを大切にする層';
+      }
+    }
+
+    // ③ MBTI特性（心理学的補完マッピング）
+    const mbtiCompatibilityMap: Record<string, { best: string; sub: string }> = {
+      INFP: { best: 'ENFJ / INFJ / INTJ / ENTJ', sub: '深い価値観の共鳴と成長を促す関係' },
+      ENFP: { best: 'INTJ / INFJ / ENTP / INTP', sub: '知的好奇心と自由な発想を広げ合える関係' },
+      INFJ: { best: 'ENTP / ENFP / INFP / INTJ', sub: '精神的な深さと相互理解が極めて高い関係' },
+      ENFJ: { best: 'INFP / ISFP / ENFP / INFJ', sub: '感情の受容と温かい信頼で結ばれる関係' },
+      INTJ: { best: 'ENFP / ENTP / ENTJ / INFP', sub: '知性と思考の深さを尊重し合える関係' },
+      ENTJ: { best: 'INTP / INFP / INTJ / ENTP', sub: '高みを目指す目標意識と相互補完関係' },
+      INTP: { best: 'ENTJ / ENFJ / INTJ / ENTP', sub: '知的な議論と精神的自立を両立する関係' },
+      ENTP: { best: 'INFJ / INTJ / ENFP / INTP', sub: '飽くなき探求心と刺激的な対話を生む関係' },
+      ISFP: { best: 'ESFJ / ESTJ / ENFJ / ISFJ', sub: '感性の豊かさと安心感で満たされる関係' },
+      ESFP: { best: 'ISFJ / ISTJ / ESFJ / ESTP', sub: '明るいエネルギーと日常の楽しさを共有する関係' },
+      ISTP: { best: 'ESTJ / ESFJ / ESTP / ISTJ', sub: '実直な行動力と適度な距離感を保てる関係' },
+      ESTP: { best: 'ISFJ / ISTJ / ESFP / ISTP', sub: 'エネルギッシュな推進力と現実的サポート' },
+      ISFJ: { best: 'ESFP / ESTP / ISFP / ISTJ', sub: '誠実な献身と温かい家族観を育む関係' },
+      ESFJ: { best: 'ISFP / ISTP / ESFP / ISFJ', sub: '調和と気遣いが行き届いた居心地の良い関係' },
+      ISTJ: { best: 'ESTP / ESFP / ISTP / ISFJ', sub: '揺るぎない信頼感と堅実な将来設計の関係' },
+      ESTJ: { best: 'ISTP / ISFP / ESTJ / ENTJ', sub: '責任感と実行力で家庭・未来を築く関係' },
+    };
+    const matchedMbti = mbtiCompatibilityMap[cleanMbti] || {
+      best: 'ENFJ / INFJ / INTJ / ISFJ',
+      sub: '心理的補完関係・共感度最大化',
+    };
+
+    // ④ 職業・業界
+    let partnerOccupation = '大手総合職・専門職・教育/士業・クリエイター';
+    let partnerOccupationSub = '知的好奇心と生活リズムが合致';
+    if (gender === 'FEMALE') {
+      if (ecoScore >= 68 || acadScore >= 68) {
+        partnerOccupation = '総合商社・外資系・医師/士業・IT大手戦略職';
+        partnerOccupationSub = '高度な知性と自立したキャリア観が共鳴';
+      } else {
+        partnerOccupation = '大手メーカー・公務員・IT/WEB・企画職';
+        partnerOccupationSub = '安定した生活基盤と家族時間を大切にする層';
+      }
+    } else {
+      if (carScore >= 68 || acadScore >= 68) {
+        partnerOccupation = '大手総合職・専門職/士業・IT/WEB企画・教育職';
+        partnerOccupationSub = '自立心と知的好奇心を備えた自走型パートナー';
+      } else {
+        partnerOccupation = '医療/看護・公務員・事務/専門職・クリエイター';
+        partnerOccupationSub = '生活リズムが整い、思いやりに溢れる堅実層';
+      }
+    }
+
+    // ⑤ 相手の学歴・知性水準
+    let partnerEducation = '大学卒以上（難関大・国公立・MARCH等）';
+    let partnerEducationSub = '会話のテンポ・論理感が噛み合う層';
+    if (acadScore >= 72) {
+      partnerEducation = '大学卒以上（難関国公立・早慶・MARCH・上位院卒）';
+      partnerEducationSub = '知的な議論や深い洞察を自然に楽しめる層';
+    } else if (acadScore >= 55) {
+      partnerEducation = '大学卒・大学院卒以上（幅広い教養と柔軟な知性）';
+      partnerEducationSub = '日常の会話のテンポや論理感が心地よく一致する層';
+    } else {
+      partnerEducation = '大卒・専門卒以上（共感力と実践的な生活知恵）';
+      partnerEducationSub = '知識量よりも人柄と柔軟なコミュニケーションを重んじる層';
+    }
+
+    // ⑥ 恋愛観タイプ
+    let loveStyle = '相互自立型 ＆ 心を開くと甘え上手';
+    let loveStyleSub = '過度な束縛を嫌い、尊敬で結ばれる';
+    if (cleanMbti.includes('I') && cleanMbti.includes('T')) {
+      loveStyle = '相互自立型 ＆ 程よい距離感と知的好奇心を尊重し合える関係';
+      loveStyleSub = 'お互いの1人時間と目標を応援し合える成熟パートナー';
+    } else if (cleanMbti.includes('I') && cleanMbti.includes('F')) {
+      loveStyle = '心理的安全性重視 ＆ 一対一の対話を深く楽しめる誠実タイプ';
+      loveStyleSub = '嘘や駆け引きのない安心感と穏やかな時間を共有';
+    } else if (cleanMbti.includes('E') && cleanMbti.includes('T')) {
+      loveStyle = '目標共闘型 ＆ 刺激的な挑戦と成長を応援し合えるパートナー';
+      loveStyleSub = '建設的な対話で高め合えるエネルギッシュな関係';
+    } else if (cleanMbti.includes('E') && cleanMbti.includes('F')) {
+      loveStyle = '温かい感情共有型 ＆ 一緒に楽しむイベントや日常を大切にするタイプ';
+      loveStyleSub = '笑顔とポジティブな会話で日常を満たす関係';
+    }
+
+    // ⑦ あなたの一番刺さる武器・魅力（最高スコアカテゴリに基づくギャップ抽出）
+    const scores = [
+      { name: 'body', score: bodyScore, label: '洗練された第一印象・清潔感' },
+      { name: 'economic', score: ecoScore, label: '確固たる生活基盤・経済的余裕' },
+      { name: 'career', score: carScore, label: '社会的信用・責任感ある仕事ぶり' },
+      { name: 'academic', score: acadScore, label: '論理的な知性・スマートな会話力' },
+      { name: 'social', score: socialScore, label: '華やかな社交性・コミュニケーション力' },
+      { name: 'ability', score: abilityScore, label: 'グローバルな視野・柔軟な適応力' },
+    ];
+    scores.sort((a, b) => b.score - a.score);
+    const topStrength = scores[0];
+
+    let decisiveWeapon = '';
+    if (topStrength.name === 'body') {
+      decisiveWeapon = `「${topStrength.label}」と「二人きりになった際に見せる丁寧で落ち着いた気遣い」のギャップ。見た目の魅力で惹きつけ、内面の誠実さで相手を安心させる決定打となります。`;
+    } else if (topStrength.name === 'economic' || topStrength.name === 'career') {
+      decisiveWeapon = `「${topStrength.label}」と「プライベートで相手を最優先にする包容力・傾聴姿勢」のギャップ。頼もしさに加え、相手が自然体で甘えられる居心地の良さが最大の武器となります。`;
+    } else if (topStrength.name === 'academic' || topStrength.name === 'ability') {
+      decisiveWeapon = `「${topStrength.label}」と「相手の話を面白がって広げるユーモア・柔軟性」のギャップ。知的な安心感を与えつつ、一緒にいて会話が尽きない楽しさが決定打となります。`;
+    } else {
+      decisiveWeapon = `「${topStrength.label}」と「ふとした時に見せる真剣なまなざしや誠実さ」のギャップ。初対面の親しみやすさから、深い信頼関係へと一気に引き込む武器となります。`;
+    }
+
+    return {
+      partnerAge,
+      partnerAgeSubtext,
+      partnerIncome,
+      partnerIncomeSubtext,
+      matchedMbti,
+      partnerOccupation,
+      partnerOccupationSub,
+      partnerEducation,
+      partnerEducationSub,
+      loveStyle,
+      loveStyleSub,
+      decisiveWeapon,
+    };
+  };
+
+  // 2. あなたと絶対に合わない「相性最悪な地雷異性タイプ ワースト3」の完全動的パーソナライズ選定
+  const getPersonalizedLandmineTypes = (): {
+    id: string;
+    title: string;
+    category: string;
+    desc: string;
+    blurPreview: string;
+  }[] => {
+    const cleanMbti = (mbti || '').toUpperCase().trim();
+    const ecoScore = result.categoryScores?.economic || 60;
+    const carScore = result.categoryScores?.career || 60;
+    const acadScore = result.categoryScores?.academic || 60;
+    const isThinking = cleanMbti.includes('T');
+    const isFeeling = cleanMbti.includes('F');
+    const isJudging = cleanMbti.includes('J');
+    const isHighSpec = ecoScore >= 70 || carScore >= 70 || acadScore >= 70;
+
+    // 地雷タイプ候補プール
+    const pool = [
+      {
+        id: 'emotional_taker',
+        title: '自己肯定感搾取・情緒不安定タイプ',
+        category: 'テイカー気質',
+        desc: 'あなたの気遣いやスペックを当然と受け止め、感情の起伏でエネルギーを消耗させる相手。感謝の言葉が極端に少なく愚痴が多い場合は即座に距離を置くべきです。',
+        blurPreview: 'あなたの気遣いを当然と受け止め、感情の起伏でエネルギーを消耗させる相手。',
+        score: (isThinking ? 3 : 2) + (isHighSpec ? 2 : 1),
+      },
+      {
+        id: 'money_mismatch',
+        title: '見栄消費・金銭感覚乖離タイプ',
+        category: '経済観不一致',
+        desc: '実力や収入に見合わない生活水準を誇示し、中長期の資産形成や自己投資に理解がない相手。初回デートでの過剰な高級志向や他責思考が見極めサインです。',
+        blurPreview: '実力に見合わない生活水準を誇示し、資産形成や自己投資に理解がない相手。',
+        score: (isHighSpec ? 3 : 1) + (isJudging ? 2 : 1),
+      },
+      {
+        id: 'control_anti_intellect',
+        title: '過度な束縛・知性軽視タイプ',
+        category: '成長阻害',
+        desc: '仕事や自己成長への熱意に理解を示さず、連絡頻度や交友関係を過度に制限しようとする相手。深い議論や相談を茶化す傾向があります。',
+        blurPreview: '仕事や自己成長への熱意を理解せず、連絡頻度や行動を過度に制限する相手。',
+        score: (isThinking ? 3 : 1) + (acadScore >= 65 ? 2 : 1),
+      },
+      {
+        id: 'passive_dependent',
+        title: '完全他力本願・受動的依存タイプ',
+        category: '自立心欠如',
+        desc: '自分から何も決めず全てを相手任せにし、不満だけは口にする相手。パートナーシップではなく「お世話役」を求めているため、対等な関係が築けません。',
+        blurPreview: '全てを相手任せにし、感謝なく不満だけを口にする完全依存タイプ。',
+        score: (isHighSpec ? 3 : 2) + (carScore >= 65 ? 2 : 1),
+      },
+      {
+        id: 'morahara_toxic',
+        title: 'マウンティング・共感欠如モラハラタイプ',
+        category: '精神的優位固執',
+        desc: '常に相手の欠点や弱点を指摘して優位に立とうとし、あなたの成果や努力を素直に喜べない相手。自尊心を削られる前に早期撤退が必須です。',
+        blurPreview: '常に欠点を指摘して優位に立とうとし、努力や成果を認めないモラハラタイプ。',
+        score: (isFeeling ? 4 : 2) + 1,
+      },
+      {
+        id: 'loose_unreliable',
+        title: '無計画ルーズ・約束軽視タイプ',
+        category: '誠実性欠如',
+        desc: '時間や約束、連絡の返信が極めてルーズで、相手の時間を尊重できない相手。「悪気はなかった」と言い訳を繰り返し、信頼関係を維持できません。',
+        blurPreview: '時間や約束が極端にルーズで、相手の時間を平気で奪う不誠実タイプ。',
+        score: (isJudging ? 4 : 1) + 2,
+      },
+    ];
+
+    // スコア順にソートして上位3件を抽出
+    pool.sort((a, b) => b.score - a.score);
+    return pool.slice(0, 3);
+  };
+
   const battlefieldRanking = getBattlefieldRanking();
 
   return (
@@ -482,11 +718,12 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
           return simContent;
         })()}
 
-        {/* 3. プレミアム専用②: あなたに最も惹かれやすい異性の特徴（7大ディメンション） */}
+        {/* 3. プレミアム専用②: あなたに最も惹かれやすい異性の特徴・相性データ（全7項目） */}
         {(() => {
+          const compData = getPersonalizedCompatibilityData();
           const matchContent = (
-            <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 transition-all ${
-              !isUnlocked ? 'cursor-pointer hover:border-purple-500/60 hover:bg-slate-900' : ''
+            <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-pink-500/30 space-y-4 transition-all ${
+              !isUnlocked ? 'cursor-pointer hover:border-pink-500/60 hover:bg-slate-900' : ''
             }`}>
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
@@ -513,15 +750,15 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   </div>
                   <div className="py-0.5">
                     {isUnlocked ? (
-                      <p className="text-base sm:text-lg font-black text-white tracking-tight font-mono">{targetPartnerAgeRange}</p>
+                      <p className="text-base sm:text-lg font-black text-white tracking-tight font-mono">{compData.partnerAge}</p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-base sm:text-lg font-black text-slate-300 filter blur-[3px] select-none font-mono">{targetPartnerAgeRange}</p>
+                        <p className="text-base sm:text-lg font-black text-slate-300 filter blur-[3px] select-none font-mono">{compData.partnerAge}</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">同世代・近似層からの需要が最多</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerAgeSubtext}</p>
                 </div>
 
                 {/* 2. 年収層 */}
@@ -535,16 +772,16 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="py-0.5">
                     {isUnlocked ? (
                       <p className="text-base sm:text-lg font-black text-emerald-400 tracking-tight font-mono">
-                        {gender === 'FEMALE' ? '年収 700万〜1,500万円' : '年収 400万〜700万円'}
+                        {compData.partnerIncome}
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-base sm:text-lg font-black text-emerald-400/80 filter blur-[3px] select-none font-mono">年収 700万〜1,500万円</p>
+                        <p className="text-base sm:text-lg font-black text-emerald-400/80 filter blur-[3px] select-none font-mono">{compData.partnerIncome}</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">価値観・生活水準の均衡ゾーン</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerIncomeSubtext}</p>
                 </div>
 
                 {/* 3. MBTI */}
@@ -558,16 +795,16 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="py-0.5">
                     {isUnlocked ? (
                       <p className="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight font-mono">
-                        INFP / ENFP / INFJ / ISFJ
+                        {compData.matchedMbti.best}
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-sm sm:text-base font-black text-pink-300 filter blur-[3px] select-none font-mono">INFP / ENFP / INFJ</p>
+                        <p className="text-sm sm:text-base font-black text-pink-300 filter blur-[3px] select-none font-mono">{compData.matchedMbti.best.split(' / ').slice(0, 3).join(' / ')}</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">心理的補完関係・共感度最大化</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.matchedMbti.sub}</p>
                 </div>
 
                 {/* 4. 職業・業界 */}
@@ -581,16 +818,16 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="py-0.5">
                     {isUnlocked ? (
                       <p className="text-xs sm:text-sm font-black text-white leading-snug">
-                        {gender === 'FEMALE' ? '総合商社・外資系・医師/士業・IT大手' : '大手総合職・専門職・教育/士業・クリエイター'}
+                        {compData.partnerOccupation}
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">大手総合職・士業・IT専門職</p>
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">{compData.partnerOccupation}</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">知的好奇心と生活リズムが合致</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerOccupationSub}</p>
                 </div>
 
                 {/* 5. 学歴・知性水準 */}
@@ -604,16 +841,16 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="py-0.5">
                     {isUnlocked ? (
                       <p className="text-xs sm:text-sm font-black text-white leading-snug">
-                        大学卒以上（難関大・国公立・MARCH等）
+                        {compData.partnerEducation}
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">大卒以上（知的対話を好む層）</p>
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">{compData.partnerEducation}</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">会話のテンポ・論理感が噛み合う層</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.partnerEducationSub}</p>
                 </div>
 
                 {/* 6. 恋愛観・タイプ */}
@@ -627,16 +864,16 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="py-0.5">
                     {isUnlocked ? (
                       <p className="text-xs sm:text-sm font-black text-white leading-snug">
-                        相互自立型 ＆ 心を開くと甘え上手
+                        {compData.loveStyle}
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">相互自立型 ＆ 誠実タイプ</p>
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">{compData.loveStyle}</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
                   </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">過度な束縛を嫌い、尊敬で結ばれる</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-400 pt-1.5 border-t border-slate-800/80 leading-snug">{compData.loveStyleSub}</p>
                 </div>
 
                 {/* 7. 一番刺さる武器 */}
@@ -649,11 +886,11 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   </div>
                   {isUnlocked ? (
                     <p className="text-xs sm:text-sm text-white font-bold leading-relaxed bg-slate-950/60 p-3 rounded-xl border border-pink-500/20">
-                      「第一印象の清潔感・知性」と「2人きりになった時の安心感・包容力」のギャップ。相手が自然体でいられる居心地の良さが最大の決定打となります。
+                      {compData.decisiveWeapon}
                     </p>
                   ) : (
                     <div className="flex items-center gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-                      <p className="text-xs sm:text-sm text-slate-300 filter blur-[3px] select-none">第一印象の清潔感と知性のギャップによる安心感が最大の決定打となります。</p>
+                      <p className="text-xs sm:text-sm text-slate-300 filter blur-[3px] select-none">{compData.decisiveWeapon}</p>
                       <span className="text-xs text-amber-400 font-bold shrink-0">🔒 開示</span>
                     </div>
                   )}
@@ -674,6 +911,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
         {/* 4. プレミアム専用③: あなたと絶対に合わない「相性最悪な地雷異性タイプ ワースト3」（新設） */}
         {(() => {
+          const landmines = getPersonalizedLandmineTypes();
           const landmineContent = (
             <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-rose-500/30 space-y-4 transition-all ${
               !isUnlocked ? 'cursor-pointer hover:border-rose-500/60 hover:bg-slate-900' : ''
@@ -694,68 +932,27 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
-                {/* ワースト1 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-rose-900/50 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30">
-                      ⚠️ ワースト 1
-                    </span>
-                    <span className="text-[10px] text-slate-400">テイカー気質</span>
-                  </div>
-                  <span className="text-xs sm:text-sm font-extrabold text-white block">自己肯定感搾取・情緒不安定タイプ</span>
-                  {isUnlocked ? (
-                    <p className="text-slate-300 text-[11px] leading-relaxed">
-                      あなたの気遣いやスペックを当然と受け止め、感情の起伏でエネルギーを消耗させる相手。感謝の言葉が極端に少なく愚痴が多い場合は即座に距離を置くべきです。
-                    </p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-slate-400 text-[11px] filter blur-[3px] select-none">あなたの気遣いを当然と受け止め、感情の起伏でエネルギーを消耗させる相手。</p>
-                      <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
+                {landmines.map((item, idx) => (
+                  <div key={item.id} className="p-3.5 rounded-xl bg-slate-950/70 border border-rose-900/50 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30">
+                        ⚠️ ワースト {idx + 1}
+                      </span>
+                      <span className="text-[10px] text-slate-400">{item.category}</span>
                     </div>
-                  )}
-                </div>
-
-                {/* ワースト2 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-rose-900/50 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30">
-                      ⚠️ ワースト 2
-                    </span>
-                    <span className="text-[10px] text-slate-400">経済観不一致</span>
+                    <span className="text-xs sm:text-sm font-extrabold text-white block">{item.title}</span>
+                    {isUnlocked ? (
+                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                        {item.desc}
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-slate-400 text-[11px] filter blur-[3px] select-none">{item.blurPreview}</p>
+                        <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
+                      </div>
+                    )}
                   </div>
-                  <span className="text-xs sm:text-sm font-extrabold text-white block">見栄消費・金銭感覚乖離タイプ</span>
-                  {isUnlocked ? (
-                    <p className="text-slate-300 text-[11px] leading-relaxed">
-                      実力や収入に見合わない生活水準を誇示し、中長期の資産形成や自己投資に理解がない相手。初回デートでの過剰な高級志向が見極めサインです。
-                    </p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-slate-400 text-[11px] filter blur-[3px] select-none">実力に見合わない生活水準を誇示し、資産形成や自己投資に理解がない相手。</p>
-                      <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* ワースト3 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-rose-900/50 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30">
-                      ⚠️ ワースト 3
-                    </span>
-                    <span className="text-[10px] text-slate-400">成長阻害</span>
-                  </div>
-                  <span className="text-xs sm:text-sm font-extrabold text-white block">過度な束縛・知性軽視タイプ</span>
-                  {isUnlocked ? (
-                    <p className="text-slate-300 text-[11px] leading-relaxed">
-                      仕事や自己成長への熱意に理解を示さず、連絡頻度や行動を過度に制限しようとする相手。深い議論や相談を茶化す傾向があります。
-                    </p>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-slate-400 text-[11px] filter blur-[3px] select-none">自己成長に理解を示さず、行動を過度に制限しようとする相手。</p>
-                      <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
             </div>
           );
