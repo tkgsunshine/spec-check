@@ -19,6 +19,12 @@ import {
   Check,
   ExternalLink,
   Flame,
+  Activity,
+  Coins,
+  Briefcase,
+  GraduationCap,
+  Share2,
+  Globe,
 } from 'lucide-react';
 
 interface PremiumReportSectionProps {
@@ -764,7 +770,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
           return landmineContent;
         })()}
 
-        {/* 5. プレミアム専用④: スペック引き上げ具体的ロードマップ（全6カテゴリ改善インパクト視覚化） */}
+        {/* 5. プレミアム専用④: 多角比較6項目別・何をすれば何pt上がるか具体策 */}
         {(() => {
           // 各カテゴリの改善ポテンシャルを現在のスコアから動的算出
           const bodyScoreVal = result.categoryScores?.body || 60;
@@ -790,15 +796,102 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
             gloPotential
           ).toFixed(1);
 
+          const improvementCategories = [
+            {
+              id: 'body',
+              title: '身体・外見 (BODY)',
+              icon: Activity,
+              potential: bodyPotential,
+              color: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+              barColor: 'bg-emerald-400',
+              actionTitle: '体脂肪率の適正化 ＆ 写真クオリティの最適化',
+              actionDetail: '体脂肪率を理想基準（男性14% / 女性21%）へあと2〜3%引き締め、自然光の清潔感あるプロフィール写真へ最適化。',
+              breakdown: [
+                { label: '体脂肪率・体型適正化', pt: `+${(bodyPotential * 0.6).toFixed(1)}pt` },
+                { label: '写真・清潔感最適化', pt: `+${(bodyPotential * 0.4).toFixed(1)}pt` },
+              ],
+            },
+            {
+              id: 'eco',
+              title: '年収・資産 (INCOME)',
+              icon: Coins,
+              potential: ecoPotential,
+              color: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+              barColor: 'bg-amber-400',
+              actionTitle: '副業収益の確立 ＆ 純資産アセットの蓄積',
+              actionDetail: '月5万〜10万円の副収入の確立、または新NISA等による資産形成で純資産と可処分所得の底上げを図る。',
+              breakdown: [
+                { label: '年収・副業額面向上', pt: `+${(ecoPotential * 0.6).toFixed(1)}pt` },
+                { label: '純資産・無借金評価', pt: `+${(ecoPotential * 0.4).toFixed(1)}pt` },
+              ],
+            },
+            {
+              id: 'car',
+              title: 'キャリア (CAREER)',
+              icon: Briefcase,
+              potential: carPotential,
+              color: 'text-indigo-400 border-indigo-500/30 bg-indigo-500/10',
+              barColor: 'bg-indigo-400',
+              actionTitle: '社内役職昇進 ＆ 企業ステータスの引き上げ',
+              actionDetail: 'リーダー・マネジメント層への昇格や、同職種上位大手企業へのキャリアアップ転職で職位スコアを獲得。',
+              breakdown: [
+                { label: '役職・職位ランク昇格', pt: `+${(carPotential * 0.6).toFixed(1)}pt` },
+                { label: '企業規模・安定性加点', pt: `+${(carPotential * 0.4).toFixed(1)}pt` },
+              ],
+            },
+            {
+              id: 'aca',
+              title: '学歴・知性 (ACADEMIC)',
+              icon: GraduationCap,
+              potential: acaPotential,
+              color: 'text-purple-400 border-purple-500/30 bg-purple-500/10',
+              barColor: 'bg-purple-400',
+              actionTitle: '専門資格の取得 ＆ 知性アセットの拡充',
+              actionDetail: '業務直結の国家資格や高度専門スキルの認定を取得し、知性・論理対話力の客観的裏付けを強化。',
+              breakdown: [
+                { label: '難関・専門資格の取得', pt: `+${(acaPotential * 0.65).toFixed(1)}pt` },
+                { label: '知性対話力ボーナス', pt: `+${(acaPotential * 0.35).toFixed(1)}pt` },
+              ],
+            },
+            {
+              id: 'soc',
+              title: 'SNS・影響力 (SOCIAL)',
+              icon: Share2,
+              potential: socPotential,
+              color: 'text-pink-400 border-pink-500/30 bg-pink-500/10',
+              barColor: 'bg-pink-400',
+              actionTitle: '特定分野の発信 ＆ フォロワー1,000人達成',
+              actionDetail: '専門分野や趣味での有益な情報発信を継続し、SNS認知度と同世代上位の波及力を獲得。',
+              breakdown: [
+                { label: 'フォロワー1,000人規模', pt: `+${(socPotential * 0.6).toFixed(1)}pt` },
+                { label: '発信力・波及力ボーナス', pt: `+${(socPotential * 0.4).toFixed(1)}pt` },
+              ],
+            },
+            {
+              id: 'glo',
+              title: 'グローバル (GLOBAL)',
+              icon: Globe,
+              potential: gloPotential,
+              color: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
+              barColor: 'bg-cyan-400',
+              actionTitle: 'TOEIC730点以上の獲得 ＆ 実用多言語スキル',
+              actionDetail: '英語スコアの公式獲得や海外渡航実績により、市場価値の高いグローバル対応力を証明。',
+              breakdown: [
+                { label: 'TOEIC・語学スコア加点', pt: `+${(gloPotential * 0.65).toFixed(1)}pt` },
+                { label: '海外渡航・適応力評価', pt: `+${(gloPotential * 0.35).toFixed(1)}pt` },
+              ],
+            },
+          ];
+
           const actionContent = (
-            <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-5 transition-all ${
+            <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 transition-all ${
               !isUnlocked ? 'cursor-pointer hover:border-purple-500/60 hover:bg-slate-900' : ''
             }`}>
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-emerald-400" />
                   <h4 className="text-sm sm:text-base font-extrabold text-white flex flex-wrap items-center gap-2">
-                    <span>スペック総合値をあと 最大 +{totalPotentialPt}pt 引き上げる具体的ロードマップ</span>
+                    <span>各項目別：何をすれば何pt上がるか具体策（最大 +{totalPotentialPt}pt）</span>
                     {!isUnlocked && (
                       <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                         🔒 プレミアム
@@ -806,140 +899,75 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                     )}
                   </h4>
                 </div>
-                <span className="text-[10px] font-bold text-emerald-400">全6カテゴリ改善インパクト連動</span>
+                <span className="text-[10px] font-bold text-emerald-400">項目別スコア引き上げアクション</span>
               </div>
 
-              {/* 全6カテゴリの改善インパクト視覚化バー */}
-              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-300">
-                  <span>多角比較 6カテゴリ別 改善余地インパクト</span>
-                  <span className="text-[10px] text-emerald-400 font-bold font-mono">最大 +{totalPotentialPt}pt の総合上昇ポテンシャル</span>
-                </div>
+              {/* 6項目別カードグリッド */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {improvementCategories.map((cat) => {
+                  const IconComponent = cat.icon;
+                  return (
+                    <div
+                      key={cat.id}
+                      className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5 flex flex-col justify-between hover:border-slate-700 transition-colors"
+                    >
+                      <div>
+                        {/* ヘッダー: 項目名 + 向上ポイント */}
+                        <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                          <div className="flex items-center gap-1.5">
+                            <div className={`p-1.5 rounded-lg border ${cat.color}`}>
+                              <IconComponent className="w-3.5 h-3.5" />
+                            </div>
+                            <span className="font-black text-white text-xs sm:text-sm">{cat.title}</span>
+                          </div>
+                          <span className="text-xs sm:text-sm font-black text-emerald-400 font-mono">
+                            最大 +{cat.potential.toFixed(1)}pt 向上
+                          </span>
+                        </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-[11px]">
-                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
-                    <div className="flex justify-between">
-                      <span className="font-bold text-slate-300">身体 (BODY)</span>
-                      <span className="text-emerald-400 font-black font-mono">+{bodyPotential.toFixed(1)}pt 伸びしろ</span>
-                    </div>
-                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-emerald-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((bodyPotential / 8.0) * 100)))}%` }} />
-                    </div>
-                  </div>
+                        {/* プログレスバー */}
+                        <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden my-2 border border-slate-800/60">
+                          <div
+                            className={`h-full rounded-full ${cat.barColor}`}
+                            style={{ width: `${Math.min(95, Math.max(30, Math.round((cat.potential / 9.0) * 100)))}%` }}
+                          />
+                        </div>
 
-                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
-                    <div className="flex justify-between">
-                      <span className="font-bold text-slate-300">年収・資産 (INCOME)</span>
-                      <span className="text-amber-400 font-black font-mono">+{ecoPotential.toFixed(1)}pt 伸びしろ</span>
-                    </div>
-                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-amber-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((ecoPotential / 9.0) * 100)))}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
-                    <div className="flex justify-between">
-                      <span className="font-bold text-slate-300">キャリア (CAREER)</span>
-                      <span className="text-indigo-400 font-black font-mono">+{carPotential.toFixed(1)}pt 伸びしろ</span>
-                    </div>
-                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-indigo-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((carPotential / 6.5) * 100)))}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
-                    <div className="flex justify-between">
-                      <span className="font-bold text-slate-300">学歴・知性 (ACADEMIC)</span>
-                      <span className="text-purple-400 font-black font-mono">+{acaPotential.toFixed(1)}pt 活用余地</span>
-                    </div>
-                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-purple-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((acaPotential / 5.0) * 100)))}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
-                    <div className="flex justify-between">
-                      <span className="font-bold text-slate-300">SNS・影響力 (SOCIAL)</span>
-                      <span className="text-pink-400 font-black font-mono">+{socPotential.toFixed(1)}pt 伸びしろ</span>
-                    </div>
-                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-pink-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((socPotential / 7.0) * 100)))}%` }} />
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-1">
-                    <div className="flex justify-between">
-                      <span className="font-bold text-slate-300">グローバル (GLOBAL)</span>
-                      <span className="text-cyan-400 font-black font-mono">+{gloPotential.toFixed(1)}pt 伸びしろ</span>
-                    </div>
-                    <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-cyan-400 h-full rounded-full" style={{ width: `${Math.min(95, Math.max(25, Math.round((gloPotential / 6.0) * 100)))}%` }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* タイムライン別 3ステップ アクション */}
-              <div className="space-y-3 text-xs">
-                {/* STEP 1 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-300 font-mono font-black text-[10px] shrink-0 border border-purple-500/30">
-                    短期（即日〜2週）
-                  </span>
-                  <div className="flex-1 space-y-1">
-                    <span className="font-extrabold text-white text-xs sm:text-sm block">清潔感・写真クオリティの最適化 (+3〜5pt)</span>
-                    {isUnlocked ? (
-                      <p className="text-slate-400 leading-relaxed text-[11px]">
-                        自然光・他撮り風の清潔感あるプロフィール写真を設定することで、第一印象と清潔感の評価が即時確定加算されます。
-                      </p>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <p className="text-slate-400 filter blur-[3px] select-none text-[11px]">自然光の清潔感ある写真を設定することで即座にスコアが加算されます。</p>
-                        <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
+                        {/* 何をすれば上がるか */}
+                        <div className="space-y-1 pt-1">
+                          <span className="text-[11px] font-black text-slate-200 block">
+                            【具体策】{cat.actionTitle}
+                          </span>
+                          {isUnlocked ? (
+                            <p className="text-slate-400 text-[11px] leading-relaxed">
+                              {cat.actionDetail}
+                            </p>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <p className="text-slate-400 text-[11px] filter blur-[3px] select-none">
+                                {cat.actionDetail}
+                              </p>
+                              <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </div>
 
-                {/* STEP 2 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 font-mono font-black text-[10px] shrink-0 border border-indigo-500/30">
-                    中期（1〜3ヶ月）
-                  </span>
-                  <div className="flex-1 space-y-1">
-                    <span className="font-extrabold text-white text-xs sm:text-sm block">体型黄金比化 ＆ 習慣チューニング (+5〜8pt)</span>
-                    {isUnlocked ? (
-                      <p className="text-slate-400 leading-relaxed text-[11px]">
-                        体脂肪率を理想基準（男性14% / 女性21%）へあと2〜3%近づけ、睡眠・運動の生活習慣を最適化。身体スコアと第一印象の評価が大幅に跳ね上がります。
-                      </p>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <p className="text-slate-400 filter blur-[3px] select-none text-[11px]">体脂肪率を理想基準へ近づけることで身体スコアが大幅に跳ね上がります。</p>
-                        <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
+                      {/* 加点の内訳バッジ */}
+                      <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between flex-wrap gap-1.5 text-[10px]">
+                        {cat.breakdown.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300"
+                          >
+                            <span>{item.label}</span>
+                            <span className="font-bold text-emerald-400 font-mono">{item.pt}</span>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* STEP 3 */}
-                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-3">
-                  <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-black text-[10px] shrink-0 border border-emerald-500/30">
-                    長期（半年〜1年）
-                  </span>
-                  <div className="flex-1 space-y-1">
-                    <span className="font-extrabold text-white text-xs sm:text-sm block">不可変アセット・キャリア資産の底上げ (+10pt以上)</span>
-                    {isUnlocked ? (
-                      <p className="text-slate-400 leading-relaxed text-[11px]">
-                        年収アップ転職や役職昇進、語学（TOEIC800+）や難関資格の取得により、生涯にわたって崩れない同世代トップ1%クラスの強固なステータスを確立します。
-                      </p>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <p className="text-slate-400 filter blur-[3px] select-none text-[11px]">キャリアアップと知性アセットの獲得により生涯の独自ポジションを確立します。</p>
-                        <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );
