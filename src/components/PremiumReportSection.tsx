@@ -862,16 +862,16 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                   </span>
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-white text-xs sm:text-sm">写真AI解析・清潔感ボーナスの満額獲得 (+3〜5pt)</span>
+                      <span className="font-extrabold text-white text-xs sm:text-sm">清潔感・写真クオリティの最適化 (+3〜5pt)</span>
                       <span className="text-emerald-400 font-bold text-[11px]">即効性 ★★★</span>
                     </div>
                     {isUnlocked ? (
                       <p className="text-slate-400 leading-relaxed text-[11px]">
-                        自然光・他撮り風の清潔感あるプロフィール写真（Gemini AI画像解析スコア90点以上）を配置することで、第一印象ボーナスが即時確定加算されます。
+                        自然光・他撮り風の清潔感あるプロフィール写真を設定することで、第一印象と清潔感の評価が即時確定加算されます。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-slate-400 filter blur-[3px] select-none text-[11px]">自然光の清潔感ある写真を登録することで満額ボーナスが確定加算されます。</p>
+                        <p className="text-slate-400 filter blur-[3px] select-none text-[11px]">自然光の清潔感ある写真を設定することで即座にスコアが加算されます。</p>
                         <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
                       </div>
                     )}
@@ -890,7 +890,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     </div>
                     {isUnlocked ? (
                       <p className="text-slate-400 leading-relaxed text-[11px]">
-                        体脂肪率を理想基準（男性14% / 女性21%）へあと2〜3%近づけ、睡眠・運動の生活習慣を最適化。身体スコアのZスコアが大幅に跳ね上がります。
+                        体脂肪率を理想基準（男性14% / 女性21%）へあと2〜3%近づけ、睡眠・運動の生活習慣を最適化。身体スコアと第一印象の評価が大幅に跳ね上がります。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">

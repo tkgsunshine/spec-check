@@ -143,11 +143,11 @@ export function calculateFaceScore(params?: {
     if (geminiAnalysis) {
       if (geminiAnalysis.isHuman) {
         photoBonus = Math.min(10, Math.max(5, geminiAnalysis.scoreBonus));
-        aiNotes = `【Gemini AI写真解析】: ${geminiAnalysis.comment} (+${photoBonus}pt加算)`;
-        rawValue = `自己評価: ${ratingLabel} ＋ AI顔写真解析: 「${geminiAnalysis.comment}」 (+${photoBonus}pt)`;
+        aiNotes = `【AI写真解析】: ${geminiAnalysis.comment} (+${photoBonus}pt加算)`;
+        rawValue = `自己評価: ${ratingLabel} ＋ AI写真解析: 「${geminiAnalysis.comment}」 (+${photoBonus}pt)`;
       } else {
         photoBonus = 0;
-        aiNotes = '【Gemini AI写真解析】: 人物の顔写真が確認できなかったため、AI写真ボーナスは適用されませんでした。';
+        aiNotes = '【AI写真解析】: 人物の顔写真が確認できなかったため、写真ボーナスは適用されませんでした。';
         rawValue = `自己評価: ${ratingLabel} (顔写真未認識)`;
       }
     } else {
@@ -170,7 +170,7 @@ export function calculateFaceScore(params?: {
     percentile: null,
     topPercent: null,
     dataQuality: geminiAnalysis?.isHuman ? 'AI' : (hasUploadedPhoto ? 'AI' : 'USER_INPUT'),
-    datasetName: geminiAnalysis?.isHuman ? 'Google Gemini 2.5 Vision 年代・性別評価モデル' : 'SPEC CHECK 容姿・雰囲気査定モデル V2.0',
+    datasetName: geminiAnalysis?.isHuman ? 'AI容姿・清潔感査定モデル' : 'SPEC CHECK 容姿・雰囲気査定モデル V2.0',
     sourceUrl: '',
     surveyYear: 2026,
     calculationMethod: 'STATISTICAL_MODEL_ESTIMATE',
