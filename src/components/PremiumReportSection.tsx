@@ -773,12 +773,12 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   </div>
                   <div className="py-0.5">
                     {isUnlocked ? (
-                      <p className="text-base sm:text-lg font-black text-emerald-400 tracking-tight font-mono">
+                      <p className="text-base sm:text-lg font-black text-white tracking-tight font-mono">
                         {compData.partnerIncome}
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-base sm:text-lg font-black text-emerald-400/80 filter blur-[8px] select-none font-mono">年収 600万〜1,200万円</p>
+                        <p className="text-base sm:text-lg font-black text-slate-300 filter blur-[8px] select-none font-mono">年収 600万〜1,200万円</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
@@ -800,12 +800,12 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   </div>
                   <div className="py-0.5">
                     {isUnlocked ? (
-                      <p className="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight font-mono">
+                      <p className="text-sm sm:text-base font-black text-white tracking-tight font-mono">
                         {compData.matchedMbti.best}
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-sm sm:text-base font-black text-pink-300 filter blur-[8px] select-none font-mono">ENFJ / INFJ / INTJ</p>
+                        <p className="text-sm sm:text-base font-black text-slate-300 filter blur-[8px] select-none font-mono">ENFJ / INFJ / INTJ</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
