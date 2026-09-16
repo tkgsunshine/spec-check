@@ -178,10 +178,10 @@ export default function PremiumReportSection({
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-purple-400" />
-                  <h4 className="text-sm font-extrabold text-white flex items-center gap-2">
+                  <h4 className="text-sm font-extrabold text-white flex flex-wrap items-center gap-2">
                     <span>同世代異性 1,000人マッチング受容シミュレーション</span>
                     {!isUnlocked && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                      <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
                         🔒 プレミアム
                       </span>
                     )}
@@ -287,10 +287,10 @@ export default function PremiumReportSection({
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   <Target className="w-5 h-5 text-pink-400" />
-                  <h4 className="text-sm font-extrabold text-white flex items-center gap-2">
+                  <h4 className="text-sm font-extrabold text-white flex flex-wrap items-center gap-2">
                     <span>あなたを最も強く求める異性のスペック逆引き分布</span>
                     {!isUnlocked && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30">
+                      <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30">
                         🔒 プレミアム
                       </span>
                     )}
@@ -362,10 +362,10 @@ export default function PremiumReportSection({
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-emerald-400" />
-                  <h4 className="text-sm font-extrabold text-white flex items-center gap-2">
+                  <h4 className="text-sm font-extrabold text-white flex flex-wrap items-center gap-2">
                     <span>恋愛スコアをあと +10pt 引き上げる具体的ロードマップ</span>
                     {!isUnlocked && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                         🔒 プレミアム
                       </span>
                     )}

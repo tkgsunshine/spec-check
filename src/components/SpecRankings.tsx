@@ -87,14 +87,14 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
               <Trophy className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
+              <h3 className="text-sm md:text-base font-black text-slate-100 flex flex-wrap items-center gap-2">
                 <span>強みのあるスペック TOP 5</span>
                 {isLocked && diagnosisId ? (
-                  <Link href={`/purchase/${diagnosisId}`} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
+                  <Link href={`/purchase/${diagnosisId}`} className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
                     🔒 プレミアム開示
                   </Link>
                 ) : isLocked ? (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                  <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
                     🔒 プレミアム開示
                   </span>
                 ) : null}
@@ -201,14 +201,14 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
+              <h3 className="text-sm md:text-base font-black text-slate-100 flex flex-wrap items-center gap-2">
                 <span>伸びしろ・改善エリア</span>
                 {isLocked && diagnosisId ? (
-                  <Link href={`/purchase/${diagnosisId}`} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
+                  <Link href={`/purchase/${diagnosisId}`} className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
                     🔒 プレミアム開示
                   </Link>
                 ) : isLocked ? (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                  <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
                     🔒 プレミアム開示
                   </span>
                 ) : null}

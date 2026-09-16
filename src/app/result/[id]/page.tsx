@@ -543,11 +543,13 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             <div className="glass-surface rounded-3xl p-6 md:p-8 border border-slate-800/80">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
                 <div className="text-center sm:text-left">
-                  <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-100 flex items-center justify-center sm:justify-start gap-2">
-                    <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-                    <span>同世代・政府統計データに基づくカテゴリ別比較スコア</span>
+                  <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-100 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    <span className="flex items-center gap-2">
+                      <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+                      <span>同世代・政府統計データに基づくカテゴリ別比較スコア</span>
+                    </span>
                     {!isUnlocked && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                      <span className="shrink-0 whitespace-nowrap text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 inline-flex items-center gap-1">
                         🔒 プレミアム限定
                       </span>
                     )}
