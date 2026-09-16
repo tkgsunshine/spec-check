@@ -1146,9 +1146,16 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
                         {/* 何をすれば上がるか */}
                         <div className="space-y-1 pt-1">
-                          <span className="text-[11px] font-black text-slate-200 block">
-                            【具体策】{cat.actionTitle}
-                          </span>
+                          <div className="text-[11px] font-black text-slate-200 flex items-center gap-1 flex-wrap">
+                            <span className="shrink-0 text-emerald-400 font-extrabold">【具体策】</span>
+                            {isUnlocked ? (
+                              <span>{cat.actionTitle}</span>
+                            ) : (
+                              <span className="text-slate-300 filter blur-[8px] select-none">
+                                体脂肪率の適正化 ＆ 写真クオリティの最適化
+                              </span>
+                            )}
+                          </div>
                           {isUnlocked ? (
                             <p className="text-slate-400 text-[11px] leading-relaxed">
                               {cat.actionDetail}
@@ -1169,10 +1176,16 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                         {cat.breakdown.map((item, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300"
+                            className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300"
                           >
-                            <span>{item.label}</span>
-                            <span className={`font-bold ${cat.textColor} font-mono`}>{item.pt}</span>
+                            {isUnlocked ? (
+                              <span>{item.label}</span>
+                            ) : (
+                              <span className="filter blur-[7px] select-none text-slate-400">
+                                改善スコア加点要素
+                              </span>
+                            )}
+                            <span className={`font-bold ${cat.textColor} font-mono shrink-0`}>{item.pt}</span>
                           </div>
                         ))}
                       </div>
