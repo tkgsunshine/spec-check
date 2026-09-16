@@ -126,13 +126,9 @@ export default function PremiumReportSection({
             </div>
             <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
               <span>プレミアム深層レポート & 詳細分析</span>
-              {isUnlocked ? (
+              {isUnlocked && (
                 <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                   アンロック完了
-                </span>
-              ) : (
-                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                  ワンコイン ¥500
                 </span>
               )}
             </h3>
