@@ -83,7 +83,7 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
       <div className="glass-surface glass-surface-glow rounded-3xl p-6 relative overflow-hidden">
         <div className="flex items-center justify-between gap-2 mb-6 flex-wrap">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
               <Trophy className="w-5 h-5" />
             </div>
             <div>
@@ -99,7 +99,7 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                   </span>
                 ) : null}
               </h3>
-              <p className="text-[10px] font-bold tracking-wider uppercase text-amber-400">
+              <p className="text-[10px] font-bold tracking-wider uppercase text-emerald-400">
                 YOUR STRONGEST SPECS
               </p>
             </div>
@@ -119,11 +119,11 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                 className={`p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 transition-all flex items-center justify-between gap-3 relative overflow-hidden ${
                   itemLocked
                     ? 'cursor-pointer hover:border-purple-500/60 hover:bg-slate-900/90'
-                    : 'hover:border-amber-500/40'
+                    : 'hover:border-emerald-500/40'
                 }`}
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <span className="text-xs font-black text-amber-400 shrink-0 w-4">0{idx + 1}</span>
+                  <span className="text-xs font-black text-emerald-400 shrink-0 w-4">0{idx + 1}</span>
                   {itemLocked ? (
                     <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap">
                       {item.metricName}
@@ -138,12 +138,12 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                 <div className="flex items-center justify-end gap-1.5 shrink-0">
                   {isLocked ? (
                     <>
-                      <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
+                      <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-lg bg-sky-500/10 text-sky-300 border border-sky-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
                         <span>上位</span>
                         <span className="filter blur-[2px] select-none">??%</span>
                         <span className="text-[9px] text-amber-400">🔒</span>
                       </span>
-                      <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-lg bg-slate-800 text-amber-300 border border-slate-700 flex items-center gap-0.5 shrink-0 whitespace-nowrap">
+                      <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-lg bg-slate-800 text-emerald-300 border border-slate-700 flex items-center gap-0.5 shrink-0 whitespace-nowrap">
                         <span className="filter blur-[2px] select-none">??</span>
                         <span>pt</span>
                       </span>
@@ -158,12 +158,12 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                         const topPct = calcHighPrecisionTopPercent(rawTop);
                         if (topPct > 50) return null;
                         return (
-                          <span className="text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 whitespace-nowrap">
+                          <span className="text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 whitespace-nowrap">
                             上位 {topPct}%
                           </span>
                         );
                       })()}
-                      <span className="text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg bg-slate-800 text-amber-300 border border-slate-700/80 whitespace-nowrap">
+                      <span className="text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg bg-slate-800 text-emerald-300 border border-slate-700/80 whitespace-nowrap">
                         {item.score} pt
                       </span>
                     </>
