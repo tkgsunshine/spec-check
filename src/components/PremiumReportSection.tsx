@@ -610,8 +610,8 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </span>
                     ) : (
                       <div className="flex items-center justify-center gap-1.5 my-0.5">
-                        <span className="text-2xl sm:text-3xl font-black text-purple-300 filter blur-[4px] select-none font-mono">
-                          {estimatedMatchCount}
+                        <span className="text-2xl sm:text-3xl font-black text-purple-300 filter blur-[8px] select-none font-mono">
+                          888
                         </span>
                         <span className="text-sm font-bold text-slate-400">/ 1,000人</span>
                         <span className="text-xs text-amber-400 ml-1">🔒</span>
@@ -628,8 +628,8 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </span>
                     ) : (
                       <div className="flex items-center justify-center gap-1.5 my-0.5">
-                        <span className="text-2xl sm:text-3xl font-black text-emerald-400/80 filter blur-[4px] select-none font-mono">
-                          {matchRate}%
+                        <span className="text-2xl sm:text-3xl font-black text-emerald-400/80 filter blur-[8px] select-none font-mono">
+                          88.8%
                         </span>
                         <span className="text-xs text-amber-400 ml-1">🔒</span>
                       </div>
@@ -645,8 +645,8 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </span>
                     ) : (
                       <div className="flex items-center justify-center gap-1.5 my-0.5">
-                        <span className="text-xl sm:text-2xl font-black text-amber-300/80 filter blur-[4px] select-none font-mono">
-                          {loveOverallScore >= 90 ? 'S (超引く手あまた)' : loveOverallScore >= 80 ? 'A (強者ポジション)' : 'B+ (優勢)'}
+                        <span className="text-xl sm:text-2xl font-black text-amber-300/80 filter blur-[8px] select-none font-mono">
+                          S+ (最高位クラス)
                         </span>
                         <span className="text-xs text-amber-400 ml-1">🔒</span>
                       </div>
@@ -751,7 +751,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       <p className="text-base sm:text-lg font-black text-white tracking-tight font-mono">{compData.partnerAge}</p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-base sm:text-lg font-black text-slate-300 filter blur-[3px] select-none font-mono">{compData.partnerAge}</p>
+                        <p className="text-base sm:text-lg font-black text-slate-300 filter blur-[8px] select-none font-mono">24歳 〜 29歳</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
@@ -774,7 +774,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-base sm:text-lg font-black text-emerald-400/80 filter blur-[3px] select-none font-mono">{compData.partnerIncome}</p>
+                        <p className="text-base sm:text-lg font-black text-emerald-400/80 filter blur-[8px] select-none font-mono">年収 600万〜1,200万円</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
@@ -797,7 +797,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-sm sm:text-base font-black text-pink-300 filter blur-[3px] select-none font-mono">{compData.matchedMbti.best.split(' / ').slice(0, 3).join(' / ')}</p>
+                        <p className="text-sm sm:text-base font-black text-pink-300 filter blur-[8px] select-none font-mono">ENFJ / INFJ / INTJ</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
@@ -820,7 +820,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">{compData.partnerOccupation}</p>
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[8px] select-none">大手総合職・専門職/士業</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
@@ -843,7 +843,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">{compData.partnerEducation}</p>
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[8px] select-none">大学卒以上（知的好奇心を共有）</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
@@ -866,7 +866,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[3px] select-none">{compData.loveStyle}</p>
+                        <p className="text-xs sm:text-sm font-black text-slate-300 filter blur-[8px] select-none">相互自立型 ＆ 心を開くと甘え上手</p>
                         <span className="text-xs text-amber-400">🔒</span>
                       </div>
                     )}
@@ -888,7 +888,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                     </p>
                   ) : (
                     <div className="flex items-center gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-                      <p className="text-xs sm:text-sm text-slate-300 filter blur-[3px] select-none">{compData.decisiveWeapon}</p>
+                      <p className="text-xs sm:text-sm text-slate-300 filter blur-[8px] select-none">第一印象の清潔感と知性のギャップによる安心感が最大の決定打となります。</p>
                       <span className="text-xs text-amber-400 font-bold shrink-0">🔒 開示</span>
                     </div>
                   )}
@@ -945,7 +945,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       </p>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <p className="text-slate-400 text-[11px] filter blur-[3px] select-none">{item.blurPreview}</p>
+                        <p className="text-slate-400 text-[11px] filter blur-[8px] select-none">{item.blurPreview}</p>
                         <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
                       </div>
                     )}
@@ -1145,7 +1145,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                             </p>
                           ) : (
                             <div className="flex items-center gap-2">
-                              <p className="text-slate-400 text-[11px] filter blur-[3px] select-none">
+                              <p className="text-slate-400 text-[11px] filter blur-[8px] select-none">
                                 {cat.actionDetail}
                               </p>
                               <span className="text-[10px] text-amber-400 font-bold shrink-0">🔒 開示</span>
@@ -1227,7 +1227,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       {profileAppText}
                     </div>
                   ) : (
-                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[3px] select-none">
+                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[8px] select-none">
                       {profileAppText}
                     </div>
                   )}
@@ -1256,7 +1256,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       {profileMarriageText}
                     </div>
                   ) : (
-                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[3px] select-none">
+                    <div className="p-3.5 rounded-lg bg-slate-900/90 text-xs text-slate-400 leading-relaxed whitespace-pre-line border border-slate-800 filter blur-[8px] select-none">
                       {profileMarriageText}
                     </div>
                   )}

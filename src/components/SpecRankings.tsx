@@ -125,7 +125,7 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span className="text-xs font-black text-emerald-400 shrink-0 w-4">0{idx + 1}</span>
                   {itemLocked ? (
-                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap">
+                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[7px] select-none whitespace-nowrap">
                       {item.metricName}
                     </span>
                   ) : (
@@ -234,7 +234,7 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                   {itemLocked ? (
-                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap">
+                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[7px] select-none whitespace-nowrap">
                       {item.metricName}
                     </span>
                   ) : (
