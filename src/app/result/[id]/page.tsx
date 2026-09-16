@@ -550,7 +550,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                   <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-100 flex flex-wrap items-center justify-center sm:justify-start gap-2">
                     <span className="flex items-center gap-2">
                       <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-                      <span>同世代・政府統計データに基づくカテゴリ別比較スコア</span>
+                      <span>同世代・政府統計データに基づくカテゴリ別詳細順位（上位%）</span>
                     </span>
                     {!isUnlocked && (
                       <span className="shrink-0 whitespace-nowrap text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 inline-flex items-center gap-1">
@@ -559,9 +559,9 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                     )}
                   </h2>
                   <p className="text-[10px] font-bold text-slate-400 mt-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
-                    <span className="font-extrabold tracking-widest text-indigo-400 uppercase">CATEGORY SCORES</span>
+                    <span className="font-extrabold tracking-widest text-indigo-400 uppercase">CATEGORY PERCENTILE</span>
                     <span className="text-slate-600">|</span>
-                    <span>各カテゴリのスコア（pt）＆ 同世代順位（上位%）</span>
+                    <span>各カテゴリの基礎スコア ＆ 同世代精密順位（上位%）</span>
                   </p>
                 </div>
                 {data.rawInput && !isUnlocked && (
