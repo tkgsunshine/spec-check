@@ -577,6 +577,14 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
 
         {/* 2. プレミアム専用①: 1,000人シミュレーション ＆ スペック無双 主戦場ランキング */}
         {(() => {
+          const simTextColor = loveOverallScore >= 85
+            ? 'text-emerald-300'
+            : loveOverallScore >= 60
+            ? 'text-sky-300'
+            : loveOverallScore >= 45
+            ? 'text-indigo-300'
+            : 'text-rose-300';
+
           const simContent = (
             <div className={`p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-6 relative overflow-hidden transition-all ${
               !isUnlocked ? 'cursor-pointer hover:border-purple-500/60 hover:bg-slate-900' : ''
@@ -605,12 +613,12 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 relative overflow-hidden">
                     <span className="text-xs sm:text-sm font-extrabold text-slate-200 block mb-1.5">推定マッチング可能人数</span>
                     {isUnlocked ? (
-                      <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-mono">
+                      <span className={`text-2xl sm:text-3xl font-black ${simTextColor} font-mono`}>
                         {estimatedMatchCount} <span className="text-sm font-bold text-slate-400">/ 1,000人</span>
                       </span>
                     ) : (
                       <div className="flex items-center justify-center gap-1.5 my-0.5">
-                        <span className="text-2xl sm:text-3xl font-black text-purple-300 filter blur-[8px] select-none font-mono">
+                        <span className="text-2xl sm:text-3xl font-black text-slate-300 filter blur-[8px] select-none font-mono">
                           888
                         </span>
                         <span className="text-sm font-bold text-slate-400">/ 1,000人</span>
@@ -623,12 +631,12 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 relative overflow-hidden">
                     <span className="text-xs sm:text-sm font-extrabold text-slate-200 block mb-1.5">市場受容率（モテ許容度）</span>
                     {isUnlocked ? (
-                      <span className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
+                      <span className={`text-2xl sm:text-3xl font-black ${simTextColor} font-mono`}>
                         {matchRate}%
                       </span>
                     ) : (
                       <div className="flex items-center justify-center gap-1.5 my-0.5">
-                        <span className="text-2xl sm:text-3xl font-black text-emerald-400/80 filter blur-[8px] select-none font-mono">
+                        <span className="text-2xl sm:text-3xl font-black text-slate-300 filter blur-[8px] select-none font-mono">
                           88.8%
                         </span>
                         <span className="text-xs text-amber-400 ml-1">🔒</span>
@@ -640,12 +648,12 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                   <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 relative overflow-hidden">
                     <span className="text-xs sm:text-sm font-extrabold text-slate-200 block mb-1.5">マッチング優位性ランク</span>
                     {isUnlocked ? (
-                      <span className="text-2xl sm:text-3xl font-black text-amber-300 font-mono">
+                      <span className={`text-2xl sm:text-3xl font-black ${simTextColor} font-mono`}>
                         {loveOverallScore >= 90 ? 'S (超引く手あまた)' : loveOverallScore >= 80 ? 'A (強者ポジション)' : loveOverallScore >= 70 ? 'B+ (優勢)' : 'B (標準)'}
                       </span>
                     ) : (
                       <div className="flex items-center justify-center gap-1.5 my-0.5">
-                        <span className="text-xl sm:text-2xl font-black text-amber-300/80 filter blur-[8px] select-none font-mono">
+                        <span className="text-xl sm:text-2xl font-black text-slate-300 filter blur-[8px] select-none font-mono">
                           S+ (最高位クラス)
                         </span>
                         <span className="text-xs text-amber-400 ml-1">🔒</span>
