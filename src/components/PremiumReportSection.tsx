@@ -1001,6 +1001,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               potential: bodyPotential,
               color: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
               barColor: 'bg-emerald-400',
+              textColor: 'text-emerald-400',
               actionTitle: '体脂肪率の適正化 ＆ 写真クオリティの最適化',
               actionDetail: '体脂肪率を理想基準（男性14% / 女性21%）へあと2〜3%引き締め、自然光の清潔感あるプロフィール写真へ最適化。',
               breakdown: [
@@ -1015,6 +1016,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               potential: ecoPotential,
               color: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
               barColor: 'bg-amber-400',
+              textColor: 'text-amber-400',
               actionTitle: '副業収益の確立 ＆ 純資産アセットの蓄積',
               actionDetail: '月5万〜10万円の副収入の確立、または新NISA等による資産形成で純資産と可処分所得の底上げを図る。',
               breakdown: [
@@ -1029,6 +1031,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               potential: carPotential,
               color: 'text-indigo-400 border-indigo-500/30 bg-indigo-500/10',
               barColor: 'bg-indigo-400',
+              textColor: 'text-indigo-400',
               actionTitle: '社内役職昇進 ＆ 企業ステータスの引き上げ',
               actionDetail: 'リーダー・マネジメント層への昇格や、同職種上位大手企業へのキャリアアップ転職で職位スコアを獲得。',
               breakdown: [
@@ -1043,6 +1046,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               potential: acaPotential,
               color: 'text-purple-400 border-purple-500/30 bg-purple-500/10',
               barColor: 'bg-purple-400',
+              textColor: 'text-purple-400',
               actionTitle: '専門資格の取得 ＆ 知性アセットの拡充',
               actionDetail: '業務直結の国家資格や高度専門スキルの認定を取得し、知性・論理対話力の客観的裏付けを強化。',
               breakdown: [
@@ -1057,6 +1061,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               potential: socPotential,
               color: 'text-pink-400 border-pink-500/30 bg-pink-500/10',
               barColor: 'bg-pink-400',
+              textColor: 'text-pink-400',
               actionTitle: '特定分野の発信 ＆ フォロワー1,000人達成',
               actionDetail: '専門分野や趣味での有益な情報発信を継続し、SNS認知度と同世代上位の波及力を獲得。',
               breakdown: [
@@ -1071,6 +1076,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               potential: gloPotential,
               color: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
               barColor: 'bg-cyan-400',
+              textColor: 'text-cyan-400',
               actionTitle: 'TOEIC730点以上の獲得 ＆ 実用多言語スキル',
               actionDetail: '英語スコアの公式獲得や海外渡航実績により、市場価値の高いグローバル対応力を証明。',
               breakdown: [
@@ -1117,7 +1123,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                             </div>
                             <span className="font-black text-white text-xs sm:text-sm">{cat.title}</span>
                           </div>
-                          <span className="text-xs sm:text-sm font-black text-emerald-400 font-mono">
+                          <span className={`text-xs sm:text-sm font-black ${cat.textColor} font-mono`}>
                             最大 +{cat.potential.toFixed(1)}pt 向上
                           </span>
                         </div>
@@ -1158,7 +1164,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                             className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-300"
                           >
                             <span>{item.label}</span>
-                            <span className="font-bold text-emerald-400 font-mono">{item.pt}</span>
+                            <span className={`font-bold ${cat.textColor} font-mono`}>{item.pt}</span>
                           </div>
                         ))}
                       </div>
