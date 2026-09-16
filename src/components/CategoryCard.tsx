@@ -171,13 +171,12 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
 
             {/* 中央のすりガラス＆ロックアイコン */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur-md border border-purple-500/30 flex flex-col items-center justify-center shadow-inner group-hover:border-purple-400/60 transition-colors">
-                <span className="text-xs font-black text-amber-300 flex items-center gap-0.5 animate-pulse">
-                  🔒
-                </span>
-                <span className="text-[9px] font-black text-purple-300 tracking-tighter -mt-0.5">
-                  ??.?
-                </span>
+              <div className="w-11 h-11 rounded-full bg-slate-900/90 backdrop-blur-md border border-purple-500/40 flex flex-col items-center justify-center shadow-inner group-hover:border-purple-400/70 transition-colors">
+                <div className="flex items-baseline gap-0.5 -mt-0.5">
+                  <span className="text-[11px] font-black text-purple-200 font-mono tracking-tight">??.?</span>
+                  <span className="text-[8px] font-extrabold text-purple-400">pt</span>
+                </div>
+                <span className="text-[9px] text-amber-400 leading-none mt-0.5">🔒</span>
               </div>
             </div>
           </div>
@@ -206,8 +205,9 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
                 className={`filter ${ringGlowClass}`}
               />
             </svg>
-            <span className={`absolute text-base ${scoreTextColor} tracking-tight`}>
+            <span className={`absolute text-sm sm:text-base ${scoreTextColor} tracking-tight font-black flex items-baseline gap-0.5`}>
               {Math.round(displayScore * 10) / 10}
+              <span className="text-[9px] font-bold text-slate-400">pt</span>
             </span>
           </>
         )}
@@ -215,13 +215,13 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
 
       {/* Top Percent Badge */}
       {isLocked ? (
-        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-900/90 text-purple-300 border border-purple-500/30 flex items-center gap-1 shadow-sm group-hover:bg-purple-950/60 transition-colors">
+        <span className="shrink-0 whitespace-nowrap text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/40 inline-flex items-center gap-1 shadow-sm group-hover:bg-purple-900/80 group-hover:border-purple-400/60 transition-colors">
           <span>上位</span>
-          <span className="font-mono text-purple-200">??%</span>
+          <span className="font-mono font-black text-purple-200">??%</span>
           <span className="text-[8px] text-amber-400">🔒</span>
         </span>
       ) : topPercent !== undefined && topPercent !== null && topPercent <= 50 ? (
-        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all ${badgeStyle}`}>
+        <span className={`shrink-0 whitespace-nowrap text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all ${badgeStyle}`}>
           上位 {topPercent}%
         </span>
       ) : (

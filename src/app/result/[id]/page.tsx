@@ -558,8 +558,10 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                       </span>
                     )}
                   </h2>
-                  <p className="text-[10px] font-extrabold tracking-widest text-slate-500 uppercase mt-0.5">
-                    CATEGORY SCORES
+                  <p className="text-[10px] font-bold text-slate-400 mt-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
+                    <span className="font-extrabold tracking-widest text-indigo-400 uppercase">CATEGORY SCORES</span>
+                    <span className="text-slate-600">|</span>
+                    <span>各カテゴリのスコア（pt）＆ 同世代順位（上位%）</span>
                   </p>
                 </div>
                 {data.rawInput && !isUnlocked && (
