@@ -173,8 +173,8 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <div className="w-11 h-11 rounded-full bg-slate-900/90 backdrop-blur-md border border-purple-500/40 flex flex-col items-center justify-center shadow-inner group-hover:border-purple-400/70 transition-colors">
                 <div className="flex items-baseline gap-0.5 -mt-0.5">
-                  <span className="text-[11px] font-black text-purple-200 font-mono tracking-tight">??.?</span>
-                  <span className="text-[8px] font-extrabold text-purple-400">pt</span>
+                  <span className="text-xs font-black text-purple-200 font-mono tracking-tight">??</span>
+                  <span className="text-[9px] font-extrabold text-purple-400">pt</span>
                 </div>
                 <span className="text-[9px] text-amber-400 leading-none mt-0.5">🔒</span>
               </div>
