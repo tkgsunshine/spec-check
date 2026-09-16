@@ -936,9 +936,19 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
                       <span className="text-[10px] font-black text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30">
                         ⚠️ ワースト {idx + 1}
                       </span>
-                      <span className="text-[10px] text-slate-400">{item.category}</span>
+                      {isUnlocked ? (
+                        <span className="text-[10px] text-slate-400">{item.category}</span>
+                      ) : (
+                        <span className="text-[10px] text-slate-400 filter blur-[6px] select-none">テイカー気質</span>
+                      )}
                     </div>
-                    <span className="text-xs sm:text-sm font-extrabold text-white block">{item.title}</span>
+                    {isUnlocked ? (
+                      <span className="text-xs sm:text-sm font-extrabold text-white block">{item.title}</span>
+                    ) : (
+                      <span className="text-xs sm:text-sm font-extrabold text-slate-300 filter blur-[8px] select-none block">
+                        自己肯定感搾取・情緒不安定タイプ
+                      </span>
+                    )}
                     {isUnlocked ? (
                       <p className="text-slate-300 text-[11px] leading-relaxed">
                         {item.desc}
