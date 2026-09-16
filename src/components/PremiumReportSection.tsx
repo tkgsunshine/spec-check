@@ -861,10 +861,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     短期（即日〜2週）
                   </span>
                   <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-white text-xs sm:text-sm">清潔感・写真クオリティの最適化 (+3〜5pt)</span>
-                      <span className="text-emerald-400 font-bold text-[11px]">即効性 ★★★</span>
-                    </div>
+                    <span className="font-extrabold text-white text-xs sm:text-sm block">清潔感・写真クオリティの最適化 (+3〜5pt)</span>
                     {isUnlocked ? (
                       <p className="text-slate-400 leading-relaxed text-[11px]">
                         自然光・他撮り風の清潔感あるプロフィール写真を設定することで、第一印象と清潔感の評価が即時確定加算されます。
@@ -884,10 +881,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     中期（1〜3ヶ月）
                   </span>
                   <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-white text-xs sm:text-sm">体型黄金比化 ＆ 習慣チューニング (+5〜8pt)</span>
-                      <span className="text-indigo-400 font-bold text-[11px]">定着度 ★★★</span>
-                    </div>
+                    <span className="font-extrabold text-white text-xs sm:text-sm block">体型黄金比化 ＆ 習慣チューニング (+5〜8pt)</span>
                     {isUnlocked ? (
                       <p className="text-slate-400 leading-relaxed text-[11px]">
                         体脂肪率を理想基準（男性14% / 女性21%）へあと2〜3%近づけ、睡眠・運動の生活習慣を最適化。身体スコアと第一印象の評価が大幅に跳ね上がります。
@@ -907,10 +901,7 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                     長期（半年〜1年）
                   </span>
                   <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-white text-xs sm:text-sm">不可変アセット・キャリア資産の底上げ (+10pt以上)</span>
-                      <span className="text-purple-400 font-bold text-[11px]">永続価値 ★★★</span>
-                    </div>
+                    <span className="font-extrabold text-white text-xs sm:text-sm block">不可変アセット・キャリア資産の底上げ (+10pt以上)</span>
                     {isUnlocked ? (
                       <p className="text-slate-400 leading-relaxed text-[11px]">
                         年収アップ転職や役職昇進、語学（TOEIC800+）や難関資格の取得により、生涯にわたって崩れない同世代トップ1%クラスの強固なステータスを確立します。
