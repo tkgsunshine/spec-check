@@ -251,10 +251,17 @@ export default function PremiumReportSection({
               <span>上位 {isUnlocked ? `${scoreToTopPercent(loveOverallScore)}%` : '??% 🔒'}</span>
             </div>
             <div className="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
-              <div
-                className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full transition-all duration-1000"
-                style={{ width: `${matchRate}%` }}
-              />
+              {isUnlocked ? (
+                <div
+                  className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full transition-all duration-1000"
+                  style={{ width: `${matchRate}%` }}
+                />
+              ) : (
+                <div
+                  className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full filter blur-[2px] opacity-70 animate-pulse"
+                  style={{ width: '60%' }}
+                />
+              )}
             </div>
           </div>
         </div>

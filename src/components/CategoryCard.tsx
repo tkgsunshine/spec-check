@@ -61,12 +61,14 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
   const progressOffset = circumference - (displayScore / 100) * circumference;
 
   // 4-Tier Dynamic Color System (Elite >= 90 / High 70-89 / Normal 40-69 / Low < 40)
-  const isElite = score >= 90;
-  const isHigh = score >= 70 && score < 90;
-  const isLow = score < 40;
+  const isElite = !isLocked && score >= 90;
+  const isHigh = !isLocked && score >= 70 && score < 90;
+  const isLow = !isLocked && score < 40;
 
-  // Stroke color for ring
-  const strokeColor = isElite
+  // Stroke color for ring (When locked, use unified mystery gradient glow to prevent score leakage)
+  const strokeColor = isLocked
+    ? '#a855f7' // Unified Purple/Violet for mystery locked state
+    : isElite
     ? '#f59e0b' // Gold / Amber for Elite Score (90+)
     : isHigh
     ? '#10b981' // Emerald Green for High Score (70-89)
@@ -77,7 +79,9 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
     : '#8b5cf6'; // Violet for Japan Normal
 
   // Dynamic glow drop shadow filter
-  const ringGlowClass = isElite
+  const ringGlowClass = isLocked
+    ? 'drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]'
+    : isElite
     ? 'drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]'
     : isHigh
     ? 'drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]'
@@ -109,8 +113,10 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
     ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
     : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40';
 
-  // Hover border glow & Card shadow
-  const borderHoverStyle = isElite
+  // Hover border glow & Card shadow (Unified when locked)
+  const borderHoverStyle = isLocked
+    ? 'border-purple-500/30 hover:border-purple-500/60 hover:shadow-[0_0_20px_rgba(168,85,247,0.25)]'
+    : isElite
     ? 'hover:border-amber-500/60 hover:shadow-[0_0_24px_rgba(245,158,11,0.3)] border-amber-500/30'
     : isHigh
     ? 'hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]'
@@ -127,55 +133,90 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
         <span className="text-[9px] font-extrabold tracking-widest text-slate-500 uppercase">{labelEn}</span>
       </div>
 
-      {/* Mini Donut Circle with Dynamic Glow */}
+      {/* Mini Donut Circle with Dynamic Glow & Mosaic Obfuscation */}
       <div className="relative w-16 h-16 flex items-center justify-center mb-2">
-        <svg className="w-full h-full -rotate-90 transform overflow-visible" viewBox="0 0 60 60">
-          <circle
-            cx="30"
-            cy="30"
-            r={radius}
-            stroke="rgba(255, 255, 255, 0.08)"
-            strokeWidth="5"
-            fill="none"
-          />
-          <circle
-            cx="30"
-            cy="30"
-            r={radius}
-            stroke={strokeColor}
-            strokeWidth="5"
-            strokeDasharray={circumference}
-            strokeDashoffset={progressOffset}
-            strokeLinecap="round"
-            fill="none"
-            className={`filter ${ringGlowClass}`}
-          />
-        </svg>
-
         {isLocked ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xs font-black text-slate-400 select-none filter blur-[1.5px] opacity-70">
-              {Math.round(score)}
-            </span>
-            <span className="text-[10px] text-amber-400/90 font-black tracking-tighter -mt-0.5 flex items-center gap-0.5">
-              🔒 <span className="text-[9px]">??</span>
-            </span>
+          /* ロック時: ゲージの長さ・色からの点数推測を完全防止するモザイク・シマーサークル */
+          <div className="relative w-full h-full flex items-center justify-center">
+            <svg className="w-full h-full animate-spin [animation-duration:8s] overflow-visible filter blur-[2px]" viewBox="0 0 60 60">
+              <circle
+                cx="30"
+                cy="30"
+                r={radius}
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeWidth="5"
+                fill="none"
+              />
+              <circle
+                cx="30"
+                cy="30"
+                r={radius}
+                stroke="url(#lockedGradient)"
+                strokeWidth="5"
+                strokeDasharray={`${circumference * 0.4} ${circumference * 0.1}`}
+                strokeLinecap="round"
+                fill="none"
+                className="filter drop-shadow-[0_0_6px_rgba(168,85,247,0.5)]"
+              />
+              <defs>
+                <linearGradient id="lockedGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#a855f7" />
+                  <stop offset="50%" stopColor="#ec4899" />
+                  <stop offset="100%" stopColor="#6366f1" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* 中央のすりガラス＆ロックアイコン */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur-md border border-purple-500/30 flex flex-col items-center justify-center shadow-inner">
+                <span className="text-xs font-black text-amber-300 flex items-center gap-0.5 animate-pulse">
+                  🔒
+                </span>
+                <span className="text-[9px] font-black text-purple-300 tracking-tighter -mt-0.5">
+                  ??.?
+                </span>
+              </div>
+            </div>
           </div>
         ) : (
-          <span className={`absolute text-base ${scoreTextColor} tracking-tight`}>
-            {Math.round(displayScore * 10) / 10}
-          </span>
+          /* アンロック時: 正確なスコアゲージと数値を表示 */
+          <>
+            <svg className="w-full h-full -rotate-90 transform overflow-visible" viewBox="0 0 60 60">
+              <circle
+                cx="30"
+                cy="30"
+                r={radius}
+                stroke="rgba(255, 255, 255, 0.08)"
+                strokeWidth="5"
+                fill="none"
+              />
+              <circle
+                cx="30"
+                cy="30"
+                r={radius}
+                stroke={strokeColor}
+                strokeWidth="5"
+                strokeDasharray={circumference}
+                strokeDashoffset={progressOffset}
+                strokeLinecap="round"
+                fill="none"
+                className={`filter ${ringGlowClass}`}
+              />
+            </svg>
+            <span className={`absolute text-base ${scoreTextColor} tracking-tight`}>
+              {Math.round(displayScore * 10) / 10}
+            </span>
+          </>
         )}
       </div>
 
       {/* Top Percent Badge */}
       {isLocked ? (
-        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-800/80 text-amber-300/80 border border-amber-500/30 flex items-center gap-1 shadow-sm">
+        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-900/90 text-purple-300 border border-purple-500/30 flex items-center gap-1 shadow-sm">
           <span>上位</span>
-          <span className="filter blur-[2px] select-none text-slate-300">
-            {topPercent ? `${topPercent}%` : '15%'}
-          </span>
-          <span className="text-[8px]">🔒</span>
+          <span className="font-mono text-purple-200">??%</span>
+          <span className="text-[8px] text-amber-400">🔒</span>
         </span>
       ) : topPercent !== undefined && topPercent !== null && topPercent <= 50 ? (
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all ${badgeStyle}`}>
