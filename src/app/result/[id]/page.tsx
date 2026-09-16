@@ -566,21 +566,21 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
                 {!isLoveMode ? (
                   <>
-                    <CategoryCard labelJa="身体" labelEn="BODY" score={data.categoryScores.body} topPercent={scoreToTopPercent(data.categoryScores.body)} isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="年収・純資産" labelEn="ECONOMIC" score={data.categoryScores.economic} topPercent={scoreToTopPercent(data.categoryScores.economic)} isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="キャリア" labelEn="CAREER" score={data.categoryScores.career} topPercent={scoreToTopPercent(data.categoryScores.career)} isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="学歴・知性" labelEn="ACADEMIC" score={data.categoryScores.academic || 50} topPercent={scoreToTopPercent(data.categoryScores.academic || 50)} isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="SNS・影響力" labelEn="SOCIAL" score={data.categoryScores.social} topPercent={scoreToTopPercent(data.categoryScores.social)} isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="グローバル力" labelEn="GLOBAL" score={data.categoryScores.ability} topPercent={scoreToTopPercent(data.categoryScores.ability)} isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="身体" labelEn="BODY" score={data.categoryScores.body} topPercent={scoreToTopPercent(data.categoryScores.body)} isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="年収・純資産" labelEn="ECONOMIC" score={data.categoryScores.economic} topPercent={scoreToTopPercent(data.categoryScores.economic)} isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="キャリア" labelEn="CAREER" score={data.categoryScores.career} topPercent={scoreToTopPercent(data.categoryScores.career)} isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="学歴・知性" labelEn="ACADEMIC" score={data.categoryScores.academic || 50} topPercent={scoreToTopPercent(data.categoryScores.academic || 50)} isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="SNS・影響力" labelEn="SOCIAL" score={data.categoryScores.social} topPercent={scoreToTopPercent(data.categoryScores.social)} isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="グローバル力" labelEn="GLOBAL" score={data.categoryScores.ability} topPercent={scoreToTopPercent(data.categoryScores.ability)} isLocked={!isUnlocked} diagnosisId={id} />
                   </>
                 ) : (
                   <>
-                    <CategoryCard labelJa="年齢" labelEn="AGE" score={data.loveCategoryScores.age} topPercent={scoreToTopPercent(data.loveCategoryScores.age)} colorTheme="rose" isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="容姿" labelEn="FACE" score={data.loveCategoryScores.face} topPercent={scoreToTopPercent(data.loveCategoryScores.face)} colorTheme="rose" isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="体型" labelEn="BODY" score={data.loveCategoryScores.body} topPercent={scoreToTopPercent(data.loveCategoryScores.body)} colorTheme="rose" isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="年収・純資産" labelEn="INCOME" score={data.loveCategoryScores.income} topPercent={scoreToTopPercent(data.loveCategoryScores.income)} colorTheme="rose" isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="キャリア・影響力" labelEn="CAREER" score={data.loveCategoryScores.career} topPercent={scoreToTopPercent(data.loveCategoryScores.career)} colorTheme="rose" isLocked={!isUnlocked} />
-                    <CategoryCard labelJa="家庭" labelEn="FAMILY" score={data.loveCategoryScores.family} topPercent={scoreToTopPercent(data.loveCategoryScores.family)} colorTheme="rose" isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="年齢" labelEn="AGE" score={data.loveCategoryScores.age} topPercent={scoreToTopPercent(data.loveCategoryScores.age)} colorTheme="rose" isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="容姿" labelEn="FACE" score={data.loveCategoryScores.face} topPercent={scoreToTopPercent(data.loveCategoryScores.face)} colorTheme="rose" isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="体型" labelEn="BODY" score={data.loveCategoryScores.body} topPercent={scoreToTopPercent(data.loveCategoryScores.body)} colorTheme="rose" isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="年収・純資産" labelEn="INCOME" score={data.loveCategoryScores.income} topPercent={scoreToTopPercent(data.loveCategoryScores.income)} colorTheme="rose" isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="キャリア・影響力" labelEn="CAREER" score={data.loveCategoryScores.career} topPercent={scoreToTopPercent(data.loveCategoryScores.career)} colorTheme="rose" isLocked={!isUnlocked} diagnosisId={id} />
+                    <CategoryCard labelJa="家庭" labelEn="FAMILY" score={data.loveCategoryScores.family} topPercent={scoreToTopPercent(data.loveCategoryScores.family)} colorTheme="rose" isLocked={!isUnlocked} diagnosisId={id} />
                   </>
                 )}
               </div>
@@ -629,7 +629,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
             </div>
 
             {/* 強みのあるスペック TOP 5 ＆ 伸びしろ・改善エリア */}
-            <SpecRankings metrics={data.metrics} isLoveMode={isLoveMode} rawInput={data.rawInput} isLocked={!isUnlocked} />
+            <SpecRankings metrics={data.metrics} isLoveMode={isLoveMode} rawInput={data.rawInput} isLocked={!isUnlocked} diagnosisId={id} />
           </>
         )}
       </PremiumReportSection>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 interface CategoryCardProps {
   labelJa: string;
@@ -9,9 +10,10 @@ interface CategoryCardProps {
   topPercent?: number | null;
   colorTheme?: 'violet' | 'rose';
   isLocked?: boolean;
+  diagnosisId?: string;
 }
 
-export default function CategoryCard({ labelJa, labelEn, score, topPercent, colorTheme, isLocked = false }: CategoryCardProps) {
+export default function CategoryCard({ labelJa, labelEn, score, topPercent, colorTheme, isLocked = false, diagnosisId }: CategoryCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [displayScore, setDisplayScore] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -126,14 +128,14 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
     ? 'hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(251,113,133,0.25)]'
     : 'hover:border-indigo-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.25)]';
 
-  return (
-    <div ref={cardRef} className={`glass-surface rounded-2xl p-4 flex flex-col items-center justify-between text-center relative overflow-hidden group transition-all duration-300 transform hover:-translate-y-1 ${borderHoverStyle}`}>
+  const cardContent = (
+    <div ref={cardRef} className={`glass-surface rounded-2xl p-4 flex flex-col items-center justify-between text-center relative overflow-hidden group transition-all duration-300 transform hover:-translate-y-1 ${borderHoverStyle} ${isLocked ? 'cursor-pointer hover:border-purple-500/80 hover:shadow-[0_0_24px_rgba(168,85,247,0.35)]' : ''}`}>
       <div className="flex flex-col items-center mb-2">
         <span className="text-xs font-black text-slate-100 group-hover:text-white transition-colors">{labelJa}</span>
         <span className="text-[9px] font-extrabold tracking-widest text-slate-500 uppercase">{labelEn}</span>
       </div>
 
-      {/* Mini Donut Circle with Dynamic Glow & Mosaic Obfuscation */}
+      {/* Mini Donut Circle with Dynamic Glow & Obfuscation */}
       <div className="relative w-16 h-16 flex items-center justify-center mb-2">
         {isLocked ? (
           /* ロック時: ゲージの長さ・色からの点数推測を完全防止するシマーサークル */
@@ -169,7 +171,7 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
 
             {/* 中央のすりガラス＆ロックアイコン */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur-md border border-purple-500/30 flex flex-col items-center justify-center shadow-inner">
+              <div className="w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur-md border border-purple-500/30 flex flex-col items-center justify-center shadow-inner group-hover:border-purple-400/60 transition-colors">
                 <span className="text-xs font-black text-amber-300 flex items-center gap-0.5 animate-pulse">
                   🔒
                 </span>
@@ -213,7 +215,7 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
 
       {/* Top Percent Badge */}
       {isLocked ? (
-        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-900/90 text-purple-300 border border-purple-500/30 flex items-center gap-1 shadow-sm">
+        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-900/90 text-purple-300 border border-purple-500/30 flex items-center gap-1 shadow-sm group-hover:bg-purple-950/60 transition-colors">
           <span>上位</span>
           <span className="font-mono text-purple-200">??%</span>
           <span className="text-[8px] text-amber-400">🔒</span>
@@ -227,4 +229,14 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
       )}
     </div>
   );
+
+  if (isLocked && diagnosisId) {
+    return (
+      <Link href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして詳細データをアンロック">
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }

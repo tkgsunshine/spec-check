@@ -4,15 +4,17 @@ import { MetricScoreResult, DiagnosisInputV3 } from '@/types/spec-check';
 import { scoreToTopPercent, calcHighPrecisionTopPercent } from '@/lib/score-engine/math-utils';
 import { Trophy, AlertCircle, TrendingUp } from 'lucide-react';
 import InputDataModal from '@/components/InputDataModal';
+import Link from 'next/link';
 
 interface SpecRankingsProps {
   metrics: MetricScoreResult[];
   isLoveMode?: boolean;
   rawInput?: DiagnosisInputV3 | null;
   isLocked?: boolean;
+  diagnosisId?: string;
 }
 
-export default function SpecRankings({ metrics, isLoveMode = false, rawInput, isLocked = false }: SpecRankingsProps) {
+export default function SpecRankings({ metrics, isLoveMode = false, rawInput, isLocked = false, diagnosisId }: SpecRankingsProps) {
   // 恋愛関連項目の判定
   const isRomanceMetric = (m: MetricScoreResult) => {
     if (m.metricCode === 'LOVE_AGE' || m.metricCode === 'FAMILY') return true;
@@ -87,11 +89,15 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
             <div>
               <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
                 <span>強みのあるスペック TOP 5</span>
-                {isLocked && (
+                {isLocked && diagnosisId ? (
+                  <Link href={`/purchase/${diagnosisId}`} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
+                    🔒 プレミアム開示
+                  </Link>
+                ) : isLocked ? (
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
                     🔒 プレミアム開示
                   </span>
-                )}
+                ) : null}
               </h3>
               <p className="text-[10px] font-bold tracking-wider uppercase text-amber-400">
                 YOUR STRONGEST SPECS
@@ -108,10 +114,13 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
             const isFirst = idx === 0;
             const itemLocked = isLocked && !isFirst;
 
-            return (
+            const rowContent = (
               <div
-                key={item.metricCode}
-                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/40 transition-all flex items-center justify-between gap-3 relative overflow-hidden"
+                className={`p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 transition-all flex items-center justify-between gap-3 relative overflow-hidden ${
+                  itemLocked
+                    ? 'cursor-pointer hover:border-purple-500/60 hover:bg-slate-900/90'
+                    : 'hover:border-amber-500/40'
+                }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   <span className="text-xs font-black text-amber-400 shrink-0 w-5">0{idx + 1}</span>
@@ -166,6 +175,20 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                 </div>
               </div>
             );
+
+            if (itemLocked && diagnosisId) {
+              return (
+                <Link key={item.metricCode} href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして詳細を開示">
+                  {rowContent}
+                </Link>
+              );
+            }
+
+            return (
+              <div key={item.metricCode}>
+                {rowContent}
+              </div>
+            );
           })}
         </div>
       </div>
@@ -180,11 +203,15 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
             <div>
               <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
                 <span>伸びしろ・改善エリア</span>
-                {isLocked && (
+                {isLocked && diagnosisId ? (
+                  <Link href={`/purchase/${diagnosisId}`} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-colors">
+                    🔒 プレミアム開示
+                  </Link>
+                ) : isLocked ? (
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
                     🔒 プレミアム開示
                   </span>
-                )}
+                ) : null}
               </h3>
               <p className="text-[10px] font-bold tracking-wider uppercase text-rose-400">
                 YOUR WEAK POINTS
@@ -200,10 +227,13 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
           {weakPoints.map((item, idx) => {
             const itemLocked = isLocked && idx > 0;
 
-            return (
+            const rowContent = (
               <div
-                key={item.metricCode}
-                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition-all flex items-center justify-between gap-3"
+                className={`p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 transition-all flex items-center justify-between gap-3 ${
+                  itemLocked
+                    ? 'cursor-pointer hover:border-purple-500/60 hover:bg-slate-900/90'
+                    : 'hover:border-rose-500/40'
+                }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
@@ -233,6 +263,20 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                     </span>
                   )}
                 </div>
+              </div>
+            );
+
+            if (itemLocked && diagnosisId) {
+              return (
+                <Link key={item.metricCode} href={`/purchase/${diagnosisId}`} className="block focus:outline-none" title="クリックして改善策を開示">
+                  {rowContent}
+                </Link>
+              );
+            }
+
+            return (
+              <div key={item.metricCode}>
+                {rowContent}
               </div>
             );
           })}
