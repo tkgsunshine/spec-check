@@ -195,7 +195,7 @@ export default function PremiumReportSection({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                 {/* 推定マッチング可能人数 */}
                 <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 relative overflow-hidden">
-                  <span className="text-[11px] font-bold text-slate-400 block mb-1">推定マッチング可能人数</span>
+                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block mb-1.5">推定マッチング可能人数</span>
                   {isUnlocked ? (
                     <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-mono">
                       {estimatedMatchCount} <span className="text-sm font-bold text-slate-400">/ 1,000人</span>
@@ -213,7 +213,7 @@ export default function PremiumReportSection({
 
                 {/* 市場受容率（モテ許容度） */}
                 <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 relative overflow-hidden">
-                  <span className="text-[11px] font-bold text-slate-400 block mb-1">市場受容率（モテ許容度）</span>
+                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block mb-1.5">市場受容率（モテ許容度）</span>
                   {isUnlocked ? (
                     <span className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
                       {matchRate}%
@@ -230,7 +230,7 @@ export default function PremiumReportSection({
 
                 {/* マッチング優位性ランク */}
                 <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 relative overflow-hidden">
-                  <span className="text-[11px] font-bold text-slate-400 block mb-1">マッチング優位性ランク</span>
+                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block mb-1.5">マッチング優位性ランク</span>
                   {isUnlocked ? (
                     <span className="text-2xl sm:text-3xl font-black text-amber-300 font-mono">
                       {loveOverallScore >= 90 ? 'S (超引く手あまた)' : loveOverallScore >= 80 ? 'A (強者ポジション)' : loveOverallScore >= 70 ? 'B+ (優勢)' : 'B (標準)'}
@@ -299,45 +299,45 @@ export default function PremiumReportSection({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-[10px] font-bold text-slate-400">支持率の高い年齢層</span>
+                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">支持率の高い年齢層</span>
                   {isUnlocked ? (
-                    <p className="text-sm font-black text-white">{targetPartnerAgeRange}</p>
+                    <p className="text-sm sm:text-base font-black text-white">{targetPartnerAgeRange}</p>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">{targetPartnerAgeRange}</p>
+                      <p className="text-sm sm:text-base font-black text-slate-300 filter blur-[3px] select-none">{targetPartnerAgeRange}</p>
                       <span className="text-xs text-amber-400">🔒</span>
                     </div>
                   )}
-                  <span className="text-[10px] text-slate-500 block">同世代・近似層からの需要が最多</span>
+                  <span className="text-[11px] text-slate-400 block">同世代・近似層からの需要が最多</span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-[10px] font-bold text-slate-400">相性の良い相手の年収層</span>
+                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">相性の良い相手の年収層</span>
                   {isUnlocked ? (
-                    <p className="text-sm font-black text-white">
+                    <p className="text-sm sm:text-base font-black text-white">
                       {gender === 'FEMALE' ? '年収 700万〜1,500万円' : '年収 400万〜700万円'}
                     </p>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">年収 700万〜1,500万円</p>
+                      <p className="text-sm sm:text-base font-black text-slate-300 filter blur-[3px] select-none">年収 700万〜1,500万円</p>
                       <span className="text-xs text-amber-400">🔒</span>
                     </div>
                   )}
-                  <span className="text-[10px] text-slate-500 block">価値観の均衡度が極めて高いゾーン</span>
+                  <span className="text-[11px] text-slate-400 block">価値観の均衡度が極めて高いゾーン</span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                  <span className="text-[10px] font-bold text-slate-400">惹かれやすい相手のMBTI特性</span>
+                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+                  <span className="text-xs sm:text-sm font-extrabold text-slate-200 block">惹かれやすい相手のMBTI特性</span>
                   {isUnlocked ? (
-                    <p className="text-sm font-black text-white">INFP / ENFP / INFJ</p>
+                    <p className="text-sm sm:text-base font-black text-white">INFP / ENFP / INFJ</p>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-black text-slate-300 filter blur-[3px] select-none">INFP / ENFP / INFJ</p>
+                      <p className="text-sm sm:text-base font-black text-slate-300 filter blur-[3px] select-none">INFP / ENFP / INFJ</p>
                       <span className="text-xs text-amber-400">🔒</span>
                     </div>
                   )}
-                  <span className="text-[10px] text-slate-500 block">心理的補完関係・共感度最大化</span>
+                  <span className="text-[11px] text-slate-400 block">心理的補完関係・共感度最大化</span>
                 </div>
               </div>
             </div>
