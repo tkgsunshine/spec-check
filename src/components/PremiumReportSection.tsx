@@ -136,6 +136,111 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
     setTimeout(() => setCopiedMarriage(false), 2000);
   };
 
+  // ユーザーの属性（年齢、経済/キャリアスコア、MBTI、総合スコア）に応じたマッチングアプリ・結婚相談所ランキング（1位〜4位）
+  const getBattlefieldRanking = () => {
+    const ecoScore = result.categoryScores?.economic || 60;
+    const carScore = result.categoryScores?.career || 60;
+    const isHighSpec = ecoScore >= 72 || carScore >= 72 || loveOverallScore >= 78;
+    const cleanMbti = (mbti || '').toUpperCase();
+    const isIntrovert = cleanMbti.includes('I');
+    const isFeeling = cleanMbti.includes('F');
+    const isOver32 = age >= 32;
+    const isUnder26 = age <= 25;
+
+    // 各サービスの適合度スコア算出
+    const allServices = [
+      {
+        id: 'bachelor',
+        name: 'バチェラーデート',
+        category: '審査制ハイスペ特化アプリ',
+        url: 'https://www.bachelorapp.net/',
+        linkText: 'おすすめ：バチェラーデート公式を見る',
+        baseFit: isHighSpec ? 95 : isUnder26 ? 81 : 86,
+        description: isHighSpec
+          ? '知性・ステータスが直接評価される完全審査制。AIが週1回のデートを自動セッティングするため、忙しい高スペック層に最適です。'
+          : 'いいねやメッセージのやり取り不要で即カフェデート。スペックと第一印象の魅力を初回から発揮できる効率特化市場です。',
+        color: 'border-amber-500/40 text-amber-300 bg-amber-500/20',
+      },
+      {
+        id: 'ibj',
+        name: 'IBJ系列 優良結婚相談所',
+        category: '業界最大手・成婚特化相談所',
+        url: 'https://www.ibjapan.com/',
+        linkText: 'おすすめ：IBJ系列・優良結婚相談所を比較する',
+        baseFit: isOver32 ? (isHighSpec ? 96 : 92) : isHighSpec ? 90 : 84,
+        description:
+          '東証プライム上場グループの業界最大手。独身証明・身元確実な真剣層が集まるため、安定した生活基盤と誠実さが圧倒的な成婚アドバンテージを生みます。',
+        color: 'border-purple-500/40 text-purple-300 bg-purple-500/20',
+      },
+      {
+        id: 'with',
+        name: 'with（ウィズ）',
+        category: '心理学・MBTI相性特化アプリ',
+        url: 'https://with.is/',
+        linkText: 'おすすめ：with（ウィズ）公式を見る',
+        baseFit: isIntrovert || isFeeling || isUnder26 ? 94 : age <= 29 ? 89 : 81,
+        description:
+          '心理テストやMBTI性格診断に基づき、内面・価値観が本当に一致する異性とマッチング。誠実さや共感力を武器に深い関係を構築できます。',
+        color: 'border-pink-500/40 text-pink-300 bg-pink-500/20',
+      },
+      {
+        id: 'pairs',
+        name: 'Pairs（ペアーズ）',
+        category: '国内会員数No.1王道アプリ',
+        url: 'https://pairs.lv/',
+        linkText: 'おすすめ：Pairs（ペアーズ）公式を見る',
+        baseFit: isUnder26 ? 91 : age <= 33 ? 88 : 83,
+        description:
+          '累計会員数2,000万人突破の国内最大級母集団。豊富なコミュニティ機能により、あなたの趣味やライフスタイルに合致する層を網羅的に開拓可能。',
+        color: 'border-cyan-500/40 text-cyan-300 bg-cyan-500/20',
+      },
+      {
+        id: 'zexy',
+        name: 'ゼクシィ縁結び',
+        category: 'リクルート運営・真剣婚活アプリ',
+        url: 'https://zexy-enmusubi.net/',
+        linkText: 'おすすめ：ゼクシィ縁結び公式を見る',
+        baseFit: isOver32 ? 90 : age >= 27 ? 86 : 78,
+        description:
+          'リクルート運営で男女同額の真剣婚活アプリ。結婚を具体的に見据えた誠実な異性が多く、生活力や信頼性を重視する層から熱い支持を集めます。',
+        color: 'border-emerald-500/40 text-emerald-300 bg-emerald-500/20',
+      },
+      {
+        id: 'marrish',
+        name: 'marrish（マリッシュ）',
+        category: '大人の真剣婚活・再婚特化',
+        url: 'https://marrish.com/',
+        linkText: 'おすすめ：marrish（マリッシュ）公式を見る',
+        baseFit: age >= 38 ? 93 : age >= 33 ? 85 : 72,
+        description:
+          '30代〜40代以降の落ち着いた大人の真剣婚活。再婚やシングル理解者も多く、人柄と包容力で勝負できる安心市場です。',
+        color: 'border-indigo-500/40 text-indigo-300 bg-indigo-500/20',
+      },
+    ];
+
+    // 適合度スコア順に降順ソートし、上位4件を抽出
+    const sorted = [...allServices].sort((a, b) => b.baseFit - a.baseFit).slice(0, 4);
+
+    const ranks = ['Sランク', 'Aランク', 'A-ランク', 'B+ランク'];
+    const medals = ['🥇 1位', '🥈 2位', '🥉 3位', '🎖️ 4位'];
+    const borderColors = [
+      'border-amber-500/50 bg-amber-500/5',
+      'border-purple-500/40 bg-purple-500/5',
+      'border-pink-500/30 bg-pink-500/5',
+      'border-slate-800 bg-slate-950/70',
+    ];
+
+    return sorted.map((item, index) => ({
+      ...item,
+      medal: medals[index],
+      rank: ranks[index],
+      fitScore: Math.min(97, Math.max(75, item.baseFit - index * 2 + Math.round((loveOverallScore % 5) - 2))),
+      cardClass: borderColors[index],
+    }));
+  };
+
+  const battlefieldRanking = getBattlefieldRanking();
+
   return (
     <div className="relative mt-8 rounded-3xl overflow-hidden border border-purple-500/30 bg-slate-950/70 backdrop-blur-xl shadow-2xl transition-all duration-500">
       {/* プレミアムヘッダー */}
@@ -297,81 +402,39 @@ ${prefectureName}で勤務しており、今年で${age}歳になります。将
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                  {/* 1位: ハイスペ特化市場 */}
-                  <div className="p-3.5 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-2 relative overflow-hidden">
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-black text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/40">
-                        🥇 1位：ハイスペ審査制アプリ
-                      </span>
-                      <span className="text-xs font-black text-amber-300 font-mono">適合度 94% (Sランク)</span>
+                  {battlefieldRanking.map((service) => (
+                    <div
+                      key={service.id}
+                      className={`p-3.5 rounded-xl border space-y-2 relative overflow-hidden transition-all duration-300 ${service.cardClass}`}
+                    >
+                      <div className="flex items-center justify-between flex-wrap gap-1.5">
+                        <span className={`inline-flex items-center gap-1 text-[11px] font-black px-2.5 py-0.5 rounded-full border ${service.color}`}>
+                          {service.medal}：{service.name}
+                        </span>
+                        <span className="text-xs font-black text-amber-300 font-mono">
+                          適合度 {service.fitScore}% ({service.rank})
+                        </span>
+                      </div>
+                      <div className="text-[10px] font-bold text-slate-400">
+                        【{service.category}】
+                      </div>
+                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                        {service.description}
+                      </p>
+                      <div className="pt-1">
+                        <a
+                          href={service.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-black text-amber-300 hover:text-amber-200 underline decoration-amber-400/60 underline-offset-2"
+                        >
+                          <span>{service.linkText}</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
                     </div>
-                    <p className="text-slate-300 text-[11px] leading-relaxed">
-                      知性・経済力・職業ステータスが直接スコア化される市場。あなたのスペックが最もプレミアムとして評価され無双可能です。
-                    </p>
-                    <div className="pt-1">
-                      <a
-                        href="https://www.bachelorapp.net/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1.5 text-[11px] font-black text-amber-300 hover:text-amber-200 underline decoration-amber-400/60 underline-offset-2"
-                      >
-                        <span>おすすめ：バチェラーデート等の審査制サービスを見る</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* 2位: 知性・価値観重視の婚活市場 */}
-                  <div className="p-3.5 rounded-xl bg-slate-950/70 border border-purple-500/40 space-y-2 relative overflow-hidden">
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-black text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-full border border-purple-500/40">
-                        🥈 2位：真剣婚活・ハイステータス相談所
-                      </span>
-                      <span className="text-xs font-black text-purple-300 font-mono">適合度 87% (Aランク)</span>
-                    </div>
-                    <p className="text-slate-300 text-[11px] leading-relaxed">
-                      身元確実で将来設計を重視する層が集まるため、安定した生活基盤と誠実さが圧倒的な成婚アドバンテージを生み出します。
-                    </p>
-                    <div className="pt-1">
-                      <a
-                        href="https://www.ibjapan.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1.5 text-[11px] font-black text-purple-300 hover:text-purple-200 underline decoration-purple-400/60 underline-offset-2"
-                      >
-                        <span>おすすめ：IBJ系列・優良結婚相談所を比較する</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* 3位: リアル紹介・食事会 */}
-                  <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-black text-slate-300 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">
-                        🥉 3位：知人紹介・ハイエンド食事会
-                      </span>
-                      <span className="text-xs font-black text-indigo-300 font-mono">適合度 80% (B+ランク)</span>
-                    </div>
-                    <p className="text-slate-300 text-[11px] leading-relaxed">
-                      対話時の清潔感と知性のギャップが伝わりやすく、1対1や少人数での信頼構築に長けた領域です。
-                    </p>
-                  </div>
-
-                  {/* 4位: 大衆向けライト恋活アプリ */}
-                  <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-black text-slate-400 bg-slate-800/60 px-2 py-0.5 rounded-full border border-slate-700/60">
-                        4位：大衆向けライト恋活アプリ
-                      </span>
-                      <span className="text-xs font-bold text-slate-400 font-mono">適合度 65% (Bランク)</span>
-                    </div>
-                    <p className="text-slate-400 text-[11px] leading-relaxed">
-                      写真の瞬間判断やノリ重視の場では、スペックの深みが埋もれがち。主戦場を絞ることが効率化の鍵です。
-                    </p>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
