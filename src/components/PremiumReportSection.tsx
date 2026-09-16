@@ -13,17 +13,20 @@ import {
   ShieldCheck,
   CheckCircle2,
   ChevronRight,
-  ArrowUpRight,
 } from 'lucide-react';
 
 interface PremiumReportSectionProps {
   result: OverallDiagnosisResultV3;
   diagnosisId: string;
+  isLoveMode?: boolean;
+  children?: React.ReactNode;
 }
 
 export default function PremiumReportSection({
   result,
   diagnosisId,
+  isLoveMode = false,
+  children,
 }: PremiumReportSectionProps) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +34,6 @@ export default function PremiumReportSection({
 
   useEffect(() => {
     setMounted(true);
-    // ローカルストレージまたはクエリパラメータからアンロック状態を復元
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(`spec_check_unlocked_${diagnosisId}`);
       const params = new URLSearchParams(window.location.search);
@@ -71,7 +73,7 @@ export default function PremiumReportSection({
           localStorage.setItem(`spec_check_unlocked_${diagnosisId}`, 'true');
         }
         setLoading(false);
-      }, 600);
+      }, 500);
     } catch (err) {
       console.error(err);
       setIsUnlocked(true);
@@ -87,7 +89,6 @@ export default function PremiumReportSection({
     age: result.inputSummary?.age || 26,
   };
 
-  // 統計モデル推計値（スコアと年代に基づくリアルな相関計算）
   const estimatedMatchCount = Math.min(
     985,
     Math.max(120, Math.round(1000 * Math.pow(loveOverallScore / 100, 1.25) * 0.95))
@@ -116,7 +117,7 @@ export default function PremiumReportSection({
               Deep Analytics Report
             </span>
             <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-              <span>プレミアム深層レポート</span>
+              <span>プレミアム深層レポート & 詳細分析</span>
               {isUnlocked ? (
                 <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                   アンロック完了
@@ -146,10 +147,10 @@ export default function PremiumReportSection({
       </div>
 
       {/* レポートコンテンツエリア */}
-      <div className="relative p-6 sm:p-8">
+      <div className="relative p-4 sm:p-6 md:p-8">
         {/* 未アンロック時のロックオーバーレイ */}
         {!isUnlocked && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center p-6 bg-slate-950/75 backdrop-blur-md">
+          <div className="absolute inset-0 z-20 flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md">
             <div className="max-w-md w-full p-6 sm:p-7 rounded-2xl bg-slate-900/95 border border-purple-500/40 shadow-2xl shadow-purple-900/40 text-center space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-500 mx-auto flex items-center justify-center shadow-lg shadow-purple-600/30">
                 <Sparkles className="w-6 h-6 text-amber-300 animate-pulse" />
@@ -157,7 +158,7 @@ export default function PremiumReportSection({
 
               <div>
                 <h4 className="text-base sm:text-lg font-black text-white">
-                  恋愛市場価値の深層データを完全開示
+                  カテゴリ別スコア & 深層分析を完全開示
                 </h4>
                 <p className="text-xs text-slate-300 mt-1">
                   1回買い切り ¥500（追加課金・月額費用一切なし）
@@ -167,15 +168,19 @@ export default function PremiumReportSection({
               <ul className="text-left text-xs text-slate-300 space-y-2 py-2 border-y border-slate-800">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>同世代異性 1,000人中 あなたを「アリ」と判定する推定人数</span>
+                  <span>同世代・政府統計に基づくカテゴリ別比較スコア (全6軸)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>あなたと最も相性の良い異性の年収・学歴・年齢層の逆引き分布</span>
+                  <span>あなたの強みのあるスペック TOP 5 ＆ 伸びしろ・改善エリア</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>恋愛スコアをあと+10点伸ばす具体的改善アクションロードマップ</span>
+                  <span>AI詳細総評 ＆ 同世代異性 1,000人マッチング受容シミュレーション</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>あなたを求める異性の逆引き相性分布 ＆ スコア+10pt改善計画</span>
                 </li>
               </ul>
 
@@ -192,7 +197,7 @@ export default function PremiumReportSection({
                 ) : (
                   <>
                     <Unlock className="w-4 h-4" />
-                    <span>¥500 で深層レポートをアンロック</span>
+                    <span>¥500 で詳細データをアンロック</span>
                     <ChevronRight className="w-4 h-4" />
                   </>
                 )}
@@ -208,8 +213,11 @@ export default function PremiumReportSection({
         )}
 
         {/* コンテンツ本体（未アンロック時はモザイク・ぼかし） */}
-        <div className={`space-y-6 ${!isUnlocked ? 'filter blur-sm select-none opacity-40 pointer-events-none' : ''}`}>
-          {/* Section 1: 異性1,000人シミュレーション */}
+        <div className={`space-y-8 ${!isUnlocked ? 'filter blur-md select-none opacity-40 pointer-events-none' : ''}`}>
+          {/* 1. 内包された詳細コンポーネント（カテゴリ別カード、総評、強みTOP5・伸びしろ） */}
+          {children}
+
+          {/* 2. プレミアム専用: 異性1,000人シミュレーション */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2">
@@ -258,7 +266,7 @@ export default function PremiumReportSection({
             </div>
           </div>
 
-          {/* Section 2: 逆引き相性分布 */}
+          {/* 3. プレミアム専用: 逆引き相性分布 */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
             <div className="flex items-center gap-2">
               <Target className="w-5 h-5 text-pink-400" />
@@ -288,7 +296,7 @@ export default function PremiumReportSection({
             </div>
           </div>
 
-          {/* Section 3: +10点スコアアップの逆引きアクション */}
+          {/* 4. プレミアム専用: +10点スコアアップの逆引きアクション */}
           <div className="p-5 sm:p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-emerald-400" />
