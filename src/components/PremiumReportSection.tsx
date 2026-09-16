@@ -956,15 +956,10 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
                 {landmines.map((item, idx) => (
                   <div key={item.id} className="p-3.5 rounded-xl bg-slate-950/70 border border-rose-900/50 space-y-1.5">
-                    <div className="flex items-center justify-between">
+                    <div>
                       <span className="text-[10px] font-black text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded-full border border-rose-500/30">
                         ⚠️ ワースト {idx + 1}
                       </span>
-                      {isUnlocked ? (
-                        <span className="text-[10px] text-slate-400">{item.category}</span>
-                      ) : (
-                        <span className="text-[10px] text-slate-400 filter blur-[6px] select-none">テイカー気質</span>
-                      )}
                     </div>
                     {isUnlocked ? (
                       <span className="text-xs sm:text-sm font-extrabold text-white block">{item.title}</span>
