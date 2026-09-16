@@ -167,19 +167,23 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
 
       {/* Top Percent Badge (Locked vs Unlocked) */}
       {isLocked ? (
-        <span className="shrink-0 whitespace-nowrap text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/40 inline-flex items-center gap-1 shadow-sm group-hover:bg-purple-900/80 group-hover:border-purple-400/60 transition-colors">
-          <span>上位</span>
-          <span className="font-mono font-black text-purple-200">??%</span>
-          <span className="text-amber-400 text-[10px]">🔒</span>
-        </span>
-      ) : topPercent !== undefined && topPercent !== null && topPercent <= 50 ? (
-        <span className={`shrink-0 whitespace-nowrap text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all ${badgeStyle}`}>
-          上位 {topPercent}%
-        </span>
+        <div className="w-full mt-1.5 py-1.5 px-2 rounded-xl bg-gradient-to-r from-purple-950/95 via-indigo-950/90 to-pink-950/95 border border-purple-500/60 shadow-[0_0_12px_rgba(168,85,247,0.35)] flex flex-col items-center justify-center group-hover:border-pink-400/80 group-hover:shadow-[0_0_18px_rgba(236,72,153,0.5)] group-hover:from-purple-900 group-hover:to-pink-900 transition-all">
+          <div className="flex items-center justify-center gap-1 leading-none">
+            <span className="text-[10px] font-black text-slate-300">上位</span>
+            <span className="text-xs sm:text-sm font-black font-mono text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-200 to-amber-300 tracking-tight">
+              ??%
+            </span>
+            <span className="text-xs text-amber-300 animate-pulse ml-0.5">🔒</span>
+          </div>
+          <span className="text-[9px] font-extrabold text-purple-300 group-hover:text-amber-300 transition-colors tracking-tight mt-0.5">
+            タップで順位開示
+          </span>
+        </div>
       ) : (
-        <span className="shrink-0 whitespace-nowrap text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-700 bg-slate-800/40 text-slate-400">
-          上位 {topPercent ?? 50}%
-        </span>
+        <div className={`w-full mt-1.5 py-1 px-2 rounded-xl border flex flex-col items-center justify-center ${badgeStyle}`}>
+          <span className="text-[8px] font-extrabold uppercase tracking-tight opacity-75">同世代順位</span>
+          <span className="text-xs font-black tracking-tight">上位 {topPercent ?? 50}%</span>
+        </div>
       )}
     </div>
   );
