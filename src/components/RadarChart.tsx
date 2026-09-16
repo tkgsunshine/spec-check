@@ -80,7 +80,7 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
   const getLabelCoordinates = (index: number) => {
     const angle = (Math.PI * 2 / count) * index - Math.PI / 2;
     // 上下左右でノード円と被らないよう適切な距離(r)を保つ
-    const rDist = index === 0 ? radius + 32 : index === 3 ? radius + 34 : radius + 38;
+    const rDist = index === 0 ? radius + 32 : index === 3 ? radius + 36 : radius + 38;
     const x = center + rDist * Math.cos(angle);
     const y = center + rDist * Math.sin(angle);
     return { x, y };
@@ -100,8 +100,8 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
 
   return (
     <div ref={containerRef} className="flex flex-col items-center justify-center p-2 w-full">
-      <div className="relative w-full max-w-[460px] aspect-square flex items-center justify-center">
-        <svg viewBox="-60 -35 580 530" className="w-full h-full overflow-visible">
+      <div className="relative w-full max-w-[480px] aspect-square flex items-center justify-center">
+        <svg viewBox="-85 -50 630 560" className="w-full h-full overflow-visible">
           {/* Concentric Grid Webs */}
           {webLevels.map(level => {
             const points = Array.from({ length: count })
@@ -142,7 +142,7 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
             points={userPolygonPoints}
             fill={fillColor}
             stroke={strokeColor}
-            strokeWidth="3"
+            strokeWidth="3.5"
           />
 
           {/* Score Nodes (洗練されたクリーンな元デザイン) */}
@@ -153,7 +153,7 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
                 key={i}
                 cx={x}
                 cy={y}
-                r="5"
+                r="6"
                 fill={strokeColor}
                 stroke="#ffffff"
                 strokeWidth="2"
@@ -161,7 +161,7 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
             );
           })}
 
-          {/* Axis Labels & Values (ノード円との重なり防止の完全位置制御) */}
+          {/* Axis Labels & Values (1.5倍フォント拡大 ＆ ノード円との重なり防止の完全位置制御) */}
           {axes.map((axis, i) => {
             const { x, y } = getLabelCoordinates(i);
             const isTop = i === 0;
@@ -170,38 +170,38 @@ export default function RadarChart({ axes, colorTheme = 'violet' }: RadarChartPr
             const isLeft = i === 4 || i === 5;
 
             const anchor = isTop || isBottom ? 'middle' : isLeft ? 'end' : 'start';
-            const dxOffset = isLeft ? -14 : isRight ? 14 : 0;
+            const dxOffset = isLeft ? -16 : isRight ? 16 : 0;
 
-            // 頂点(100pt)ノード円とテキストの縦方向オフセット最適化
-            const dyLabel = isTop ? -28 : isBottom ? 18 : -14;
-            const dyScore = isTop ? -10 : isBottom ? 36 : 4;
-            const dySub = isTop ? 6 : isBottom ? 50 : 18;
+            // 頂点(100pt)ノード円と拡大テキストの縦方向オフセット最適化
+            const dyLabel = isTop ? -34 : isBottom ? 22 : -18;
+            const dyScore = isTop ? -10 : isBottom ? 48 : 6;
+            const dySub = isTop ? 10 : isBottom ? 70 : 26;
 
             return (
               <g key={i} transform={`translate(${x + dxOffset}, ${y})`}>
-                {/* 1. 日本語メインラベル */}
+                {/* 1. 日本語メインラベル (14px -> 21px 1.5倍) */}
                 <text
                   textAnchor={anchor}
                   dy={dyLabel}
-                  className="fill-slate-100 text-[14px] font-black tracking-wide"
+                  className="fill-slate-100 text-[21px] font-black tracking-wide"
                 >
                   {axis.labelJa}
                 </text>
 
-                {/* 2. スコア pt */}
+                {/* 2. スコア pt (13px -> 19.5px 1.5倍) */}
                 <text
                   textAnchor={anchor}
                   dy={dyScore}
-                  className={`${colorTheme === 'rose' ? 'fill-rose-300' : 'fill-indigo-300'} text-[13px] font-extrabold`}
+                  className={`${colorTheme === 'rose' ? 'fill-rose-300' : 'fill-indigo-300'} text-[19.5px] font-black tracking-tight`}
                 >
                   {axis.score} pt
                 </text>
 
-                {/* 3. 英語サブキー */}
+                {/* 3. 英語サブキー (10px -> 15px 1.5倍) */}
                 <text
                   textAnchor={anchor}
                   dy={dySub}
-                  className="fill-slate-400 text-[10px] font-extrabold uppercase tracking-widest opacity-90"
+                  className="fill-slate-400 text-[15px] font-extrabold uppercase tracking-widest opacity-85"
                 >
                   {axis.labelEn}
                 </text>
