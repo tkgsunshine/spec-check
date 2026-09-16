@@ -62,51 +62,45 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
   const circumference = 2 * Math.PI * radius;
   const progressOffset = circumference - (displayScore / 100) * circumference;
 
-  // 4-Tier Dynamic Color System (Elite >= 90 / High 70-89 / Normal 40-69 / Low < 40)
-  const isElite = score >= 90;
-  const isHigh = score >= 70 && score < 90;
-  const isLow = score < 40;
+  // 3-Tier Harmonious Color System:
+  // - Elite / Top Tier (>= 85): Emerald Green (#10b981) - 最高峰・エリート達成
+  // - High / Strong Tier (60-84): Cyan / Sky Blue (#38bdf8) - 良好・上位
+  // - Normal / Growth Tier (< 60): Rose Pink (#fb7185) / Violet (#818cf8) - 標準・伸びしろ
+  const isElite = score >= 85;
+  const isHigh = score >= 60 && score < 85;
 
   // Stroke color for ring
   const strokeColor = isElite
-    ? '#f59e0b' // Gold / Amber for Elite Score (90+)
+    ? '#10b981' // Emerald Green for Elite Score (85+)
     : isHigh
-    ? '#10b981' // Emerald Green for High Score (70-89)
-    : isLow
-    ? '#f43f5e' // Rose Red for Low Score (<40)
+    ? '#38bdf8' // Sky Blue / Cyan for High Score (60-84)
     : colorTheme === 'rose'
-    ? '#fb7185' // Rose Pink for Love Normal
-    : '#8b5cf6'; // Violet for Japan Normal
+    ? '#fb7185' // Rose Pink for Normal (<60)
+    : '#818cf8'; // Indigo / Violet for Normal (<60)
 
   // Dynamic glow drop shadow filter
   const ringGlowClass = isElite
-    ? 'drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]'
+    ? 'drop-shadow-[0_0_8px_rgba(16,185,129,0.55)]'
     : isHigh
-    ? 'drop-shadow-[0_0_6px_rgba(16,185,129,0.4)]'
-    : isLow
-    ? 'drop-shadow-[0_0_6px_rgba(244,63,94,0.3)]'
+    ? 'drop-shadow-[0_0_6px_rgba(56,189,248,0.45)]'
     : colorTheme === 'rose'
-    ? 'drop-shadow-[0_0_6px_rgba(251,113,133,0.3)]'
-    : 'drop-shadow-[0_0_6px_rgba(139,92,246,0.3)]';
+    ? 'drop-shadow-[0_0_6px_rgba(251,113,133,0.35)]'
+    : 'drop-shadow-[0_0_6px_rgba(129,140,248,0.35)]';
 
   // Text color for score value
   const scoreTextColor = isElite
-    ? 'text-amber-300 font-black'
+    ? 'text-emerald-300 font-black'
     : isHigh
-    ? 'text-emerald-400 font-black'
-    : isLow
-    ? 'text-rose-400 font-black'
+    ? 'text-sky-300 font-black'
     : colorTheme === 'rose'
     ? 'text-rose-300 font-black'
     : 'text-indigo-300 font-black';
 
   // Badge style for TOP %
   const badgeStyle = isElite
-    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
+    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.35)]'
     : isHigh
-    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
-    : isLow
-    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 shadow-[0_0_10px_rgba(56,189,248,0.25)]'
     : colorTheme === 'rose'
     ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
     : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40';
@@ -115,14 +109,12 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
   const borderHoverStyle = isLocked
     ? 'border-purple-500/30 hover:border-purple-500/60 hover:shadow-[0_0_20px_rgba(168,85,247,0.25)]'
     : isElite
-    ? 'hover:border-amber-500/60 hover:shadow-[0_0_24px_rgba(245,158,11,0.3)] border-amber-500/30'
+    ? 'hover:border-emerald-500/60 hover:shadow-[0_0_24px_rgba(168,85,247,0.3)] border-emerald-500/30'
     : isHigh
-    ? 'hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]'
-    : isLow
-    ? 'hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.25)]'
+    ? 'hover:border-sky-500/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.25)] border-sky-500/20'
     : colorTheme === 'rose'
     ? 'hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(251,113,133,0.25)]'
-    : 'hover:border-indigo-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.25)]';
+    : 'hover:border-indigo-500/50 hover:shadow-[0_0_20px_rgba(129,140,248,0.25)]';
 
   const cardContent = (
     <div
