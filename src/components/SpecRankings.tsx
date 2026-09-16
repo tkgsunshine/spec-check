@@ -111,35 +111,36 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
             return (
               <div
                 key={item.metricCode}
-                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/40 transition-all space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between relative overflow-hidden"
+                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/40 transition-all flex items-center justify-between gap-3 relative overflow-hidden"
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   <span className="text-xs font-black text-amber-400 shrink-0 w-5">0{idx + 1}</span>
                   {itemLocked ? (
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none">
+                    <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+                      <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap truncate">
                         {item.metricName}
                       </span>
-                      <span className="text-[10px] text-amber-400/90 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                      <span className="text-[10px] text-amber-400/90 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 shrink-0 whitespace-nowrap">
                         🔒 プレミアム開示
                       </span>
                     </div>
                   ) : (
-                    <span className="text-xs sm:text-sm font-bold text-slate-100 leading-snug break-words">
+                    <span className="text-xs sm:text-sm font-bold text-slate-100 leading-snug break-words truncate">
                       {item.metricName}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pl-7 sm:pl-0 shrink-0">
+                <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0">
                   {isLocked ? (
                     <>
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-300/80 border border-indigo-500/30 flex items-center gap-1">
-                        上位 <span className="filter blur-[2px] select-none">3.2%</span>
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-300/80 border border-indigo-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
+                        <span>上位</span>
+                        <span className="filter blur-[2px] select-none">??%</span>
                         <span className="text-[9px]">🔒</span>
                       </span>
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-lg bg-slate-800 text-amber-300/80 border border-slate-700/80 flex items-center gap-1">
-                        <span className="filter blur-[2px] select-none">{item.score}</span> POINT
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-slate-800 text-amber-300/80 border border-slate-700/80 flex items-center gap-1 shrink-0 whitespace-nowrap">
+                        <span className="filter blur-[2px] select-none">??</span> POINT
                       </span>
                     </>
                   ) : (
@@ -202,29 +203,29 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
             return (
               <div
                 key={item.metricCode}
-                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition-all space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between"
+                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition-all flex items-center justify-between gap-3"
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                   {itemLocked ? (
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none">
+                    <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+                      <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap truncate">
                         {item.metricName}
                       </span>
-                      <span className="text-[10px] text-rose-400/90 font-bold bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
+                      <span className="text-[10px] text-rose-400/90 font-bold bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20 shrink-0 whitespace-nowrap">
                         🔒 改善ポイント
                       </span>
                     </div>
                   ) : (
-                    <span className="text-xs sm:text-sm font-bold text-slate-200 leading-snug break-words">
+                    <span className="text-xs sm:text-sm font-bold text-slate-200 leading-snug break-words truncate">
                       {item.metricName}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center justify-end pl-6 sm:pl-0 shrink-0">
+                <div className="flex items-center justify-end shrink-0">
                   {isLocked ? (
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300/80 border border-rose-500/30 flex items-center gap-1">
-                      <span className="filter blur-[2px] select-none">{item.score}</span> POINT 🔒
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300/80 border border-rose-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
+                      <span className="filter blur-[2px] select-none">??</span> POINT 🔒
                     </span>
                   ) : (
                     <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300 border border-rose-500/30 whitespace-nowrap">
