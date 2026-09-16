@@ -1364,6 +1364,7 @@ ${nickname}と申します。${prefectureName}在住の${age}歳です。
             <div className="max-w-md mx-auto space-y-3">
               <Link
                 href={`/purchase/${diagnosisId}`}
+                scroll={true}
                 className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-2xl shadow-purple-600/40 transition-all cursor-pointer"
               >
                 <Unlock className="w-5 h-5" />

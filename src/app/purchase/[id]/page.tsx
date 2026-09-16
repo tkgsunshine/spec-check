@@ -35,6 +35,19 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
+    // 画面遷移時に必ず最上部にスクロール
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading && typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  }, [loading]);
+
+  useEffect(() => {
     async function fetchResult() {
       try {
         const res = await fetch(`/api/diagnosis/${id}`);

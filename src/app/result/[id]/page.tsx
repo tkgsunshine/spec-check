@@ -671,6 +671,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                       <div className="space-y-2 pt-0.5">
                         <Link
                           href={`/purchase/${id}`}
+                          scroll={true}
                           className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl shadow-purple-600/40 transition-all cursor-pointer group"
                         >
                           <Unlock className="w-4 h-4" />
