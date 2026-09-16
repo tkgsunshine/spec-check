@@ -537,67 +537,97 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
 
       {/* ④ 中段：🔒 500円プレミアム深層レポート（カテゴリ別比較スコア・強みTOP5・伸びしろ・総評をアンロック） */}
       <PremiumReportSection result={data} diagnosisId={id} isLoveMode={isLoveMode}>
-        {/* 同世代・政府統計データに基づくカテゴリ別比較スコア */}
-        <div className="glass-surface rounded-3xl p-6 md:p-8 border border-slate-800/80">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-            <div className="text-center sm:text-left">
-              <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-100 flex items-center justify-center sm:justify-start gap-2">
-                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-                同世代・政府統計データに基づくカテゴリ別比較スコア
-              </h2>
-              <p className="text-[10px] font-extrabold tracking-widest text-slate-500 uppercase mt-0.5">
-                CATEGORY SCORES
-              </p>
-            </div>
-            {data.rawInput && (
-              <div className="shrink-0">
-                <InputDataModal input={data.rawInput} activeTab={activeTab} />
+        {({ isUnlocked }) => (
+          <>
+            {/* 同世代・政府統計データに基づくカテゴリ別比較スコア */}
+            <div className="glass-surface rounded-3xl p-6 md:p-8 border border-slate-800/80">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                <div className="text-center sm:text-left">
+                  <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-100 flex items-center justify-center sm:justify-start gap-2">
+                    <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <span>同世代・政府統計データに基づくカテゴリ別比較スコア</span>
+                    {!isUnlocked && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        🔒 モザイク中
+                      </span>
+                    )}
+                  </h2>
+                  <p className="text-[10px] font-extrabold tracking-widest text-slate-500 uppercase mt-0.5">
+                    CATEGORY SCORES
+                  </p>
+                </div>
+                {data.rawInput && !isUnlocked && (
+                  <div className="shrink-0">
+                    <InputDataModal input={data.rawInput} activeTab={activeTab} />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
-            {!isLoveMode ? (
-              <>
-                <CategoryCard labelJa="身体" labelEn="BODY" score={data.categoryScores.body} topPercent={scoreToTopPercent(data.categoryScores.body)} />
-                <CategoryCard labelJa="年収・純資産" labelEn="ECONOMIC" score={data.categoryScores.economic} topPercent={scoreToTopPercent(data.categoryScores.economic)} />
-                <CategoryCard labelJa="キャリア" labelEn="CAREER" score={data.categoryScores.career} topPercent={scoreToTopPercent(data.categoryScores.career)} />
-                <CategoryCard labelJa="学歴・知性" labelEn="ACADEMIC" score={data.categoryScores.academic || 50} topPercent={scoreToTopPercent(data.categoryScores.academic || 50)} />
-                <CategoryCard labelJa="SNS・影響力" labelEn="SOCIAL" score={data.categoryScores.social} topPercent={scoreToTopPercent(data.categoryScores.social)} />
-                <CategoryCard labelJa="グローバル力" labelEn="GLOBAL" score={data.categoryScores.ability} topPercent={scoreToTopPercent(data.categoryScores.ability)} />
-              </>
-            ) : (
-              <>
-                <CategoryCard labelJa="年齢" labelEn="AGE" score={data.loveCategoryScores.age} topPercent={scoreToTopPercent(data.loveCategoryScores.age)} colorTheme="rose" />
-                <CategoryCard labelJa="容姿" labelEn="FACE" score={data.loveCategoryScores.face} topPercent={scoreToTopPercent(data.loveCategoryScores.face)} colorTheme="rose" />
-                <CategoryCard labelJa="体型" labelEn="BODY" score={data.loveCategoryScores.body} topPercent={scoreToTopPercent(data.loveCategoryScores.body)} colorTheme="rose" />
-                <CategoryCard labelJa="年収・純資産" labelEn="INCOME" score={data.loveCategoryScores.income} topPercent={scoreToTopPercent(data.loveCategoryScores.income)} colorTheme="rose" />
-                <CategoryCard labelJa="キャリア・影響力" labelEn="CAREER" score={data.loveCategoryScores.career} topPercent={scoreToTopPercent(data.loveCategoryScores.career)} colorTheme="rose" />
-                <CategoryCard labelJa="家庭" labelEn="FAMILY" score={data.loveCategoryScores.family} topPercent={scoreToTopPercent(data.loveCategoryScores.family)} colorTheme="rose" />
-              </>
-            )}
-          </div>
-
-          {/* 総評テキスト分析ブロック */}
-          <div className="mt-6 p-5 md:p-6 rounded-2xl glass-surface border border-indigo-500/30 bg-slate-900/60 shadow-xl">
-            <div className="flex items-center gap-2.5 mb-3">
-              <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-                <FileText className="w-4 h-4" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+                {!isLoveMode ? (
+                  <>
+                    <CategoryCard labelJa="身体" labelEn="BODY" score={data.categoryScores.body} topPercent={scoreToTopPercent(data.categoryScores.body)} isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="年収・純資産" labelEn="ECONOMIC" score={data.categoryScores.economic} topPercent={scoreToTopPercent(data.categoryScores.economic)} isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="キャリア" labelEn="CAREER" score={data.categoryScores.career} topPercent={scoreToTopPercent(data.categoryScores.career)} isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="学歴・知性" labelEn="ACADEMIC" score={data.categoryScores.academic || 50} topPercent={scoreToTopPercent(data.categoryScores.academic || 50)} isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="SNS・影響力" labelEn="SOCIAL" score={data.categoryScores.social} topPercent={scoreToTopPercent(data.categoryScores.social)} isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="グローバル力" labelEn="GLOBAL" score={data.categoryScores.ability} topPercent={scoreToTopPercent(data.categoryScores.ability)} isLocked={!isUnlocked} />
+                  </>
+                ) : (
+                  <>
+                    <CategoryCard labelJa="年齢" labelEn="AGE" score={data.loveCategoryScores.age} topPercent={scoreToTopPercent(data.loveCategoryScores.age)} colorTheme="rose" isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="容姿" labelEn="FACE" score={data.loveCategoryScores.face} topPercent={scoreToTopPercent(data.loveCategoryScores.face)} colorTheme="rose" isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="体型" labelEn="BODY" score={data.loveCategoryScores.body} topPercent={scoreToTopPercent(data.loveCategoryScores.body)} colorTheme="rose" isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="年収・純資産" labelEn="INCOME" score={data.loveCategoryScores.income} topPercent={scoreToTopPercent(data.loveCategoryScores.income)} colorTheme="rose" isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="キャリア・影響力" labelEn="CAREER" score={data.loveCategoryScores.career} topPercent={scoreToTopPercent(data.loveCategoryScores.career)} colorTheme="rose" isLocked={!isUnlocked} />
+                    <CategoryCard labelJa="家庭" labelEn="FAMILY" score={data.loveCategoryScores.family} topPercent={scoreToTopPercent(data.loveCategoryScores.family)} colorTheme="rose" isLocked={!isUnlocked} />
+                  </>
+                )}
               </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-100">
-                  {isLoveMode ? '恋愛スペック診断 総評' : '総合スペック診断 総評'}
-                </h3>
+
+              {/* 総評テキスト分析ブロック（未アンロック時は冒頭のみ見せて下部フェードアウト＆モザイク） */}
+              <div className="mt-6 p-5 md:p-6 rounded-2xl glass-surface border border-indigo-500/30 bg-slate-900/60 shadow-xl relative overflow-hidden">
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                        <span>{isLoveMode ? '恋愛スペック診断 総評' : '総合スペック診断 総評'}</span>
+                        {!isUnlocked && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                            🔒 冒頭プレビュー中
+                          </span>
+                        )}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <div className={`text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-3 ${
+                    !isUnlocked ? 'max-h-[140px] overflow-hidden select-none' : ''
+                  }`}>
+                    {overallEvaluationText}
+                  </div>
+
+                  {!isUnlocked && (
+                    <div className="absolute inset-x-0 bottom-0 pt-16 pb-2 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent flex flex-col items-center justify-end text-center">
+                      <div className="px-3 py-1.5 rounded-full bg-slate-950/90 border border-purple-500/40 shadow-lg text-[11px] font-bold text-purple-300 flex items-center gap-1.5 animate-pulse">
+                        <span>🔒</span>
+                        <span>この先：強み相乗効果・弱点克服・MBTI深層解析など全7章（¥500 で全文開示）</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-3">
-              {overallEvaluationText}
-            </div>
-          </div>
-        </div>
 
-        {/* 強みのあるスペック TOP 5 ＆ 伸びしろ・改善エリア */}
-        <SpecRankings metrics={data.metrics} isLoveMode={isLoveMode} rawInput={data.rawInput} />
+            {/* 強みのあるスペック TOP 5 ＆ 伸びしろ・改善エリア */}
+            <SpecRankings metrics={data.metrics} isLoveMode={isLoveMode} rawInput={data.rawInput} isLocked={!isUnlocked} />
+          </>
+        )}
       </PremiumReportSection>
 
       {/* ⑤ 中段直後：💡 スペック連動おすすめサービス（パーソナライズドアフィリエイト動線） */}

@@ -8,9 +8,10 @@ interface CategoryCardProps {
   score: number;
   topPercent?: number | null;
   colorTheme?: 'violet' | 'rose';
+  isLocked?: boolean;
 }
 
-export default function CategoryCard({ labelJa, labelEn, score, topPercent, colorTheme }: CategoryCardProps) {
+export default function CategoryCard({ labelJa, labelEn, score, topPercent, colorTheme, isLocked = false }: CategoryCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [displayScore, setDisplayScore] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -150,13 +151,33 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
             className={`filter ${ringGlowClass}`}
           />
         </svg>
-        <span className={`absolute text-base ${scoreTextColor} tracking-tight`}>
-          {Math.round(displayScore * 10) / 10}
-        </span>
+
+        {isLocked ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-xs font-black text-slate-400 select-none filter blur-[1.5px] opacity-70">
+              {Math.round(score)}
+            </span>
+            <span className="text-[10px] text-amber-400/90 font-black tracking-tighter -mt-0.5 flex items-center gap-0.5">
+              🔒 <span className="text-[9px]">??</span>
+            </span>
+          </div>
+        ) : (
+          <span className={`absolute text-base ${scoreTextColor} tracking-tight`}>
+            {Math.round(displayScore * 10) / 10}
+          </span>
+        )}
       </div>
 
       {/* Top Percent Badge */}
-      {topPercent !== undefined && topPercent !== null && topPercent <= 50 ? (
+      {isLocked ? (
+        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-800/80 text-amber-300/80 border border-amber-500/30 flex items-center gap-1 shadow-sm">
+          <span>上位</span>
+          <span className="filter blur-[2px] select-none text-slate-300">
+            {topPercent ? `${topPercent}%` : '15%'}
+          </span>
+          <span className="text-[8px]">🔒</span>
+        </span>
+      ) : topPercent !== undefined && topPercent !== null && topPercent <= 50 ? (
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all ${badgeStyle}`}>
           上位 {topPercent}%
         </span>

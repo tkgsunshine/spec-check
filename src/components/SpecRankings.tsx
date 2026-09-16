@@ -9,9 +9,10 @@ interface SpecRankingsProps {
   metrics: MetricScoreResult[];
   isLoveMode?: boolean;
   rawInput?: DiagnosisInputV3 | null;
+  isLocked?: boolean;
 }
 
-export default function SpecRankings({ metrics, isLoveMode = false, rawInput }: SpecRankingsProps) {
+export default function SpecRankings({ metrics, isLoveMode = false, rawInput, isLocked = false }: SpecRankingsProps) {
   // 恋愛関連項目の判定
   const isRomanceMetric = (m: MetricScoreResult) => {
     if (m.metricCode === 'LOVE_AGE' || m.metricCode === 'FAMILY') return true;
@@ -84,51 +85,87 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput }: 
               <Trophy className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm md:text-base font-black text-slate-100">
-                強みのあるスペック TOP 5
+              <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
+                <span>強みのあるスペック TOP 5</span>
+                {isLocked && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    🔒 一部モザイク
+                  </span>
+                )}
               </h3>
               <p className="text-[10px] font-bold tracking-wider uppercase text-amber-400">
                 YOUR STRONGEST SPECS
               </p>
             </div>
           </div>
-          {rawInput && (
+          {rawInput && !isLocked && (
             <InputDataModal input={rawInput} />
           )}
         </div>
 
         <div className="space-y-3">
-          {topStrengths.map((item, idx) => (
-            <div
-              key={item.metricCode}
-              className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/40 transition-all space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between"
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span className="text-xs font-black text-amber-400 shrink-0 w-5">0{idx + 1}</span>
-                <span className="text-xs sm:text-sm font-bold text-slate-100 leading-snug break-words">
-                  {item.metricName}
-                </span>
-              </div>
-              <div className="flex items-center justify-end gap-2 pl-7 sm:pl-0 shrink-0">
-                {(() => {
-                  const rawTop = (item.topPercent !== null && item.topPercent !== undefined && item.topPercent > 0)
-                    ? item.topPercent
-                    : (item.hasOfficialTopPercent ? scoreToTopPercent(item.score) : null);
-                  if (rawTop === null || rawTop === undefined) return null;
-                  const topPct = calcHighPrecisionTopPercent(rawTop);
-                  if (topPct > 50) return null;
-                  return (
-                    <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 whitespace-nowrap">
-                      上位 {topPct}%
+          {topStrengths.map((item, idx) => {
+            const isFirst = idx === 0;
+            const itemLocked = isLocked && !isFirst;
+
+            return (
+              <div
+                key={item.metricCode}
+                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/40 transition-all space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between relative overflow-hidden"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="text-xs font-black text-amber-400 shrink-0 w-5">0{idx + 1}</span>
+                  {itemLocked ? (
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none">
+                        {item.metricName}
+                      </span>
+                      <span className="text-[10px] text-amber-400/90 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                        🔒 プレミアム開示
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-xs sm:text-sm font-bold text-slate-100 leading-snug break-words">
+                      {item.metricName}
                     </span>
-                  );
-                })()}
-                <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-slate-800 text-amber-300 border border-slate-700/80 whitespace-nowrap">
-                  {item.score} POINT
-                </span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pl-7 sm:pl-0 shrink-0">
+                  {isLocked ? (
+                    <>
+                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-300/80 border border-indigo-500/30 flex items-center gap-1">
+                        上位 <span className="filter blur-[2px] select-none">3.2%</span>
+                        <span className="text-[9px]">🔒</span>
+                      </span>
+                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-lg bg-slate-800 text-amber-300/80 border border-slate-700/80 flex items-center gap-1">
+                        <span className="filter blur-[2px] select-none">{item.score}</span> POINT
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {(() => {
+                        const rawTop = (item.topPercent !== null && item.topPercent !== undefined && item.topPercent > 0)
+                          ? item.topPercent
+                          : (item.hasOfficialTopPercent ? scoreToTopPercent(item.score) : null);
+                        if (rawTop === null || rawTop === undefined) return null;
+                        const topPct = calcHighPrecisionTopPercent(rawTop);
+                        if (topPct > 50) return null;
+                        return (
+                          <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 whitespace-nowrap">
+                            上位 {topPct}%
+                          </span>
+                        );
+                      })()}
+                      <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-slate-800 text-amber-300 border border-slate-700/80 whitespace-nowrap">
+                        {item.score} POINT
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -140,38 +177,64 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput }: 
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm md:text-base font-black text-slate-100">
-                伸びしろ・改善エリア
+              <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
+                <span>伸びしろ・改善エリア</span>
+                {isLocked && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                    🔒 一部モザイク
+                  </span>
+                )}
               </h3>
               <p className="text-[10px] font-bold tracking-wider uppercase text-rose-400">
                 YOUR WEAK POINTS
               </p>
             </div>
           </div>
-          {rawInput && (
+          {rawInput && !isLocked && (
             <InputDataModal input={rawInput} />
           )}
         </div>
 
         <div className="space-y-3">
-          {weakPoints.map((item, idx) => (
-            <div
-              key={item.metricCode}
-              className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition-all space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between"
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                <span className="text-xs sm:text-sm font-bold text-slate-200 leading-snug break-words">
-                  {item.metricName}
-                </span>
+          {weakPoints.map((item, idx) => {
+            const itemLocked = isLocked && idx > 0;
+
+            return (
+              <div
+                key={item.metricCode}
+                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition-all space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  {itemLocked ? (
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none">
+                        {item.metricName}
+                      </span>
+                      <span className="text-[10px] text-rose-400/90 font-bold bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
+                        🔒 改善ポイント
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-xs sm:text-sm font-bold text-slate-200 leading-snug break-words">
+                      {item.metricName}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center justify-end pl-6 sm:pl-0 shrink-0">
+                  {isLocked ? (
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300/80 border border-rose-500/30 flex items-center gap-1">
+                      <span className="filter blur-[2px] select-none">{item.score}</span> POINT 🔒
+                    </span>
+                  ) : (
+                    <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300 border border-rose-500/30 whitespace-nowrap">
+                      {item.score} POINT
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center justify-end pl-6 sm:pl-0 shrink-0">
-                <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300 border border-rose-500/30 whitespace-nowrap">
-                  {item.score} POINT
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
