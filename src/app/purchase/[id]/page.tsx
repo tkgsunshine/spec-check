@@ -343,7 +343,7 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
         <h3 className="text-lg sm:text-xl font-black text-white">
           あなたの本当の市場価値を、今すぐ手に入れよう
         </h3>
-        <p className="text-xs text-slate-300 max-w-md mx-auto">
+        <p className="text-xs text-slate-300">
           追加費用なしのワンコイン ¥500。決済完了後、即時（0秒）で結果画面のすべての制限が解除されます。
         </p>
         <div className="max-w-xs mx-auto">
