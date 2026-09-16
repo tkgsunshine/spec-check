@@ -19,6 +19,9 @@ import {
   HelpCircle,
   Clock,
   Award,
+  ShieldAlert,
+  Copy,
+  Compass,
 } from "lucide-react";
 
 export default function PurchaseLandingPage({ params }: { params: Promise<{ id: string }> }) {
@@ -222,6 +225,7 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* BENEFIT 01 */}
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400">
@@ -229,18 +233,19 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-purple-400">BENEFIT 01</span>
-                <h3 className="text-base font-black text-white">同世代異性 1,000人マッチング受容シミュレーション</h3>
+                <h3 className="text-base font-black text-white">1,000人シミュレーション ＆ 主戦場ランキング</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              あなたのスペックを持つ同世代{genderJa}が、同世代の異性1,000名母集団の中で「何人から恋愛対象・結婚相手として受容されるか」を確率論的に算出。
+              同世代1,000人中における受容人数・確率に加え、あなたのスペックが最も無双できる「主戦場（ハイスペマッチング/真剣婚活/日常出会い）」の市場別適合度（S/A/Bランク）を特定。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>推定マッチング可能人数</span>
-              <span className="text-purple-400 font-mono font-black">███ 人 / 1,000人中 🔓</span>
+              <span>主戦場・適合度Sランク</span>
+              <span className="text-purple-400 font-mono font-black">ハイスペ特化市場 🔓</span>
             </div>
           </div>
 
+          {/* BENEFIT 02 */}
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-2xl bg-pink-500/10 border border-pink-500/30 text-pink-400">
@@ -248,91 +253,95 @@ export default function PurchaseLandingPage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-pink-400">BENEFIT 02</span>
-                <h3 className="text-base font-black text-white">あなたに最も惹かれやすい異性の特徴・相性データ</h3>
+                <h3 className="text-base font-black text-white">好かれやすい異性の特徴（7大ディメンション）</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              あなたに対して最も好意・需要を抱きやすい異性の「最適な年齢層」「年収帯」「惹かれやすいMBTI性格特性」をデータ解析します。
+              あなたに対して好意を抱きやすい相手の「年齢層・年収帯・MBTI性格・相性の良い職業・知性水準・恋愛観タイプ・最も刺さる武器」の全7項目を詳細プロファイル。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>相性の良い相手のMBTI</span>
-              <span className="text-pink-400 font-mono font-black">INFP / ENFP ほか 🔓</span>
+              <span>相性7大データ</span>
+              <span className="text-pink-400 font-mono font-black">職業・知性・MBTIほか 🔓</span>
             </div>
           </div>
 
+          {/* BENEFIT 03 */}
+          <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
+                <ShieldAlert className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-rose-400">BENEFIT 03</span>
+                <h3 className="text-base font-black text-white">相性最悪な地雷異性タイプ ワースト3</h3>
+              </div>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              あなたの価値観や性格と絶対に合わず消耗する「地雷タイプ（テイカー気質・見栄消費・過度な束縛等）」を特定し、初期に見抜くサインと自衛策を提示。
+            </p>
+            <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
+              <span>避けるべき地雷相手</span>
+              <span className="text-rose-400 font-mono font-black">ワースト3 ＆ 見極めサイン 🔓</span>
+            </div>
+          </div>
+
+          {/* BENEFIT 04 */}
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                 <TrendingUp className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">BENEFIT 03</span>
-                <h3 className="text-base font-black text-white">恋愛スコアをあと +10pt 引き上げる改善策</h3>
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">BENEFIT 04</span>
+                <h3 className="text-base font-black text-white">全6カテゴリ改善インパクト ＆ ロードマップ</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              体脂肪率・写真AI判定・活動プラットフォーム最適化など、短期間でスコアを引き上げて上位ランクへ昇格するための3ステップを指南。
+              身体・年収・キャリア等、全6カテゴリのどれを何Pt伸ばせるかを視覚化（最大+25pt）。即日・3ヶ月・1年スパンの具体的3ステップで成長を最短化。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>具体的改善プラン</span>
-              <span className="text-emerald-400 font-black">STEP 1〜3 完全開示 🔓</span>
+              <span>スペック向上ポテンシャル</span>
+              <span className="text-emerald-400 font-black">最大 +25 pt 🔓</span>
             </div>
           </div>
 
-          <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
-                <Award className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-400">BENEFIT 04</span>
-                <h3 className="text-base font-black text-white">全6カテゴリ精密比較スコア（全開示）</h3>
-              </div>
-            </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              身体・年収・キャリア・知性・影響力・グローバル力の全6軸について、正確なPOINT数値と同世代上位パーセンタイル（上位X%）を開示。
-            </p>
-            <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>全6軸の数値・上位%</span>
-              <span className="text-indigo-400 font-mono font-black">全カード数値開示 🔓</span>
-            </div>
-          </div>
-
+          {/* BENEFIT 05 */}
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
-                <Zap className="w-5 h-5" />
+                <Copy className="w-5 h-5" />
               </div>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">BENEFIT 05</span>
-                <h3 className="text-base font-black text-white">強みのあるスペック TOP 5 ＆ 伸びしろ改善</h3>
+                <h3 className="text-base font-black text-white">即コピペで使える最強プロフィール文章</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              あなたの最も強力な武器TOP5と、努力や工夫で改善可能な弱点エリアを精密特定。客観的な市場優位性を把握できます。
+              あなたの診断データ・強みを黄金構成で文章化。「マッチングアプリ用（自然体＆好感度）」と「婚活相談所用（信頼感＆誠実さ）」をワンタップコピー可能。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>強み・改善項目一覧</span>
-              <span className="text-amber-400 font-black">全項目アンロック 🔓</span>
+              <span>AI自己PR文</span>
+              <span className="text-amber-400 font-mono font-black">2パターン ワンタップコピー 🔓</span>
             </div>
           </div>
 
+          {/* BENEFIT 06 */}
           <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3 relative overflow-hidden">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400">
+              <div className="p-2.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-purple-400">BENEFIT 06</span>
-                <h3 className="text-base font-black text-white">AI詳細総評 全文（全7章・約2,000文字）</h3>
+                <span className="text-[10px] font-black uppercase tracking-wider text-indigo-400">BENEFIT 06</span>
+                <h3 className="text-base font-black text-white">全6カテゴリ精密比較 ＆ AI詳細総評 全文</h3>
               </div>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              統計的ポジション、強み相乗効果、ボトルネック克服、MBTI特性、地域市場環境、中長期戦略ロードマップの全章を完全開示。
+              全6軸の数値・上位%の完全開示に加え、統計的ポジション・強み相乗効果・MBTI特性・地域市場環境・中長期戦略のAI総評（約2,000文字）をフルアンロック。
             </p>
             <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs font-bold text-slate-300">
-              <span>AI個別総評</span>
-              <span className="text-purple-300 font-black">全文2,000字 完全開示 🔓</span>
+              <span>全6軸数値 ＆ AI総評</span>
+              <span className="text-indigo-400 font-mono font-black">完全開示 🔓</span>
             </div>
           </div>
         </div>

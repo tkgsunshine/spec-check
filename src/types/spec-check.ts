@@ -150,6 +150,7 @@ export interface OverallDiagnosisResultV3 {
     gender: Gender;
     age: number;
     prefectureName: string;
+    mbti?: string | null;
   };
   japanOverallScore: number;
   loveOverallScore: number;
