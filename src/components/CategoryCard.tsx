@@ -205,9 +205,8 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
                 className={`filter ${ringGlowClass}`}
               />
             </svg>
-            <span className={`absolute text-sm sm:text-base ${scoreTextColor} tracking-tight font-black flex items-baseline gap-0.5`}>
+            <span className={`absolute text-sm sm:text-base ${scoreTextColor} tracking-tight font-black`}>
               {Math.round(displayScore * 10) / 10}
-              <span className="text-[9px] font-bold text-slate-400">pt</span>
             </span>
           </>
         )}
