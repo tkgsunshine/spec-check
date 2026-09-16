@@ -217,7 +217,6 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
         <span className="shrink-0 whitespace-nowrap text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-purple-950/90 text-purple-300 border border-purple-500/40 inline-flex items-center gap-1 shadow-sm group-hover:bg-purple-900/80 group-hover:border-purple-400/60 transition-colors">
           <span>上位</span>
           <span className="font-mono font-black text-purple-200">??%</span>
-          <span className="text-[8px] text-amber-400">🔒</span>
         </span>
       ) : topPercent !== undefined && topPercent !== null && topPercent <= 50 ? (
         <span className={`shrink-0 whitespace-nowrap text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all ${badgeStyle}`}>
