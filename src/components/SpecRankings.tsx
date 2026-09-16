@@ -122,29 +122,30 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                     : 'hover:border-amber-500/40'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                  <span className="text-xs font-black text-amber-400 shrink-0 w-5">0{idx + 1}</span>
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className="text-xs font-black text-amber-400 shrink-0 w-4">0{idx + 1}</span>
                   {itemLocked ? (
-                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap truncate">
+                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap">
                       {item.metricName}
                     </span>
                   ) : (
-                    <span className="text-xs sm:text-sm font-bold text-slate-100 leading-snug break-words truncate">
+                    <span className="text-xs sm:text-sm font-bold text-slate-100 leading-snug break-words">
                       {item.metricName}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0">
+                <div className="flex items-center justify-end gap-1.5 shrink-0">
                   {isLocked ? (
                     <>
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-300/80 border border-indigo-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
+                      <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
                         <span>上位</span>
                         <span className="filter blur-[2px] select-none">??%</span>
-                        <span className="text-[9px]">🔒</span>
+                        <span className="text-[9px] text-amber-400">🔒</span>
                       </span>
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-slate-800 text-amber-300/80 border border-slate-700/80 flex items-center gap-1 shrink-0 whitespace-nowrap">
-                        <span className="filter blur-[2px] select-none">??</span> POINT
+                      <span className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 rounded-lg bg-slate-800 text-amber-300 border border-slate-700 flex items-center gap-0.5 shrink-0 whitespace-nowrap">
+                        <span className="filter blur-[2px] select-none">??</span>
+                        <span>pt</span>
                       </span>
                     </>
                   ) : (
@@ -157,13 +158,13 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                         const topPct = calcHighPrecisionTopPercent(rawTop);
                         if (topPct > 50) return null;
                         return (
-                          <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 whitespace-nowrap">
+                          <span className="text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 whitespace-nowrap">
                             上位 {topPct}%
                           </span>
                         );
                       })()}
-                      <span className="text-[11px] font-black px-2.5 py-0.5 rounded-lg bg-slate-800 text-amber-300 border border-slate-700/80 whitespace-nowrap">
-                        {item.score} POINT
+                      <span className="text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg bg-slate-800 text-amber-300 border border-slate-700/80 whitespace-nowrap">
+                        {item.score} pt
                       </span>
                     </>
                   )}
@@ -230,26 +231,26 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
                     : 'hover:border-rose-500/40'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
                   <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                   {itemLocked ? (
-                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap truncate">
+                    <span className="text-xs sm:text-sm font-bold text-slate-400 filter blur-[4px] select-none whitespace-nowrap">
                       {item.metricName}
                     </span>
                   ) : (
-                    <span className="text-xs sm:text-sm font-bold text-slate-200 leading-snug break-words truncate">
+                    <span className="text-xs sm:text-sm font-bold text-slate-200 leading-snug break-words">
                       {item.metricName}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center justify-end shrink-0">
                   {isLocked ? (
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300/80 border border-rose-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
-                      <span className="filter blur-[2px] select-none">??</span> POINT 🔒
+                    <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-lg bg-rose-500/10 text-rose-300 border border-rose-500/30 flex items-center gap-1 shrink-0 whitespace-nowrap">
+                      <span className="filter blur-[2px] select-none">??</span> pt 🔒
                     </span>
                   ) : (
-                    <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-300 border border-rose-500/30 whitespace-nowrap">
-                      {item.score} POINT
+                    <span className="text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg bg-rose-500/10 text-rose-300 border border-rose-500/30 whitespace-nowrap">
+                      {item.score} pt
                     </span>
                   )}
                 </div>
