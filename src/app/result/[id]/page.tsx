@@ -28,7 +28,7 @@ function generateOverallEvaluationText(params: {
   socialScore?: number;
   mbti?: string | null;
   partnerCount?: number | null;
-}): string {
+}): { preview: string; remaining: string; fullText: string } {
   const { isLoveMode, overallScore, topPercent, gender, age, prefectureName, categoryScores, socialScore, mbti, partnerCount } = params;
   const genderText = gender === 'MALE' ? '男性' : '女性';
 
@@ -121,16 +121,20 @@ function generateOverallEvaluationText(params: {
     section5 = `【今後の総括とパートナーシップ戦略】\n総じて、あなたの恋愛市場におけるポテンシャルは非常に高く、自信を持ってパートナーシップに臨める好条件が揃っています。ご自身の強みである【${bestCategory.label}】をアピール軸として確立し、お相手との価値観のすり合わせを丁寧に行っていくことで、相思相愛の理想的なパートナーとの出逢いと関係成就を確実に手に入れることができるでしょう。`;
   }
 
-  const sections = [section1, section2, section3];
+  const preview = section1;
+  const remainingList = [section2, section3];
   if (expSection) {
-    sections.push(expSection);
+    remainingList.push(expSection);
   }
   if (mbtiSection) {
-    sections.push(mbtiSection);
+    remainingList.push(mbtiSection);
   }
-  sections.push(section4, section5);
+  remainingList.push(section4, section5);
 
-  return sections.join('\n\n');
+  const remaining = remainingList.join('\n\n');
+  const fullText = [preview, remaining].join('\n\n');
+
+  return { preview, remaining, fullText };
 }
 
 export default function ResultPage({ params }: { params: Promise<{ id: string }> }) {
@@ -607,26 +611,39 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                   </div>
                 </div>
 
-                <div className="relative">
-                  <div className={`text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-3 ${
-                    !isUnlocked ? 'max-h-[140px] overflow-hidden select-none' : ''
-                  }`}>
-                    {overallEvaluationText}
+                {isUnlocked ? (
+                  <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-4">
+                    {overallEvaluationText.fullText}
                   </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* 第1章: 冒頭プレビュー（クリアに閲覧可能） */}
+                    <div className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium tracking-wide whitespace-pre-line">
+                      {overallEvaluationText.preview}
+                    </div>
 
-                  {!isUnlocked && (
-                    <div className="absolute inset-x-0 bottom-0 pt-16 pb-2 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent flex flex-col items-center justify-end text-center">
+                    {/* 第2章〜第7章: 実際の画面と同じフルサイズを表示してモザイク（ブラー） */}
+                    <div className="relative rounded-xl overflow-hidden border border-purple-500/20 bg-slate-950/40 p-4">
+                      {/* フルサイズのテキスト（ブラー適用） */}
+                      <div className="text-xs sm:text-sm text-slate-400 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-4 filter blur-[5px] select-none pointer-events-none opacity-75">
+                        {overallEvaluationText.remaining}
+                      </div>
+
+                      {/* クリックで購入LPへ遷移するオーバーレイ */}
                       <Link
                         href={`/purchase/${id}`}
-                        className="px-3.5 py-1.5 rounded-full bg-slate-950/95 hover:bg-slate-900 border border-purple-500/50 shadow-lg text-[11px] font-bold text-purple-300 hover:text-white flex items-center gap-1.5 animate-pulse transition-all cursor-pointer"
+                        className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-slate-950/30 hover:bg-slate-950/50 transition-all cursor-pointer group backdrop-blur-[1px]"
+                        title="クリックして総評全文を開示"
                       >
-                        <span>🔒</span>
-                        <span>この先：強み相乗効果・弱点克服・MBTI深層解析など全7章（¥500 で全文開示）</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-purple-400" />
+                        <div className="px-4 sm:px-6 py-3 rounded-2xl bg-slate-950/95 border border-purple-500/60 shadow-2xl text-xs sm:text-sm font-bold text-purple-200 group-hover:text-white flex items-center gap-2 group-hover:scale-105 transition-all text-center max-w-md">
+                          <span>🔒</span>
+                          <span>この先：強み相乗効果・弱点克服・MBTI深層解析など全7章（¥500 で全文開示）</span>
+                          <ChevronRight className="w-4 h-4 text-purple-400 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                        </div>
                       </Link>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 
