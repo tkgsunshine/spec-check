@@ -618,20 +618,20 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                     {overallEvaluationText.fullText}
                   </div>
                 ) : (
-                  <div className="relative">
-                    <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-4">
-                      {/* 第1章: 冒頭プレビュー */}
-                      <div>{overallEvaluationText.preview}</div>
+                    <div className="relative">
+                      <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium tracking-wide whitespace-pre-line space-y-4">
+                        {/* 第1章: 冒頭プレビュー */}
+                        <div>{overallEvaluationText.preview}</div>
 
-                      {/* 第2章〜第7章: フルサイズで他の箇所と同様の自然なモザイク（blur-[4px]）を適用 */}
-                      <div className="filter blur-[4px] select-none pointer-events-none opacity-60">
-                        {overallEvaluationText.remaining}
+                        {/* 第2章〜第7章: SP時は長大化を防ぐため約半分（max-h-[260px]）に制限して自然なモザイクを適用 */}
+                        <div className="filter blur-[4px] select-none pointer-events-none opacity-60 max-h-[260px] sm:max-h-[480px] overflow-hidden">
+                          {overallEvaluationText.remaining}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* クリックで購入LPへ遷移する魅力的なオーバーレイCTAカード */}
-                    <div className="absolute inset-x-0 bottom-0 top-16 flex items-center justify-center p-3 sm:p-6 bg-gradient-to-t from-slate-950/95 via-slate-950/75 to-transparent">
-                      <div className="w-full max-w-md p-5 sm:p-6 rounded-3xl bg-slate-950/90 border border-purple-500/40 backdrop-blur-xl shadow-2xl shadow-purple-950/60 text-center space-y-3.5 relative overflow-hidden">
+                      {/* クリックで購入LPへ遷移する魅力的なオーバーレイCTAカード */}
+                      <div className="absolute inset-x-0 bottom-0 top-10 sm:top-16 flex items-center justify-center p-2 sm:p-6 bg-gradient-to-t from-slate-950/95 via-slate-950/80 to-transparent">
+                        <div className="w-full max-w-md p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-slate-950/90 border border-purple-500/40 backdrop-blur-xl shadow-2xl shadow-purple-950/60 text-center space-y-3 sm:space-y-3.5 relative overflow-hidden">
                         {/* Decorative Glow */}
                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-44 h-44 bg-purple-600/25 rounded-full blur-3xl pointer-events-none" />
 
