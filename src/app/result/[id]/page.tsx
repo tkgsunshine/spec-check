@@ -547,8 +547,8 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                     <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
                     <span>同世代・政府統計データに基づくカテゴリ別比較スコア</span>
                     {!isUnlocked && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        🔒 モザイク中
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                        🔒 プレミアム限定
                       </span>
                     )}
                   </h2>
@@ -585,7 +585,7 @@ export default function ResultPage({ params }: { params: Promise<{ id: string }>
                 )}
               </div>
 
-              {/* 総評テキスト分析ブロック（未アンロック時は冒頭のみ見せて下部フェードアウト＆モザイク） */}
+              {/* 総評テキスト分析ブロック（未アンロック時は冒頭のみ見せて下部フェードアウト＆シマープレビュー） */}
               <div className="mt-6 p-5 md:p-6 rounded-2xl glass-surface border border-indigo-500/30 bg-slate-900/60 shadow-xl relative overflow-hidden">
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2.5">

@@ -136,7 +136,7 @@ export default function CategoryCard({ labelJa, labelEn, score, topPercent, colo
       {/* Mini Donut Circle with Dynamic Glow & Mosaic Obfuscation */}
       <div className="relative w-16 h-16 flex items-center justify-center mb-2">
         {isLocked ? (
-          /* ロック時: ゲージの長さ・色からの点数推測を完全防止するモザイク・シマーサークル */
+          /* ロック時: ゲージの長さ・色からの点数推測を完全防止するシマーサークル */
           <div className="relative w-full h-full flex items-center justify-center">
             <svg className="w-full h-full animate-spin [animation-duration:8s] overflow-visible filter blur-[2px]" viewBox="0 0 60 60">
               <circle

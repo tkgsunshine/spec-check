@@ -118,8 +118,8 @@ export default function PremiumReportSection({
                 Deep Analytics Report
               </span>
               {!isUnlocked && (
-                <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
-                  ✨ 匂わせ・モザイク中
+                <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 animate-pulse">
+                  ✨ プレミアム限定データ
                 </span>
               )}
             </div>
@@ -127,7 +127,7 @@ export default function PremiumReportSection({
               <span>プレミアム深層レポート & 詳細分析</span>
               {isUnlocked ? (
                 <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  全モザイク解除済み
+                  アンロック完了
                 </span>
               ) : (
                 <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
@@ -147,7 +147,7 @@ export default function PremiumReportSection({
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-black text-xs flex items-center gap-1.5 shadow-lg shadow-purple-600/30 transition-all cursor-pointer"
             >
               <Unlock className="w-3.5 h-3.5" />
-              <span>¥500 で全モザイク解除</span>
+              <span>¥500 で詳細データを完全アンロック</span>
             </button>
           )}
 
@@ -162,7 +162,7 @@ export default function PremiumReportSection({
             }}
             className="text-[10px] font-bold text-slate-400 hover:text-slate-200 px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 hover:bg-slate-800 transition-all cursor-pointer"
           >
-            {isUnlocked ? '🔒 モザイク状態を試す' : '⚡ テスト即時アンロック'}
+            {isUnlocked ? '🔒 ロック状態をプレビュー' : '⚡ テスト即時アンロック'}
           </button>
         </div>
       </div>
@@ -411,7 +411,7 @@ export default function PremiumReportSection({
 
             <div className="space-y-1.5 max-w-md mx-auto">
               <h4 className="text-lg sm:text-xl font-black text-white">
-                全モザイク解除 ＆ プレミアム深層レポート
+                プレミアム深層レポート ＆ 完全データ開示
               </h4>
               <p className="text-xs text-slate-300">
                 1回買い切り ¥500（月額課金・追加費用なし）で、あなたの強み・弱点・マッチングポテンシャルを完全開示
@@ -451,7 +451,7 @@ export default function PremiumReportSection({
                 ) : (
                   <>
                     <Unlock className="w-5 h-5" />
-                    <span>¥500 でモザイクを解除してすべて見る</span>
+                    <span>¥500 で詳細データをすべて見る</span>
                     <ChevronRight className="w-5 h-5" />
                   </>
                 )}

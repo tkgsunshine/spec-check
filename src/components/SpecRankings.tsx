@@ -88,8 +88,8 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
               <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
                 <span>強みのあるスペック TOP 5</span>
                 {isLocked && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    🔒 一部モザイク
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                    🔒 プレミアム開示
                   </span>
                 )}
               </h3>
@@ -180,8 +180,8 @@ export default function SpecRankings({ metrics, isLoveMode = false, rawInput, is
               <h3 className="text-sm md:text-base font-black text-slate-100 flex items-center gap-2">
                 <span>伸びしろ・改善エリア</span>
                 {isLocked && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                    🔒 一部モザイク
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                    🔒 プレミアム開示
                   </span>
                 )}
               </h3>
